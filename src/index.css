@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .center {
+    @apply flex items-center justify-center
+  }
+
+  .around {
+    @apply flex items-center justify-around
+  }
+
+  .vstack {
+    @apply flex flex-col
+  }
+
+  .full {
+    @apply w-full h-full
+  }
+
+  .center-full {
+    @apply full center
+  }
+
+  .error {
+    @apply outline-pink-500 ring-1 ring-pink-500
+  }
+
+  .font-ma {
+    font-family: 'MontserratAlternates';
+  }
+}
+
+
+@font-face {
+  font-family: 'MontserratAlternates';
+  src: url('$fonts/MontserratAlternates-Light.ttf');
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: 'MontserratAlternates';
+  src: url('$fonts/MontserratAlternates-Regular.ttf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'MontserratAlternates';
+  src: url('$fonts/MontserratAlternates-Medium.ttf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'MontserratAlternates';
+  src: url('$fonts/MontserratAlternates-Bold.ttf');
+  font-weight: 800;
+}
+
+:root {
+  --color-1-1: #111;
+  --color-1-2: #222;
+  --color-1-3: #444;
+  --color-1-4: #555;
+  --color-1-5: #666;
+  --color-1-6: #888;
+  --color-1-7: #999;
+  --color-1-8: #AAA;
+  --color-1-9: #BBB;
+  --color-1-10: #CCC;
+  --color-1-11: #EEE;
+  --color-1-12: #FFF;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  font-family: "MontserratAlternates";
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+* {
+  overscroll-behavior-y: contain;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+  background-clip: content-box;
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-clip: content-box;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  background: transparent;
+}
+
+*::placeholder {
+  color: var(--color-1-10);
+}
