@@ -3,11 +3,14 @@ import React from 'react';
 export const Footer: React.FC = () => {
   return (
     <footer>
-      <div className="bg-1-8 text-1-1 flex vstack center p-1">
+      <div className="vstack center text-1-1 p-1 w-full">
         <p>
-          <code>2024</code>, Kozlov Kirill
+          <code>2024</code>, NSU
         </p>
-        <a className="underline" href="https://github.com/KozlovKV">
+        <a
+          className="underline"
+          href="https://github.com/FIT-2024-Digital-Library"
+        >
           Github
         </a>
       </div>
