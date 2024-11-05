@@ -18,8 +18,8 @@ export const theme = {
     '1-8': '#AAA',
     '1-9': '#BBB',
     '1-10': '#CCC',
-    '1-11': '#EEE',
-    '1-12': '#FFF',
+    '1-11': '#DDD',
+    '1-12': '#EEE',
   },
   extend: {
     keyframes: {
