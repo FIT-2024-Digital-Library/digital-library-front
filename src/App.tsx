@@ -11,7 +11,7 @@ export const App: React.FC = () => {
       <main>
         <AppRoutes />
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

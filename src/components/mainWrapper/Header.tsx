@@ -3,36 +3,31 @@ import { Link } from 'wouter';
 
 import { Button } from '@/components/library/Button';
 import { useAppStore } from '@/state/state';
-import { Menu } from './Menu';
 
 export const Header: React.FC = () => {
   const showLoginWindow = useAppStore((state) => state.showLoginWindow);
-  const showRegisterWindow = useAppStore((state) => state.showRegisterWindow);
 
   return (
     <header>
-      <div className="flex justify-between m-0 p-2 bg-1-7 w-full transition-all">
-        <h2 className="text-lg md:text-2xl text-1-1 font-bold mx-2 center">
-          <Link to="/">App</Link>
+      <div className="grid grid-cols-4 m-0 p-10 bg-white w-full transition-all">
+        <h2 className="flex justify-start items-center text-lg md:text-2xl text-1-1 font-bold">
+          <Link to="/">Digital library</Link>
         </h2>
-        <Menu />
-        <div className="center">
+        <div className="col-span-2 p-2">
+          <Link to="/books" className="w-full">
+            <Button className="w-full" variant="plate-grey">
+              Search
+            </Button>
+          </Link>
+        </div>
+        <div className="flex justify-end items-center">
           <Button
-            variant="bordered"
-            className="p-1 my-1 mx-2"
+            variant="plate-grey"
+            className="p-4 my-1 mx-2 font-bold"
             onClick={showLoginWindow}
           >
-            Log in
+            Sign in
           </Button>
-          <div className="hidden md:block">
-            <Button
-              variant="plate"
-              className="p-1 my-1 mx-2"
-              onClick={showRegisterWindow}
-            >
-              Register
-            </Button>
-          </div>
         </div>
       </div>
     </header>

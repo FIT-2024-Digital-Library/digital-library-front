@@ -1,0 +1,50 @@
+{% extends 'basic.html' %}
+{% block login_register %}
+<!-- Полупрозрачный фон и форма логина -->
+<div id="blurBackground"></div>
+<script src="/js/logic_registration_logic.js"></script> <!-- Подключение внешнего JS файла -->
+<link rel="stylesheet" href="/login_registration.css">
+<link href="https://fonts.googleapis.com/css?family=IM+FELL English&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Imperial+Script&display=swap" rel="stylesheet">
+<div id="loginForm">
+    <img alt="" class="form-img">
+    <div class="login-form-content">
+        <span class="login-upper-header">Digital Library</span>
+        <span class="login-bottom-header">Welcome to the Digital library!</span>
+
+        <div class="input-group">
+            <label for="login-username">Username or email</label>
+            <input type="text" id="login-username" placeholder="">
+
+            <label for="login-password">Password</label>
+            <input type="text" id="login-password" placeholder="">
+        </div>
+        <button class="login-button">Sign in</button>
+        <label class="register-link">New in Digital library?<u id="showRegisterForm">Create
+            account</u></label>
+    </div>
+    <button id="closeLoginForm" class="close-button">✖</button>
+</div>
+<!-- Форма регистрации -->
+<div id="registerForm" class="registerForm">
+    <img alt="" class="form-img">
+    <div class="login-form-content">
+        <span class="login-upper-header">Digital Library</span>
+        <div class="input-group">
+            <label for="register-username">Username or email</label>
+            <input type="text" id="register-username" placeholder="">
+
+            <label for="register-password">Password</label>
+            <input type="text" id="register-password" placeholder="">
+
+            <label for="repeat-password">Repeat password</label>
+            <input type="text" id="repeat-password" placeholder="">
+        </div>
+
+        <button class="login-button">Create account</button>
+        <label class="register-link">Already registered?<u id="showLoginForm">Log
+            in</u></label>
+    </div>
+    <button id="closeRegisterForm" class="close-button">✖</button>
+</div>
+{% endblock %}

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { PopUp } from '@/components/library/PopUp';
-import { Button } from '@/components/library/Button';
 import { useAppStore } from '@/state';
 import { LoginForm } from './LoginForm';
 import { RegisterForm } from './RegisterForm';
@@ -21,14 +20,24 @@ export const LoginWindow: React.FC = () => {
     <PopUp
       isShown={authWindowState !== 'hidden'}
       close={closeAuthWindow}
-      className="bg-1-8/25 backdrop-blur-sm"
+      className="bg-1-12/75 backdrop-blur-sm"
     >
       <div className="center">
-        <div className="absolute top-1/4 w-3/4 m-2 md:w-1/2 lg:w-1/3 h-fit p-3 border border-1-1 rounded-lg bg-gradient-to-tr from-1-5 to-1-6">
-          <h1 className="text-lg md:text-xl text-center text-black">
-            {isLogin ? 'Log in to RecAll' : 'Register in RecAll'}
-          </h1>
-          <div className="vstack center transition-all relative">
+        <div className="absolute top-20 w-2/3 h-fit shadow shadow-black bg-white grid grid-cols-2 font-serif">
+          <div>
+            <img
+              src="https://avatars.mds.yandex.net/i?id=814637c78277135739ec143a4f3ff0a5_l-5235819-images-thumbs&n=13"
+              alt="Image"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="p-3 vstack center">
+            <h1 className="text-lg md:text-2xl text-center text-black my-4">
+              Welcome to Digital library
+            </h1>
+            <h2 className="text-md md:text-lg text-center text-black my-2">
+              {isLogin ? 'Sigining in' : 'Regsitration'}
+            </h2>
             <div
               className={clsx(
                 'transition-all duration-300 w-full relative',
@@ -45,14 +54,19 @@ export const LoginWindow: React.FC = () => {
             >
               {isRegister && <RegisterForm />}
             </div>
-            <div className="around w-full">
-              <Button
-                className="m-1 p-2 rounded-lg"
-                variant="bordered"
-                onClick={toggleActiveAuthWindow}
-              >
-                {isRegister ? '< Go to Log in' : 'Go to Register >'}
-              </Button>
+            <div
+              className="around w-full hover:cursor-pointer my-2"
+              onClick={toggleActiveAuthWindow}
+            >
+              {isLogin ? (
+                <span>
+                  New in Digital library? <u>Create account</u>
+                </span>
+              ) : (
+                <span>
+                  Already registered? <u>Log in</u>
+                </span>
+              )}
             </div>
           </div>
         </div>

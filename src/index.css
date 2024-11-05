@@ -27,34 +27,16 @@
     @apply outline-pink-500 ring-1 ring-pink-500
   }
 
-  .font-ma {
-    font-family: 'MontserratAlternates';
+  .font-inter {
+    font-family: 'Inter';
   }
 }
 
 
 @font-face {
-  font-family: 'MontserratAlternates';
-  src: url('$fonts/MontserratAlternates-Light.ttf');
-  font-weight: 200;
-}
-
-@font-face {
-  font-family: 'MontserratAlternates';
-  src: url('$fonts/MontserratAlternates-Regular.ttf');
+  font-family: 'Inter';
+  src: url('$fonts/inter.ttf');
   font-weight: 400;
-}
-
-@font-face {
-  font-family: 'MontserratAlternates';
-  src: url('$fonts/MontserratAlternates-Medium.ttf');
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: 'MontserratAlternates';
-  src: url('$fonts/MontserratAlternates-Bold.ttf');
-  font-weight: 800;
 }
 
 :root {
@@ -68,15 +50,15 @@
   --color-1-8: #AAA;
   --color-1-9: #BBB;
   --color-1-10: #CCC;
-  --color-1-11: #EEE;
-  --color-1-12: #FFF;
+  --color-1-11: #DDD;
+  --color-1-12: #EEE;
 }
 
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  font-family: "MontserratAlternates";
+  font-family: "Inter";
 }
 
 html,
@@ -85,6 +67,7 @@ body,
   margin: 0;
   padding: 0;
   width: 100%;
+  height: 100%;
 }
 
 * {
