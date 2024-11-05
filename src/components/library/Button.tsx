@@ -9,9 +9,9 @@ interface IconButtonProps
 }
 
 const variants = {
-  inline: `text-1-1 hover:bg-1-1/25`,
-  plate: `bg-1-3 text-1-12 hover:bg-1-4`,
-  bordered: `bg-1-7 text-black border-2 border-1-1 hover:bg-1-5`,
+  inline: `text-1-1 hover:bg-1-6/25`,
+  'plate-black': `bg-1-2 text-white hover:bg-1-4 rounded-full`,
+  'plate-grey': `bg-1-10 text-black hover:bg-1-8 rounded-full`,
 };
 export const Button: React.FC<IconButtonProps> = ({
   variant,
@@ -26,7 +26,7 @@ export const Button: React.FC<IconButtonProps> = ({
     className={
       `${
         variants[variant || 'inline']
-      } center h-10 min-w-[40px] space-x-2 rounded-md p-2 transition-colors` +
+      } center h-10 min-w-[40px] space-x-2 p-2 transition-colors` +
       ' ' +
       className
     }

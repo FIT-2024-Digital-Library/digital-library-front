@@ -32,17 +32,15 @@ export const RegisterForm: React.FC = () => {
   };
 
   return (
-    <form
-      className="vstack w-full p-2 text-white"
-      onSubmit={handleSubmit(registerUser)}
-    >
+    <form className="vstack w-full p-2" onSubmit={handleSubmit(registerUser)}>
       <FormItem
         className="vstack p-1 w-full"
         errorMessage={errors.email?.message}
       >
+        <label htmlFor="email">Username or email</label>
         <input
-          placeholder="Email"
-          className="w-full p-2 bg-1-2 focus:bg-1-3 rounded-md placeholder-shown:text-1-8"
+          id="email"
+          className="w-full p-2 bg-transparent border-black border-b"
           {...register('email')}
         />
       </FormItem>
@@ -50,9 +48,10 @@ export const RegisterForm: React.FC = () => {
         className="vstack p-1 w-full"
         errorMessage={errors.password1?.message}
       >
+        <label htmlFor="password1">Password</label>
         <input
-          placeholder="Create password"
-          className="w-full p-2 bg-1-2 focus:bg-1-3 rounded-md"
+          id="password1"
+          className="w-full p-2 bg-transparent border-black border-b"
           {...register('password1')}
           type="password"
         />
@@ -61,15 +60,16 @@ export const RegisterForm: React.FC = () => {
         className="vstack p-1 w-full"
         errorMessage={errors.password2?.message}
       >
+        <label htmlFor="password2">Repeat password</label>
         <input
-          placeholder="Repeat password"
-          className="w-full p-2 bg-1-2 focus:bg-1-3 rounded-md"
+          id="password2"
+          className="w-full p-2 bg-transparent border-black border-b"
           {...register('password2')}
           type="password"
         />
       </FormItem>
-      <Button variant="plate" type="submit" className="m-2">
-        Sign up
+      <Button variant="plate-black" type="submit" className="m-2 my-4">
+        Create account
       </Button>
     </form>
   );

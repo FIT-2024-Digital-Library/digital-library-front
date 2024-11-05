@@ -1,0 +1,184 @@
+/* Основной контент */
+.content {
+    text-align: center;
+    padding: 20px;
+}
+
+
+/* Форма логина */
+#loginForm {
+    display: none;
+    position: fixed;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 65%;
+    height: 80%;
+    background-color: #fff;
+    box-shadow: -1px 4px 4px rgba(0, 0, 0, 0.25);
+    z-index: 10;
+}
+
+/* Форма логина */
+#registerForm {
+    display: none;
+    position: fixed;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 65%;
+    height: 80%;
+    background-color: #fff;
+    box-shadow: -1px 4px 4px rgba(0, 0, 0, 0.25);
+    z-index: 10;
+}
+
+.login-form-content {
+    margin: 0;
+    display: flex;
+    width: 50%;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+.login-upper-header {
+    color: rgba(0, 0, 0, 1);
+    text-align: center;
+    margin-top: 10%;
+    font-size: 36px;
+    letter-spacing: 0;
+}
+
+.login-bottom-header {
+    margin-top: 10%;
+    color: rgba(0, 0, 0, 1);
+    font-family: Imperial Script;
+    text-align: center;
+    font-size: 30px;
+    letter-spacing: 0;
+}
+
+.input-group {
+    display: flex;
+    padding-top: 5%;
+    flex-direction: column;
+    width: 100%;
+    padding-left: 0;
+    margin-left: 0;
+    margin-bottom: 20px;
+}
+
+/* Стили для надписи */
+.input-group label {
+    color: rgba(0, 0, 0, 0.53);
+    font-family: IM FELL English;
+    text-align: left;
+    font-size: 15px;
+    letter-spacing: 0;
+    margin-left: 10%;
+    margin-top: 5%;
+}
+
+/* Стиль для поля ввода */
+.input-group input {
+    margin-top: 3%;
+    border: none;
+    align-self: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 1);
+    width: 80%;
+    text-align: left;
+    padding: 0;
+
+    outline: none;
+    font-size: 16px;
+    background-color: transparent;
+}
+
+/* Стиль при фокусе на input */
+.input-group input:focus {
+    border-bottom: 2px solid rgba(0, 0, 0, 1);
+
+}
+
+.form-img {
+    width: 50%;
+    height: 100%;
+    background-color: rgba(217, 217, 217, 1);
+}
+
+
+/* Кнопка закрытия */
+.close-button {
+    display: block;
+    padding: 8px;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Эффект при наведении на крестик */
+.close-button:hover {
+    color: #f00; /* Красный при наведении */
+}
+
+.login-button {
+    margin-top: 7%;
+    height: 7%;
+    width: 50%;
+    background-color: rgba(44, 44, 44, 1); /* Чёрный цвет фона */
+    color: white; /* Белый текст */
+    border: none; /* Убираем рамку */
+    border-radius: 80px;
+    cursor: pointer; /* Курсор в виде указателя при наведении */
+    font-size: 14px; /* Размер шрифта */
+    transition: background-color 0.3s; /* Плавный переход фона */
+}
+
+/* Кнопка закрытия */
+.close-button {
+    position: absolute;
+    top: 10px; /* Отступ сверху */
+    right: 10px; /* Отступ справа */
+    font-size: 24px; /* Размер шрифта */
+    color: black; /* Цвет */
+    border: 0;
+    background: white;
+    cursor: pointer; /* Курсор в виде указателя при наведении */
+    z-index: 20; /* Увеличиваем z-index, чтобы он был над остальным содержимым */
+    transition: color 0.3s; /* Плавный переход цвета */
+}
+
+/* Эффект при наведении */
+.login-button:hover {
+    background-color: #333; /* Темнее при наведении */
+}
+
+.register-link {
+    padding-top: 2%;
+    color: rgba(0, 0, 0, 0.50);
+    font-family: IM FELL English;
+    text-align: left;
+    font-size: 15px;
+    letter-spacing: 0;
+}
+
+/* Размытый фон */
+#blurBackground {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    z-index: 5;
+}
+
+
+
+
