@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'wouter';
+import { Options } from 'react-select';
+
 import { Button } from '@/components/library/Button';
 import { BookDisplay } from '@/components/book/BookDisplay';
 import { BookEdit } from '@/components/book/BookEdit';
@@ -9,9 +11,17 @@ export type SelectOption = {
   label: string;
 };
 
-const authors = [{ value: 0, label: 'George R.R. Martin' }];
+const authors: Options<SelectOption> = [
+  { value: 0, label: 'George R.R. Martin' },
+  { value: 1, label: 'George R.R. Martin' },
+  { value: 2, label: 'George R.R. Martin' },
+];
 
-const genres = [{ value: 0, label: 'Fantasy' }];
+const genres: Options<SelectOption> = [
+  { value: 0, label: 'Fantasy' },
+  { value: 1, label: 'Sci-Fi' },
+  { value: 2, label: 'Novel' },
+];
 
 const bookDataDraft = {
   coverUrl:
@@ -22,17 +32,17 @@ const bookDataDraft = {
   published: new Date('1996.01.01'),
   description:
     "A Song of Ice and Fire depicts a violent world dominated by political realism. What little supernatural power exists is confined to the margins of the known world. Moral ambiguity pervades the books, and their stories continually raise questions concerning loyalty, pride, human sexuality, piety, and the morality of violence.\nThe story unfolds through a rotating set of subjective points of view, the success or survival of any of which is never assured. Each chapter is told from a limited third-person perspective, drawn from a group of characters that grows from nine in the first novel to 31 by the fifth.\nThe novels are set on the fictional continents of Westeros and Essos. Martin's stated inspirations for the series include the Wars of the Roses and The Accursed Kings, a series of French historical novels by Maurice Druon.[3][4] The work as a whole consists of three interwoven plots: a dynastic war among several families for control of Westeros, the growing threat posed by the powerful supernatural Others from the northernmost region of Westeros, and the ambition of the daughter of the deposed Westerosi king to return from her exile in Essos and assume the Iron Throne.",
-  pdf_url:
+  pdfUrl:
     'https://static.onlinetrade.ru/img/items/m/kniga_mir_lda_i_plameni_ofitsialnaya_istoriya_vesterosa_i_igry_prestolov_martin_dzhordzh_r_r_1513773582_2.jpg',
 };
 
 export type BookType = typeof bookDataDraft;
 
-const allAuthorsPseudoReqeust = async () => {
+export const allAuthorsPseudoReqeust = async () => {
   return authors;
 };
 
-const allGenresPseudoReqeust = async () => {
+export const allGenresPseudoReqeust = async () => {
   return genres;
 };
 

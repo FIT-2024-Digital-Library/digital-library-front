@@ -34,7 +34,7 @@ export const BookDisplay: React.FC<BookDisplayProps> = ({
           Published: <code>{bookData.published.toDateString()}</code>
         </h2>
         <p className="my-4">{bookData.description}</p>
-        <a className="w-fit" href={bookData.pdf_url}>
+        <a className="w-fit" href={bookData.pdfUrl}>
           <Button
             className="px-4 py-2 font-bold text-xl rounded-lg"
             variant="plate-grey"
