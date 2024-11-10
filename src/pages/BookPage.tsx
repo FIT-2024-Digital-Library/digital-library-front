@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'wouter';
 import { Button } from '@/components/library/Button';
+import { BookDisplay } from '@/components/book/BookDisplay';
+import { BookEdit } from '@/components/book/BookEdit';
+
+export type SelectOption = {
+  value: number;
+  label: string;
+};
 
 const authors = [{ value: 0, label: 'George R.R. Martin' }];
 
@@ -19,6 +26,8 @@ const bookDataDraft = {
     'https://static.onlinetrade.ru/img/items/m/kniga_mir_lda_i_plameni_ofitsialnaya_istoriya_vesterosa_i_igry_prestolov_martin_dzhordzh_r_r_1513773582_2.jpg',
 };
 
+export type BookType = typeof bookDataDraft;
+
 const allAuthorsPseudoReqeust = async () => {
   return authors;
 };
@@ -32,15 +41,18 @@ const bookDataPseudoReqeust = async (id: number) => {
   throw new Error('Book not found');
 };
 
+const hasRightsPseudoRequset = async () => {
+  return true;
+};
+
 export const BookPage: React.FC = () => {
   const { id } = useParams();
 
   const [isEdit, setIsEdit] = useState(false);
-  const [author, setAuthor] = useState<(typeof authors)[0]>();
-  const [genre, setGenre] = useState<(typeof genres)[0]>();
-  const [bookData, setBookData] = useState<typeof bookDataDraft | undefined>(
-    undefined
-  );
+  const [canEdit, setCanEdit] = useState(false);
+  const [author, setAuthor] = useState<SelectOption>();
+  const [genre, setGenre] = useState<SelectOption>();
+  const [bookData, setBookData] = useState<BookType | undefined>(undefined);
 
   useEffect(() => {
     bookDataPseudoReqeust(Number(id))
@@ -56,34 +68,45 @@ export const BookPage: React.FC = () => {
         );
       })
       .catch((error) => console.log(error));
+    hasRightsPseudoRequset().then((value) => setCanEdit(value));
   }, [id]);
 
   return (
     <div className="vstack mx-2 md:mx-10 xl:mx-32 px-2 md:px-5 text-black rounded-md">
       {!bookData ? (
-        <h1>Book not found</h1>
+        <h1 className="text-2xl font-bold mb-4">Book not found</h1>
       ) : (
-        <div className="grid grid-cols-3">
-          <div>
-            <img
-              src={bookData.coverUrl}
-              alt={`${bookData.title}'s cover`}
-              className="w-full h-full object-cover"
+        <>
+          {!isEdit ? (
+            <BookDisplay
+              bookData={bookData}
+              authorOption={author}
+              genreOption={genre}
             />
-          </div>
-          <div className="col-span-2 vstack px-8">
-            <h1 className="text-2xl font-bold mb-4">{bookData.title}</h1>
-            {author && <h2 className="text-xl mb-2 italic">{author.label}</h2>}
-            {genre && <h2 className="text-xl mb-2 italic">{genre.label}</h2>}
-            <h2 className="text-xl mb-2">
-              Published: <code>{bookData.published.toDateString()}</code>
-            </h2>
-            <p className="my-4">{bookData.description}</p>
-            <a href={bookData.pdf_url}>
-              <Button variant="plate-grey">Download book</Button>
-            </a>
-          </div>
-        </div>
+          ) : (
+            <BookEdit
+              bookData={bookData}
+              authorOption={author}
+              genreOption={genre}
+            />
+          )}
+          {canEdit && !isEdit && (
+            <div className="grid grid-cols-3 my-2">
+              <div className="grid grid-cols-2">
+                <Button
+                  className="mx-1 py-2 text-xl"
+                  variant="plate-black"
+                  onClick={() => setIsEdit(true)}
+                >
+                  Edit
+                </Button>
+                <Button className="mx-1 py-2 text-xl" variant="plate-black">
+                  Delete
+                </Button>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
