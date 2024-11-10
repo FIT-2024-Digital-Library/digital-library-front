@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod';
-import Select, { Options } from 'react-select';
+import { Options } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
 import { BookDisplayProps } from './BookDisplay';
@@ -12,9 +12,9 @@ import {
   allGenresPseudoReqeust,
   allAuthorsPseudoReqeust,
   SelectOption,
+  BookType,
 } from '@/pages';
 import { produce } from 'immer';
-import { CreatableSelectHOC } from '../library/CreatableSelectHOC';
 
 export const bookEditScheme = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -30,18 +30,37 @@ export const bookEditScheme = z.object({
       label: z.string(),
     })
     .required(),
-  published: z.string().date(),
+  published: z.date(),
   description: z.string().min(1, 'Description is required'),
   coverUrl: z.string().url(),
   pdfUrl: z.string().url().min(1, "Book's file is required"),
 });
 export type BookEditData = z.infer<typeof bookEditScheme>;
 
-export const BookEdit: React.FC<BookDisplayProps> = ({
+const selectComponentStaticProps = {
+  unstyled: true,
+  classNames: {
+    container: () => 'w-full border-b border-black',
+    menuList: () => 'bg-1-12 my-1 py-1 divide-y-2 divide-black rounded',
+    option: () => 'p-2 hover:bg-white',
+    dropdownIndicator: () => 'mx-2',
+  },
+  isSearchable: true,
+};
+
+export interface BookEditProps {
+  isNew?: boolean;
+  bookData?: BookType;
+  genreOption?: SelectOption;
+  authorOption?: SelectOption;
+}
+
+export const BookEdit: React.FC<BookEditProps> = ({
   bookData,
   genreOption,
   authorOption,
 }) => {
+  const isNew = bookData === undefined;
   const [allAuthors, setAllAuthors] = useState<Options<SelectOption>>([]);
   const [allGenres, setAllGenres] = useState<Options<SelectOption>>([]);
   useEffect(() => {
@@ -56,27 +75,32 @@ export const BookEdit: React.FC<BookDisplayProps> = ({
     formState: { errors },
   } = useForm<BookEditData>({
     resolver: zodResolver(bookEditScheme),
-    defaultValues: {
+    defaultValues: bookData && {
       ...bookData,
-      published: bookData.published.toDateString(),
+      published: bookData.published,
       author: authorOption,
       genre: genreOption,
     },
   });
 
   const saveBookData: SubmitHandler<BookEditData> = (data) => {
+    if (isNew) console.log('Creating book...');
+    else console.log('Saving book...');
     console.log(data);
   };
 
   return (
     <form onSubmit={handleSubmit(saveBookData)}>
       <div className="grid grid-cols-3">
-        <div>
+        <div className="center vstack">
           <img
-            src={bookData.coverUrl}
-            alt={`${bookData.title}'s cover`}
-            className="w-full h-full object-cover"
+            src={bookData?.coverUrl}
+            alt={`${bookData?.title ?? 'Book'}'s cover`}
+            className="w-full h-full object-cover mb-2"
           />
+          <Button className="rounded-md w-fit" variant="plate-grey">
+            Upload new cover
+          </Button>
         </div>
         <div className="col-span-2 vstack px-8">
           <FormItem
@@ -87,7 +111,7 @@ export const BookEdit: React.FC<BookDisplayProps> = ({
               id="title"
               placeholder="Title (reauired)"
               className="w-full pb-1 bg-transparent border-black border-b"
-              defaultValue={bookData.title}
+              defaultValue={bookData?.title}
               {...register('title')}
             />
           </FormItem>
@@ -99,8 +123,10 @@ export const BookEdit: React.FC<BookDisplayProps> = ({
               name="author"
               control={control}
               render={({ field }) => (
-                <CreatableSelectHOC
+                <CreatableSelect
                   {...field}
+                  {...selectComponentStaticProps}
+                  placeholder="Select an author (required)"
                   options={allAuthors}
                   onCreateOption={(optionLabel) => {
                     setAllAuthors(
@@ -124,8 +150,10 @@ export const BookEdit: React.FC<BookDisplayProps> = ({
               name="genre"
               control={control}
               render={({ field }) => (
-                <CreatableSelectHOC
+                <CreatableSelect
                   {...field}
+                  {...selectComponentStaticProps}
+                  placeholder="Select a genre (required)"
                   options={allGenres}
                   onCreateOption={(optionLabel) => {
                     setAllGenres(
@@ -151,7 +179,7 @@ export const BookEdit: React.FC<BookDisplayProps> = ({
                 id="published"
                 type="date"
                 className="pb-1 bg-transparent border-black border-b"
-                defaultValue={bookData.published.toDateString()}
+                defaultValue={bookData?.published.toISOString().split('T')[0]}
                 {...register('published')}
               />
             </code>
@@ -163,7 +191,7 @@ export const BookEdit: React.FC<BookDisplayProps> = ({
             <textarea
               id="description"
               className="w-full pb-1 bg-transparent border-black border-b h-32"
-              defaultValue={bookData.description}
+              defaultValue={bookData?.description}
               {...register('description')}
             />
           </FormItem>
@@ -174,7 +202,7 @@ export const BookEdit: React.FC<BookDisplayProps> = ({
             <Button className="rounded-md w-fit" variant="plate-grey">
               Upload new file
             </Button>
-            <a href={bookData.pdfUrl}>
+            <a href={bookData?.pdfUrl}>
               <Button className="rounded-md w-fit" variant="plate-grey">
                 Download book
               </Button>
@@ -182,7 +210,7 @@ export const BookEdit: React.FC<BookDisplayProps> = ({
             <input
               disabled
               className="hidden"
-              value={bookData.pdfUrl}
+              value={bookData?.pdfUrl}
               {...register('pdfUrl')}
             />
           </FormItem>
