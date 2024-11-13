@@ -15,6 +15,7 @@ import {
   BookType,
 } from '@/pages';
 import { produce } from 'immer';
+import { Icon } from '../library/Icon';
 
 export const bookEditScheme = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -98,9 +99,6 @@ export const BookEdit: React.FC<BookEditProps> = ({
             alt={`${bookData?.title ?? 'Book'}'s cover`}
             className="w-full h-full object-cover mb-2"
           />
-          <Button className="rounded-md w-fit" variant="plate-grey">
-            Upload new cover
-          </Button>
         </div>
         <div className="col-span-2 vstack px-8">
           <FormItem
@@ -174,15 +172,13 @@ export const BookEdit: React.FC<BookEditProps> = ({
             labelComponent={<span className="pr-1">Published:</span>}
             errorMessage={errors.published?.message}
           >
-            <code>
-              <input
-                id="published"
-                type="date"
-                className="pb-1 bg-transparent border-black border-b"
-                defaultValue={bookData?.published.toISOString().split('T')[0]}
-                {...register('published')}
-              />
-            </code>
+            <input
+              id="published"
+              type="date"
+              className="pb-1 bg-transparent border-black border-b"
+              defaultValue={bookData?.published.toISOString().split('T')[0]}
+              {...register('published')}
+            />
           </FormItem>
           <FormItem
             className="p-1 my-4 w-full text-black"
@@ -190,30 +186,43 @@ export const BookEdit: React.FC<BookEditProps> = ({
           >
             <textarea
               id="description"
-              className="w-full pb-1 bg-transparent border-black border-b h-32"
+              className="w-full p-2 bg-transparent border-black border h-32 resize-none rounded"
               defaultValue={bookData?.description}
               {...register('description')}
             />
           </FormItem>
-          <FormItem
-            className="p-1 mb-2 w-full text-black around"
-            errorMessage={errors.pdfUrl?.message}
-          >
+        </div>
+        <div className="center">
+          <Button className="rounded-md w-fit" variant="plate-grey">
+            <span>Upload new cover</span>
+            <Icon icon="add-file" />
+          </Button>
+          <input
+            disabled
+            className="hidden"
+            value={bookData?.coverUrl}
+            {...register('coverUrl')}
+          />
+        </div>
+        <div className="center">
+          <Button className="rounded-md w-fit" variant="plate-grey">
+          <span>Upload new PDF</span>
+          <Icon icon="pdf" />
+          </Button>
+        </div>
+        <div className="center">
+          <a href={bookData?.pdfUrl}>
             <Button className="rounded-md w-fit" variant="plate-grey">
-              Upload new file
+            <span>Download book</span>
+            <Icon icon="download" />
             </Button>
-            <a href={bookData?.pdfUrl}>
-              <Button className="rounded-md w-fit" variant="plate-grey">
-                Download book
-              </Button>
-            </a>
-            <input
-              disabled
-              className="hidden"
-              value={bookData?.pdfUrl}
-              {...register('pdfUrl')}
-            />
-          </FormItem>
+          </a>
+          <input
+            disabled
+            className="hidden"
+            value={bookData?.pdfUrl}
+            {...register('pdfUrl')}
+          />
         </div>
         <div className="center col-span-3 my-4">
           <Button
@@ -221,8 +230,9 @@ export const BookEdit: React.FC<BookEditProps> = ({
             variant="plate-black"
             type="submit"
           >
-            Save
-          </Button>
+            <span>Save</span>
+            <Icon icon="save" />
+            </Button>
         </div>
       </div>
     </form>

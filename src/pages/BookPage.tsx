@@ -5,6 +5,7 @@ import { Options } from 'react-select';
 import { Button } from '@/components/library/Button';
 import { BookDisplay } from '@/components/book/BookDisplay';
 import { BookEdit } from '@/components/book/BookEdit';
+import { Icon } from '../components/library/Icon';
 
 export type SelectOption = {
   value: number;
@@ -108,10 +109,12 @@ export const BookPage: React.FC = () => {
                   variant="plate-black"
                   onClick={() => setIsEdit(true)}
                 >
-                  Edit
+                  <span>Edit</span>
+                  <Icon icon="editor" />
                 </Button>
                 <Button className="mx-1 py-2 text-xl" variant="plate-black">
-                  Delete
+                  <span>Delete</span>
+                  <Icon icon="trash" />
                 </Button>
               </div>
             </div>

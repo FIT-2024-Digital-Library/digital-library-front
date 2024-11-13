@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/library/Button';
 import { BookType, SelectOption } from '@/pages';
+import { Icon } from '../library/Icon';
 
 export interface BookDisplayProps {
   bookData: BookType;
@@ -31,7 +32,7 @@ export const BookDisplay: React.FC<BookDisplayProps> = ({
           <h2 className="text-xl mb-2 italic">{genreOption.label}</h2>
         )}
         <h2 className="text-xl mb-2">
-          Published: <code>{bookData.published.toDateString()}</code>
+          Published at {bookData.published.toDateString()}
         </h2>
         <p className="my-4">{bookData.description}</p>
         <a className="w-fit" href={bookData.pdfUrl}>
@@ -39,7 +40,8 @@ export const BookDisplay: React.FC<BookDisplayProps> = ({
             className="px-4 py-2 font-bold text-xl rounded-lg"
             variant="plate-grey"
           >
-            Download book
+            <span>Download book</span>
+            <Icon icon="download" />
           </Button>
         </a>
       </div>
