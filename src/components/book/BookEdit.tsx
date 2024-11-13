@@ -4,8 +4,8 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod';
 import { Options } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
+import { produce } from 'immer';
 
-import { BookDisplayProps } from './BookDisplay';
 import { Button } from '@/components/library/Button';
 import { FormItem } from '@/components/library/FormItem';
 import {
@@ -14,8 +14,8 @@ import {
   SelectOption,
   BookType,
 } from '@/pages';
-import { produce } from 'immer';
-import { Icon } from '../library/Icon';
+import { Icon } from '@/components/library/Icon';
+import { UploadDropdown } from '@/components/library/UploadDropdown';
 
 export const bookEditScheme = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -31,7 +31,7 @@ export const bookEditScheme = z.object({
       label: z.string(),
     })
     .required(),
-  published: z.date(),
+  published: z.string().date(),
   description: z.string().min(1, 'Description is required'),
   coverUrl: z.string().url(),
   pdfUrl: z.string().url().min(1, "Book's file is required"),
@@ -69,6 +69,9 @@ export const BookEdit: React.FC<BookEditProps> = ({
     allGenresPseudoReqeust().then((genres) => setAllGenres(genres));
   }, []);
 
+  const [currentCoverLink, setCurrentCoverLink] = useState(bookData?.coverUrl);
+  const [currentPdfLink, setCurrentPdfLink] = useState(bookData?.pdfUrl);
+
   const {
     register,
     control,
@@ -76,9 +79,7 @@ export const BookEdit: React.FC<BookEditProps> = ({
     formState: { errors },
   } = useForm<BookEditData>({
     resolver: zodResolver(bookEditScheme),
-    defaultValues: bookData && {
-      ...bookData,
-      published: bookData.published,
+    defaultValues: {
       author: authorOption,
       genre: genreOption,
     },
@@ -95,7 +96,7 @@ export const BookEdit: React.FC<BookEditProps> = ({
       <div className="grid grid-cols-3">
         <div className="center vstack">
           <img
-            src={bookData?.coverUrl}
+            src={currentCoverLink}
             alt={`${bookData?.title ?? 'Book'}'s cover`}
             className="w-full h-full object-cover mb-2"
           />
@@ -193,34 +194,44 @@ export const BookEdit: React.FC<BookEditProps> = ({
           </FormItem>
         </div>
         <div className="center">
-          <Button className="rounded-md w-fit" variant="plate-grey">
-            <span>Upload new cover</span>
-            <Icon icon="add-file" />
-          </Button>
+          <UploadDropdown
+            buttonComponent={
+              <Button className="rounded-md w-fit" variant="plate-grey">
+                <span>Upload new cover</span>
+                <Icon icon="add-file" />
+              </Button>
+            }
+            setUploadedLink={setCurrentCoverLink}
+          />
           <input
             disabled
             className="hidden"
-            value={bookData?.coverUrl}
+            value={currentCoverLink}
             {...register('coverUrl')}
           />
         </div>
         <div className="center">
-          <Button className="rounded-md w-fit" variant="plate-grey">
-          <span>Upload new PDF</span>
-          <Icon icon="pdf" />
-          </Button>
+          <UploadDropdown
+            buttonComponent={
+              <Button className="rounded-md w-fit" variant="plate-grey">
+                <span>Upload new PDF</span>
+                <Icon icon="pdf" />
+              </Button>
+            }
+            setUploadedLink={setCurrentPdfLink}
+          />
         </div>
         <div className="center">
-          <a href={bookData?.pdfUrl}>
+          <a href={currentPdfLink}>
             <Button className="rounded-md w-fit" variant="plate-grey">
-            <span>Download book</span>
-            <Icon icon="download" />
+              <span>Download book</span>
+              <Icon icon="download" />
             </Button>
           </a>
           <input
             disabled
             className="hidden"
-            value={bookData?.pdfUrl}
+            value={currentPdfLink}
             {...register('pdfUrl')}
           />
         </div>
@@ -232,7 +243,7 @@ export const BookEdit: React.FC<BookEditProps> = ({
           >
             <span>Save</span>
             <Icon icon="save" />
-            </Button>
+          </Button>
         </div>
       </div>
     </form>
