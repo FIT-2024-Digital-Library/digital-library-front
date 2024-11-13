@@ -23,7 +23,7 @@ export const UploadDropdown: React.FC<UploadDropDownProps> = ({
       <div
         className={clsx(
           'w-full p-2 around',
-          'bg-1- text-black',
+          'bg-1-10 text-black',
           'border border-black rounded'
         )}
       >
