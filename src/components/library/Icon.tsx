@@ -21,7 +21,15 @@ import {
   TbTrash,
   TbTriangleFilled,
   TbX,
+  TbDownload,
+  TbUpload,
 } from 'react-icons/tb';
+import {
+  AiFillFileAdd,
+  AiFillFilePdf,
+  AiFillSave,
+} from 'react-icons/ai';
+import {} from 'react-icons/ai';
 import React from 'react';
 import { match } from 'ts-pattern';
 import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
@@ -49,6 +57,11 @@ export const icons = [
   'plus',
   'state',
   'play',
+  'download',
+  'upload',
+  'add-file',
+  'pdf',
+  'save',
 ] as const;
 export type IconType = (typeof icons)[number];
 
@@ -86,6 +99,11 @@ export const Icon: React.FC<IconProps> = ({
     .with('trash', () => TbTrash)
     .with('loader', () => TbLoader)
     .with('plus', () => TbPlus)
+    .with('download', () => TbDownload)
+    .with('upload', () => TbUpload)
+    .with('add-file', () => AiFillFileAdd)
+    .with('pdf', () => AiFillFilePdf)
+    .with('save', () => AiFillSave)
     .exhaustive();
 
   const modifiers = match(icon)
