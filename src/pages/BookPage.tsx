@@ -6,6 +6,7 @@ import { Button } from '@/components/library/Button';
 import { BookDisplay } from '@/components/book/BookDisplay';
 import { BookEdit } from '@/components/book/BookEdit';
 import { Icon } from '../components/library/Icon';
+import { ReviewsList } from '../components/review/ReviewsList';
 
 export type SelectOption = {
   value: number;
@@ -119,6 +120,7 @@ export const BookPage: React.FC = () => {
               </div>
             </div>
           )}
+          <ReviewsList bookId={Number(id)} />
         </>
       )}
     </div>
