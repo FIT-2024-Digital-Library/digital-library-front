@@ -194,21 +194,22 @@ export const BookEdit: React.FC<BookEditProps> = ({
           </FormItem>
         </div>
         <div className="center">
-          <UploadDropdown
-            buttonComponent={
-              <Button className="rounded-md w-fit" variant="plate-grey">
-                <span>Upload new cover</span>
-                <Icon icon="add-file" />
-              </Button>
-            }
-            setUploadedLink={setCurrentCoverLink}
-          />
-          <input
-            disabled
-            className="hidden"
-            value={currentCoverLink}
-            {...register('coverUrl')}
-          />
+          <FormItem errorMessage={errors.coverUrl?.message}>
+            <UploadDropdown
+              buttonComponent={
+                <Button className="rounded-md w-fit" variant="plate-grey">
+                  <span>Upload new cover</span>
+                  <Icon icon="add-file" />
+                </Button>
+              }
+              setUploadedLink={setCurrentCoverLink}
+            />
+            <input
+              className="hidden"
+              value={currentCoverLink}
+              {...register('coverUrl')}
+            />
+          </FormItem>
         </div>
         <div className="center">
           <UploadDropdown
@@ -222,18 +223,19 @@ export const BookEdit: React.FC<BookEditProps> = ({
           />
         </div>
         <div className="center">
-          <a href={currentPdfLink}>
-            <Button className="rounded-md w-fit" variant="plate-grey">
-              <span>Download book</span>
-              <Icon icon="download" />
-            </Button>
-          </a>
-          <input
-            disabled
-            className="hidden"
-            value={currentPdfLink}
-            {...register('pdfUrl')}
-          />
+          <FormItem errorMessage={errors.pdfUrl?.message}>
+            <a href={currentPdfLink}>
+              <Button className="rounded-md w-fit" variant="plate-grey">
+                <span>Download book</span>
+                <Icon icon="download" />
+              </Button>
+            </a>
+            <input
+              className="hidden"
+              value={currentPdfLink}
+              {...register('pdfUrl')}
+            />
+          </FormItem>
         </div>
         <div className="center col-span-3 my-4">
           <Button

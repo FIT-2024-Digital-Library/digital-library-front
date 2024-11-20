@@ -5,6 +5,7 @@ import React, {
   useState,
 } from 'react';
 import { Review } from './Review';
+import { MyReview } from './MyReview';
 
 export interface ReviewListProps
   extends PropsWithChildren<HTMLAttributes<React.FC>> {
@@ -12,6 +13,7 @@ export interface ReviewListProps
 }
 
 export type ReviewType = {
+  reviewId: number;
   userId: number;
   mark: number;
   creationTime: Date;
@@ -20,6 +22,7 @@ export type ReviewType = {
 
 const getReviewDraftTemplate = (id: number, mark: number) => {
   return {
+    reviewId: id,
     userId: id,
     mark: mark,
     creationTime: new Date(),
@@ -37,8 +40,15 @@ const getReviewsPseudoRequest = async (bookId: number) => {
   ];
 };
 
+const getUserPseudoRequest = async () => {
+  return {
+    userId: 1,
+  };
+};
+
 export const ReviewsList: React.FC<ReviewListProps> = ({ bookId }) => {
   const [reviews, setReviews] = useState<ReviewType[]>();
+  const [userReview, setUserReview] = useState<ReviewType>();
   const [average, setAverage] = useState<number>(0);
 
   useEffect(() => {
@@ -48,16 +58,26 @@ export const ReviewsList: React.FC<ReviewListProps> = ({ bookId }) => {
         reviews.reduce<number>((sum, review) => sum + review.mark, 0) /
           reviews.length
       );
+      getUserPseudoRequest().then((user) =>
+        setUserReview(reviews.find((review) => review.userId == user.userId))
+      );
     });
   }, [bookId]);
 
   return (
-    <div className="grid grid-cols-1 gap-y-3">
-      <div className="my-3">Review addition</div>
-      <div className="my-3 text-xl font-medium">Average mark: {average}/5</div>
-      {reviews?.map((review) => (
-        <Review review={review} key={review.userId} />
-      ))}
+    <div className="grid grid-cols-1 gap-y-3 my-3">
+      <MyReview review={userReview} />
+      <div className="text-xl font-medium">Average mark: {average}/5</div>
+      <div
+        className="grid gap-y-3 gap-x-3 w-full"
+        style={{
+          gridTemplateColumns: 'repeat( auto-fit, minmax(300px, 1fr) )',
+        }}
+      >
+        {reviews?.map((review) => (
+          <Review review={review} key={review.userId} />
+        ))}
+      </div>
     </div>
   );
 };

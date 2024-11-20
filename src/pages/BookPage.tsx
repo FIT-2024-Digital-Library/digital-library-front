@@ -120,6 +120,7 @@ export const BookPage: React.FC = () => {
               </div>
             </div>
           )}
+          <hr className="border-2 border-1-7 my-3 rounded" />
           <ReviewsList bookId={Number(id)} />
         </>
       )}

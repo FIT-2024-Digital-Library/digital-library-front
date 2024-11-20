@@ -27,19 +27,21 @@ export const Review: React.FC<ReviewProps> = ({ review }) => {
   return (
     <div
       className={clsx(
-        'grid grid-cols-5 py-3',
+        'grid grid-cols-1 divide-black divide-y',
         'border border-black rounded-xl'
       )}
       key={review.userId}
     >
-      <div className="grid grid-cols-1 gap-y-3 text-center">
+      <div className="grid grid-cols-3 px-4 text-center">
         <span>{review.mark}</span>
         <span>{user?.name}</span>
         <span className="text-gray-500/75">
           {review.creationTime.toLocaleDateString()}
         </span>
       </div>
-      {review.text && <div className="col-span-4">{review.text}</div>}
+      {review.text && (
+        <div className="col-span-4 p-2 text-center">{review.text}</div>
+      )}
     </div>
   );
 };
