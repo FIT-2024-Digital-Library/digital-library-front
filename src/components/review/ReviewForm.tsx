@@ -38,7 +38,6 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ review }) => {
   });
 
   useEffect(() => {
-    console.log('Mark updated');
     setValue('mark', currentMark, { shouldValidate: true });
   }, [setValue, currentMark]);
 

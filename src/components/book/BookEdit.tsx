@@ -33,8 +33,8 @@ export const bookEditScheme = z.object({
     .required(),
   published: z.string().date(),
   description: z.string().min(1, 'Description is required'),
-  coverUrl: z.string().url(),
-  pdfUrl: z.string().url().min(1, "Book's file is required"),
+  coverUrl: z.string(),
+  pdfUrl: z.string().min(1, "Book's file is required"),
 });
 export type BookEditData = z.infer<typeof bookEditScheme>;
 
@@ -69,12 +69,13 @@ export const BookEdit: React.FC<BookEditProps> = ({
     allGenresPseudoReqeust().then((genres) => setAllGenres(genres));
   }, []);
 
-  const [currentCoverLink, setCurrentCoverLink] = useState(bookData?.coverUrl);
-  const [currentPdfLink, setCurrentPdfLink] = useState(bookData?.pdfUrl);
+  const [currentCoverLink, setCurrentCoverLink] = useState(bookData?.coverUrl ?? '');
+  const [currentPdfLink, setCurrentPdfLink] = useState(bookData?.pdfUrl ?? '');
 
   const {
     register,
     control,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<BookEditData>({
@@ -84,6 +85,11 @@ export const BookEdit: React.FC<BookEditProps> = ({
       genre: genreOption,
     },
   });
+
+  useEffect(() => {
+    setValue('coverUrl', currentCoverLink, { shouldValidate: true });
+    setValue('pdfUrl', currentPdfLink, { shouldValidate: true });
+  }, [setValue, currentCoverLink, currentPdfLink]);
 
   const saveBookData: SubmitHandler<BookEditData> = (data) => {
     if (isNew) console.log('Creating book...');
@@ -212,30 +218,30 @@ export const BookEdit: React.FC<BookEditProps> = ({
           </FormItem>
         </div>
         <div className="center">
-          <UploadDropdown
-            buttonComponent={
-              <Button className="rounded-md w-fit" variant="plate-grey">
-                <span>Upload new PDF</span>
-                <Icon icon="pdf" />
-              </Button>
-            }
-            setUploadedLink={setCurrentPdfLink}
-          />
-        </div>
-        <div className="center">
           <FormItem errorMessage={errors.pdfUrl?.message}>
-            <a href={currentPdfLink}>
-              <Button className="rounded-md w-fit" variant="plate-grey">
-                <span>Download book</span>
-                <Icon icon="download" />
-              </Button>
-            </a>
-            <input
-              className="hidden"
-              value={currentPdfLink}
-              {...register('pdfUrl')}
+            <UploadDropdown
+              buttonComponent={
+                <Button className="rounded-md w-fit" variant="plate-grey">
+                  <span>Upload new PDF</span>
+                  <Icon icon="pdf" />
+                </Button>
+              }
+              setUploadedLink={setCurrentPdfLink}
             />
           </FormItem>
+        </div>
+        <div className="center">
+          <a href={currentPdfLink}>
+            <Button className="rounded-md w-fit" variant="plate-grey">
+              <span>Download book</span>
+              <Icon icon="download" />
+            </Button>
+          </a>
+          <input
+            className="hidden"
+            value={currentPdfLink}
+            {...register('pdfUrl')}
+          />
         </div>
         <div className="center col-span-3 my-4">
           <Button
