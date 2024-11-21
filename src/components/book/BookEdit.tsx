@@ -33,8 +33,8 @@ export const bookEditScheme = z.object({
     .required(),
   published: z.string().date(),
   description: z.string().min(1, 'Description is required'),
-  coverUrl: z.string(),
-  pdfUrl: z.string().min(1, "Book's file is required"),
+  coverUrl: z.string().url(),
+  pdfUrl: z.string().url().min(1, "Book's file is required"),
 });
 export type BookEditData = z.infer<typeof bookEditScheme>;
 
@@ -69,13 +69,10 @@ export const BookEdit: React.FC<BookEditProps> = ({
     allGenresPseudoReqeust().then((genres) => setAllGenres(genres));
   }, []);
 
-  const [currentCoverLink, setCurrentCoverLink] = useState(bookData?.coverUrl ?? '');
-  const [currentPdfLink, setCurrentPdfLink] = useState(bookData?.pdfUrl ?? '');
-
   const {
     register,
     control,
-    setValue,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm<BookEditData>({
@@ -83,13 +80,10 @@ export const BookEdit: React.FC<BookEditProps> = ({
     defaultValues: {
       author: authorOption,
       genre: genreOption,
+      coverUrl: bookData?.coverUrl ?? '',
+      pdfUrl: bookData?.pdfUrl ?? '',
     },
   });
-
-  useEffect(() => {
-    setValue('coverUrl', currentCoverLink, { shouldValidate: true });
-    setValue('pdfUrl', currentPdfLink, { shouldValidate: true });
-  }, [setValue, currentCoverLink, currentPdfLink]);
 
   const saveBookData: SubmitHandler<BookEditData> = (data) => {
     if (isNew) console.log('Creating book...');
@@ -102,7 +96,7 @@ export const BookEdit: React.FC<BookEditProps> = ({
       <div className="grid grid-cols-3">
         <div className="center vstack">
           <img
-            src={currentCoverLink}
+            src={watch('coverUrl')}
             alt={`${bookData?.title ?? 'Book'}'s cover`}
             className="w-full h-full object-cover mb-2"
           />
@@ -201,47 +195,54 @@ export const BookEdit: React.FC<BookEditProps> = ({
         </div>
         <div className="center">
           <FormItem errorMessage={errors.coverUrl?.message}>
-            <UploadDropdown
-              buttonComponent={
-                <Button className="rounded-md w-fit" variant="plate-grey">
-                  <span>Upload new cover</span>
-                  <Icon icon="add-file" />
-                </Button>
-              }
-              setUploadedLink={setCurrentCoverLink}
-            />
-            <input
-              className="hidden"
-              value={currentCoverLink}
-              {...register('coverUrl')}
+            <Controller
+              control={control}
+              name="coverUrl"
+              rules={{ required: false }}
+              render={({ field: { onChange } }) => (
+                <>
+                  <UploadDropdown
+                    buttonComponent={
+                      <Button className="rounded-md w-fit" variant="plate-grey">
+                        <span>Upload new cover</span>
+                        <Icon icon="add-file" />
+                      </Button>
+                    }
+                    setUploadedLink={onChange}
+                  />
+                </>
+              )}
             />
           </FormItem>
         </div>
         <div className="center">
           <FormItem errorMessage={errors.pdfUrl?.message}>
-            <UploadDropdown
-              buttonComponent={
-                <Button className="rounded-md w-fit" variant="plate-grey">
-                  <span>Upload new PDF</span>
-                  <Icon icon="pdf" />
-                </Button>
-              }
-              setUploadedLink={setCurrentPdfLink}
+            <Controller
+              control={control}
+              name="pdfUrl"
+              render={({ field: { onChange } }) => (
+                <>
+                  <UploadDropdown
+                    buttonComponent={
+                      <Button className="rounded-md w-fit" variant="plate-grey">
+                        <span>Upload new PDF</span>
+                        <Icon icon="pdf" />
+                      </Button>
+                    }
+                    setUploadedLink={onChange}
+                  />
+                </>
+              )}
             />
           </FormItem>
         </div>
         <div className="center">
-          <a href={currentPdfLink}>
+          <a href={watch('pdfUrl')}>
             <Button className="rounded-md w-fit" variant="plate-grey">
               <span>Download book</span>
               <Icon icon="download" />
             </Button>
           </a>
-          <input
-            className="hidden"
-            value={currentPdfLink}
-            {...register('pdfUrl')}
-          />
         </div>
         <div className="center col-span-3 my-4">
           <Button

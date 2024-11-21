@@ -6,6 +6,7 @@ import React, {
 } from 'react';
 import { ReviewType } from './ReviewsList';
 import clsx from 'clsx';
+import { ProgressBar } from '../library/ProgressBar';
 
 export interface ReviewProps
   extends PropsWithChildren<HTMLAttributes<React.FC>> {
@@ -33,7 +34,7 @@ export const Review: React.FC<ReviewProps> = ({ review }) => {
       key={review.userId}
     >
       <div className="grid grid-cols-3 px-4 text-center">
-        <span>{review.mark}</span>
+        <ProgressBar value={review.mark} maxValue={5} />
         <span>{user?.name}</span>
         <span className="text-gray-500/75">
           {review.creationTime.toLocaleDateString()}

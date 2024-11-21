@@ -14,17 +14,24 @@ export const MyReview: React.FC<MyReviewProps> = ({ review }) => {
 
   return (
     <div className="grid grid-cols-1 gap-y-1">
-      {!review && <h2 className="text-center text-xl">Share your opinion!</h2>}
+      {review ? (
+        <h2 className="text-center text-xl">Your review</h2>
+      ) : (
+        <h2 className="text-center text-xl">Share your opinion!</h2>
+      )}
       {review && !isEdit && (
         <>
-          <h2 className="text-center text-xl">Your review</h2>
           <Review review={review} />
           <Button variant="plate-black" onClick={() => setIsEdit(true)}>
             Edit
           </Button>
         </>
       )}
-      {(!review || isEdit) && <ReviewForm review={review} />}
+      {(!review || isEdit) && (
+        <>
+          <ReviewForm review={review} />
+        </>
+      )}
     </div>
   );
 };

@@ -7,13 +7,14 @@ import React, {
 import { ReviewType } from './ReviewsList';
 import { Button } from '../library/Button';
 import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod';
 import { FormItem } from '../library/FormItem';
 import clsx from 'clsx';
 import { Icon } from '../library/Icon';
+import { ProgressBar } from '../library/ProgressBar';
 
-const marks = [1, 2, 3, 4, 5];
+const marks = [1, 2, 3, 4, 5] as const;
 const reviewScheme = z.object({
   mark: z.number({ coerce: true }).min(1).max(5),
   text: z.string(),
@@ -26,26 +27,22 @@ export interface ReviewFormProps
 }
 
 export const ReviewForm: React.FC<ReviewFormProps> = ({ review }) => {
-  const [currentMark, setCurrentMark] = useState(review?.mark ?? 5);
-
   const {
     register,
     handleSubmit,
-    setValue,
+    control,
     formState: { errors },
   } = useForm<ReviwSchemeType>({
     resolver: zodResolver(reviewScheme),
+    defaultValues: {
+      mark: review?.mark ?? 5,
+    },
   });
-
-  useEffect(() => {
-    setValue('mark', currentMark, { shouldValidate: true });
-  }, [setValue, currentMark]);
 
   return (
     <form
       className={clsx(
         'grid grid-cols-5',
-        'gap-x-3',
         'divide-x divide-black',
         'border border-black rounded-lg'
       )}
@@ -55,30 +52,41 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ review }) => {
         className="grid grid-cols-1 p-2"
         errorMessage={errors.mark?.message}
       >
-        <div className="around">
-          {marks.map((mark) => (
-            <Button
-              className="rounded-md"
-              variant={currentMark === mark ? 'plate-black' : 'plate-grey'}
-              onClick={() => setCurrentMark(mark)}
-              key={mark}
-            >
-              {mark}
-            </Button>
-          ))}
-        </div>
-        <input className="hidden" value={currentMark} {...register('mark')} />
+        <Controller
+          control={control}
+          name="mark"
+          render={({ field: { onChange, value } }) => (
+            <>
+              <div className="around">
+                {marks.map((mark) => (
+                  <Button
+                    className="rounded-md"
+                    variant={value === mark ? 'plate-black' : 'plate-grey'}
+                    onClick={() => onChange(mark)}
+                    key={mark}
+                  >
+                    {mark}
+                  </Button>
+                ))}
+              </div>
+              <ProgressBar value={value} maxValue={5} />
+            </>
+          )}
+        />
       </FormItem>
-      <FormItem className="col-span-3 p-2" errorMessage={errors.text?.message}>
+      <FormItem
+        className="col-span-3 p-2 center"
+        errorMessage={errors.text?.message}
+      >
         <textarea
           id="text"
           placeholder="Review text (optional)"
-          className="w-full p-2 bg-transparent"
+          className="w-full p-2 bg-transparent resize-none"
           defaultValue={review?.text}
           {...register('text')}
         />
       </FormItem>
-      <div className="p-2">
+      <div className="p-2 center">
         <Button className="w-full" variant="plate-black" type="submit">
           <span>Save</span>
           <Icon icon="save" />
