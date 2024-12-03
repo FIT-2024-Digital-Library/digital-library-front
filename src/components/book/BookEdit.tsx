@@ -47,6 +47,8 @@ const selectComponentStaticProps = {
     dropdownIndicator: () => 'mx-2',
   },
   isSearchable: true,
+  isClearable: false,
+  maxMenuHeight: 160,
 };
 
 export interface BookEditProps {
