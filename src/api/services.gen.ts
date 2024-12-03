@@ -6,46 +6,343 @@ import {
   type Options,
 } from '@hey-api/client-fetch';
 import type {
-  TakeSecretSecretsSecretKeyGetData,
-  TakeSecretSecretsSecretKeyGetError,
-  TakeSecretSecretsSecretKeyGetResponse,
-  CreateSecretGeneratePostData,
-  CreateSecretGeneratePostError,
-  CreateSecretGeneratePostResponse,
+  GetBooksBooksGetData,
+  GetBooksBooksGetError,
+  GetBooksBooksGetResponse,
+  GetBookBooksIdGetData,
+  GetBookBooksIdGetError,
+  GetBookBooksIdGetResponse,
+  CreateBookBooksCreatePostData,
+  CreateBookBooksCreatePostError,
+  CreateBookBooksCreatePostResponse,
+  UpdateBookBooksIdUpdatePutData,
+  UpdateBookBooksIdUpdatePutError,
+  UpdateBookBooksIdUpdatePutResponse,
+  DeleteBookBooksIdDeleteDeleteData,
+  DeleteBookBooksIdDeleteDeleteError,
+  DeleteBookBooksIdDeleteDeleteResponse,
+  GetProfileUsersProfileGetError,
+  GetProfileUsersProfileGetResponse,
+  LoginUsersLoginPostData,
+  LoginUsersLoginPostError,
+  LoginUsersLoginPostResponse,
+  RegisterUsersRegisterPostData,
+  RegisterUsersRegisterPostError,
+  RegisterUsersRegisterPostResponse,
+  LogoutUserUsersLogoutPostError,
+  LogoutUserUsersLogoutPostResponse,
+  GetAuthorsAuthorsGetData,
+  GetAuthorsAuthorsGetError,
+  GetAuthorsAuthorsGetResponse,
+  CreateAuthorAuthorsCreatePostData,
+  CreateAuthorAuthorsCreatePostError,
+  CreateAuthorAuthorsCreatePostResponse,
+  DeleteAuthorAuthorsDeleteDeleteData,
+  DeleteAuthorAuthorsDeleteDeleteError,
+  DeleteAuthorAuthorsDeleteDeleteResponse,
+  DeleteAuthorAuthorsUpdateIdPutData,
+  DeleteAuthorAuthorsUpdateIdPutError,
+  DeleteAuthorAuthorsUpdateIdPutResponse,
+  GetGenresGenresGetData,
+  GetGenresGenresGetError,
+  GetGenresGenresGetResponse,
+  CreateGenreGenresCreatePostData,
+  CreateGenreGenresCreatePostError,
+  CreateGenreGenresCreatePostResponse,
+  DeleteGenreGenresDeleteDeleteData,
+  DeleteGenreGenresDeleteDeleteError,
+  DeleteGenreGenresDeleteDeleteResponse,
+  DeleteGenreGenresUpdateIdPutData,
+  DeleteGenreGenresUpdateIdPutError,
+  DeleteGenreGenresUpdateIdPutResponse,
 } from './types.gen';
 
 export const client = createClient(createConfig());
 
 /**
- * Take Secret
+ * Returns books using search parameters (all of them otherwise)
  */
-export const takeSecretSecretsSecretKeyGet = <
-  ThrowOnError extends boolean = false
->(
-  options: Options<TakeSecretSecretsSecretKeyGetData, ThrowOnError>
+export const getBooksBooksGet = <ThrowOnError extends boolean = false>(
+  options?: Options<GetBooksBooksGetData, ThrowOnError>
 ) => {
   return (options?.client ?? client).get<
-    TakeSecretSecretsSecretKeyGetResponse,
-    TakeSecretSecretsSecretKeyGetError,
+    GetBooksBooksGetResponse,
+    GetBooksBooksGetError,
     ThrowOnError
   >({
     ...options,
-    url: '/secrets/{secret_key}',
+    url: '/books/',
   });
 };
 
 /**
- * Create Secret
+ * Returns book data
  */
-export const createSecretGeneratePost = <ThrowOnError extends boolean = false>(
-  options: Options<CreateSecretGeneratePostData, ThrowOnError>
+export const getBookBooksIdGet = <ThrowOnError extends boolean = false>(
+  options: Options<GetBookBooksIdGetData, ThrowOnError>
 ) => {
-  return (options?.client ?? client).post<
-    CreateSecretGeneratePostResponse,
-    CreateSecretGeneratePostError,
+  return (options?.client ?? client).get<
+    GetBookBooksIdGetResponse,
+    GetBookBooksIdGetError,
     ThrowOnError
   >({
     ...options,
-    url: '/generate',
+    url: '/books/{id}',
+  });
+};
+
+/**
+ * Creates new book. Only for authorized user with admin previlegy
+ */
+export const createBookBooksCreatePost = <ThrowOnError extends boolean = false>(
+  options: Options<CreateBookBooksCreatePostData, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    CreateBookBooksCreatePostResponse,
+    CreateBookBooksCreatePostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/books/create',
+  });
+};
+
+/**
+ * Updates book data. Only for authorized user with admin previlegy
+ */
+export const updateBookBooksIdUpdatePut = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<UpdateBookBooksIdUpdatePutData, ThrowOnError>
+) => {
+  return (options?.client ?? client).put<
+    UpdateBookBooksIdUpdatePutResponse,
+    UpdateBookBooksIdUpdatePutError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/books/{id}/update',
+  });
+};
+
+/**
+ * Deletes book. Only for authorized user with admin previlegy
+ */
+export const deleteBookBooksIdDeleteDelete = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<DeleteBookBooksIdDeleteDeleteData, ThrowOnError>
+) => {
+  return (options?.client ?? client).delete<
+    DeleteBookBooksIdDeleteDeleteResponse,
+    DeleteBookBooksIdDeleteDeleteError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/books/{id}/delete',
+  });
+};
+
+/**
+ * Returns authorized user
+ */
+export const getProfileUsersProfileGet = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetProfileUsersProfileGetResponse,
+    GetProfileUsersProfileGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/users/profile',
+  });
+};
+
+/**
+ * Logs user in
+ */
+export const loginUsersLoginPost = <ThrowOnError extends boolean = false>(
+  options: Options<LoginUsersLoginPostData, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    LoginUsersLoginPostResponse,
+    LoginUsersLoginPostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/users/login',
+  });
+};
+
+/**
+ * Creates new user
+ */
+export const registerUsersRegisterPost = <ThrowOnError extends boolean = false>(
+  options: Options<RegisterUsersRegisterPostData, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    RegisterUsersRegisterPostResponse,
+    RegisterUsersRegisterPostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/users/register',
+  });
+};
+
+/**
+ * Log out of system
+ */
+export const logoutUserUsersLogoutPost = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    LogoutUserUsersLogoutPostResponse,
+    LogoutUserUsersLogoutPostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/users/logout',
+  });
+};
+
+/**
+ * Returns authors
+ */
+export const getAuthorsAuthorsGet = <ThrowOnError extends boolean = false>(
+  options?: Options<GetAuthorsAuthorsGetData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetAuthorsAuthorsGetResponse,
+    GetAuthorsAuthorsGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/authors/',
+  });
+};
+
+/**
+ * Creates authors
+ */
+export const createAuthorAuthorsCreatePost = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<CreateAuthorAuthorsCreatePostData, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    CreateAuthorAuthorsCreatePostResponse,
+    CreateAuthorAuthorsCreatePostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/authors/create',
+  });
+};
+
+/**
+ * Deletes authors
+ */
+export const deleteAuthorAuthorsDeleteDelete = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<DeleteAuthorAuthorsDeleteDeleteData, ThrowOnError>
+) => {
+  return (options?.client ?? client).delete<
+    DeleteAuthorAuthorsDeleteDeleteResponse,
+    DeleteAuthorAuthorsDeleteDeleteError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/authors/delete',
+  });
+};
+
+/**
+ * Updates authors
+ */
+export const deleteAuthorAuthorsUpdateIdPut = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<DeleteAuthorAuthorsUpdateIdPutData, ThrowOnError>
+) => {
+  return (options?.client ?? client).put<
+    DeleteAuthorAuthorsUpdateIdPutResponse,
+    DeleteAuthorAuthorsUpdateIdPutError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/authors/update/{id}',
+  });
+};
+
+/**
+ * Returns genres
+ */
+export const getGenresGenresGet = <ThrowOnError extends boolean = false>(
+  options?: Options<GetGenresGenresGetData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetGenresGenresGetResponse,
+    GetGenresGenresGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/genres/',
+  });
+};
+
+/**
+ * Creates genres
+ */
+export const createGenreGenresCreatePost = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<CreateGenreGenresCreatePostData, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    CreateGenreGenresCreatePostResponse,
+    CreateGenreGenresCreatePostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/genres/create',
+  });
+};
+
+/**
+ * Deletes genres
+ */
+export const deleteGenreGenresDeleteDelete = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<DeleteGenreGenresDeleteDeleteData, ThrowOnError>
+) => {
+  return (options?.client ?? client).delete<
+    DeleteGenreGenresDeleteDeleteResponse,
+    DeleteGenreGenresDeleteDeleteError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/genres/delete',
+  });
+};
+
+/**
+ * Updates genres
+ */
+export const deleteGenreGenresUpdateIdPut = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<DeleteGenreGenresUpdateIdPutData, ThrowOnError>
+) => {
+  return (options?.client ?? client).put<
+    DeleteGenreGenresUpdateIdPutResponse,
+    DeleteGenreGenresUpdateIdPutError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/genres/update/{id}',
   });
 };
