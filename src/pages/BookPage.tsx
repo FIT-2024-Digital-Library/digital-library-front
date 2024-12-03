@@ -6,6 +6,7 @@ import { Button } from '@/components/library/Button';
 import { BookDisplay } from '@/components/book/BookDisplay';
 import { BookEdit } from '@/components/book/BookEdit';
 import { Icon } from '../components/library/Icon';
+import { ReviewsList } from '../components/review/ReviewsList';
 
 export type SelectOption = {
   value: number;
@@ -19,6 +20,24 @@ const authors: Options<SelectOption> = [
 ];
 
 const genres: Options<SelectOption> = [
+  { value: 0, label: 'Fantasy' },
+  { value: 1, label: 'Sci-Fi' },
+  { value: 2, label: 'Novel' },
+  { value: 0, label: 'Fantasy' },
+  { value: 1, label: 'Sci-Fi' },
+  { value: 2, label: 'Novel' },
+  { value: 0, label: 'Fantasy' },
+  { value: 1, label: 'Sci-Fi' },
+  { value: 2, label: 'Novel' },
+  { value: 0, label: 'Fantasy' },
+  { value: 1, label: 'Sci-Fi' },
+  { value: 2, label: 'Novel' },
+  { value: 0, label: 'Fantasy' },
+  { value: 1, label: 'Sci-Fi' },
+  { value: 2, label: 'Novel' },
+  { value: 0, label: 'Fantasy' },
+  { value: 1, label: 'Sci-Fi' },
+  { value: 2, label: 'Novel' },
   { value: 0, label: 'Fantasy' },
   { value: 1, label: 'Sci-Fi' },
   { value: 2, label: 'Novel' },
@@ -119,6 +138,8 @@ export const BookPage: React.FC = () => {
               </div>
             </div>
           )}
+          <hr className="border-2 border-1-7 my-3 rounded" />
+          <ReviewsList bookId={Number(id)} />
         </>
       )}
     </div>

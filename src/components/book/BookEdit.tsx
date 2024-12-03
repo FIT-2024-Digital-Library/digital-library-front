@@ -47,6 +47,8 @@ const selectComponentStaticProps = {
     dropdownIndicator: () => 'mx-2',
   },
   isSearchable: true,
+  isClearable: false,
+  maxMenuHeight: 160,
 };
 
 export interface BookEditProps {
@@ -69,12 +71,10 @@ export const BookEdit: React.FC<BookEditProps> = ({
     allGenresPseudoReqeust().then((genres) => setAllGenres(genres));
   }, []);
 
-  const [currentCoverLink, setCurrentCoverLink] = useState(bookData?.coverUrl);
-  const [currentPdfLink, setCurrentPdfLink] = useState(bookData?.pdfUrl);
-
   const {
     register,
     control,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm<BookEditData>({
@@ -82,6 +82,8 @@ export const BookEdit: React.FC<BookEditProps> = ({
     defaultValues: {
       author: authorOption,
       genre: genreOption,
+      coverUrl: bookData?.coverUrl ?? '',
+      pdfUrl: bookData?.pdfUrl ?? '',
     },
   });
 
@@ -96,7 +98,7 @@ export const BookEdit: React.FC<BookEditProps> = ({
       <div className="grid grid-cols-3">
         <div className="center vstack">
           <img
-            src={currentCoverLink}
+            src={watch('coverUrl')}
             alt={`${bookData?.title ?? 'Book'}'s cover`}
             className="w-full h-full object-cover mb-2"
           />
@@ -194,46 +196,55 @@ export const BookEdit: React.FC<BookEditProps> = ({
           </FormItem>
         </div>
         <div className="center">
-          <UploadDropdown
-            buttonComponent={
-              <Button className="rounded-md w-fit" variant="plate-grey">
-                <span>Upload new cover</span>
-                <Icon icon="add-file" />
-              </Button>
-            }
-            setUploadedLink={setCurrentCoverLink}
-          />
-          <input
-            disabled
-            className="hidden"
-            value={currentCoverLink}
-            {...register('coverUrl')}
-          />
+          <FormItem errorMessage={errors.coverUrl?.message}>
+            <Controller
+              control={control}
+              name="coverUrl"
+              rules={{ required: false }}
+              render={({ field: { onChange } }) => (
+                <>
+                  <UploadDropdown
+                    buttonComponent={
+                      <Button className="rounded-md w-fit" variant="plate-grey">
+                        <span>Upload new cover</span>
+                        <Icon icon="add-file" />
+                      </Button>
+                    }
+                    setUploadedLink={onChange}
+                  />
+                </>
+              )}
+            />
+          </FormItem>
         </div>
         <div className="center">
-          <UploadDropdown
-            buttonComponent={
-              <Button className="rounded-md w-fit" variant="plate-grey">
-                <span>Upload new PDF</span>
-                <Icon icon="pdf" />
-              </Button>
-            }
-            setUploadedLink={setCurrentPdfLink}
-          />
+          <FormItem errorMessage={errors.pdfUrl?.message}>
+            <Controller
+              control={control}
+              name="pdfUrl"
+              render={({ field: { onChange } }) => (
+                <>
+                  <UploadDropdown
+                    buttonComponent={
+                      <Button className="rounded-md w-fit" variant="plate-grey">
+                        <span>Upload new PDF</span>
+                        <Icon icon="pdf" />
+                      </Button>
+                    }
+                    setUploadedLink={onChange}
+                  />
+                </>
+              )}
+            />
+          </FormItem>
         </div>
         <div className="center">
-          <a href={currentPdfLink}>
+          <a href={watch('pdfUrl')}>
             <Button className="rounded-md w-fit" variant="plate-grey">
               <span>Download book</span>
               <Icon icon="download" />
             </Button>
           </a>
-          <input
-            disabled
-            className="hidden"
-            value={currentPdfLink}
-            {...register('pdfUrl')}
-          />
         </div>
         <div className="center col-span-3 my-4">
           <Button
