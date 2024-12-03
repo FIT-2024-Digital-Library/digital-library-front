@@ -1,10 +1,13 @@
 import React from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod';
 
 import { Button } from '@/components/library/Button';
 import { FormItem } from '@/components/library/FormItem';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { dataExtractionWrapper } from '@/query';
+import { loginUsersLoginPost } from '@/api';
 
 const userLoginScheme = z.object({
   email: z.string().email().min(1, 'Email is required'),
@@ -23,12 +26,22 @@ export const LoginForm: React.FC = () => {
     resolver: zodResolver(userLoginScheme),
   });
 
-  const login: SubmitHandler<UserLoginData> = (data) => {
-    userLoginScheme.parse(data);
-  };
+  const queryClient = useQueryClient();
+  const { mutate: login, error } = useMutation({
+    mutationFn: (data: UserLoginData) =>
+      dataExtractionWrapper(
+        loginUsersLoginPost({
+          body: { ...data },
+        })
+      ),
+    onSuccess: () => queryClient.resetQueries({ queryKey: ['profile'] }),
+  });
 
   return (
-    <form className="vstack w-full p-2" onSubmit={handleSubmit(login)}>
+    <form
+      className="vstack w-full p-2"
+      onSubmit={handleSubmit((data) => login(data))}
+    >
       <FormItem
         className="vstack p-1 w-full text-black"
         errorMessage={errors.email?.message}
@@ -52,6 +65,9 @@ export const LoginForm: React.FC = () => {
           type="password"
         />
       </FormItem>
+      {error && (
+        <FormItem className="vstack p-1 w-full" errorMessage={error.message} />
+      )}
       <Button variant="plate-black" type="submit" className="m-2 my-4">
         Sign in
       </Button>
