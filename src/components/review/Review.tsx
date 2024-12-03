@@ -33,7 +33,7 @@ export const Review: React.FC<ReviewProps> = ({ review }) => {
       )}
       key={review.userId}
     >
-      <div className="grid grid-cols-3 px-4 text-center">
+      <div className="grid grid-cols-3 px-4 items-center text-center">
         <ProgressBar value={review.mark} minValue={0} maxValue={5} />
         <span>{user?.name}</span>
         <span className="text-gray-500/75">
