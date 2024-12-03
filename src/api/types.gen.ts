@@ -43,6 +43,19 @@ export type HTTPValidationError = {
   detail?: Array<ValidationError>;
 };
 
+export type User = {
+  id: number;
+  /**
+   * Электронная почта
+   */
+  email: string;
+  /**
+   * Имя, от 3 до 50 символов
+   */
+  name: string;
+  privileges: string;
+};
+
 export type UserLogin = {
   /**
    * Электронная почта
@@ -52,6 +65,18 @@ export type UserLogin = {
    * Пароль, от 5 до 50 знаков
    */
   password: string;
+};
+
+export type UserLogined = {
+  /**
+   * Электронная почта
+   */
+  email: string;
+  /**
+   * Имя, от 3 до 50 символов
+   */
+  name: string;
+  privileges: string;
 };
 
 export type UserRegister = {
@@ -151,7 +176,7 @@ export type DeleteBookBooksIdDeleteDeleteResponse = Book;
 
 export type DeleteBookBooksIdDeleteDeleteError = HTTPValidationError;
 
-export type GetProfileUsersProfileGetResponse = unknown;
+export type GetProfileUsersProfileGetResponse = User;
 
 export type GetProfileUsersProfileGetError = unknown;
 
@@ -159,7 +184,7 @@ export type LoginUsersLoginPostData = {
   body: UserLogin;
 };
 
-export type LoginUsersLoginPostResponse = unknown;
+export type LoginUsersLoginPostResponse = UserLogined;
 
 export type LoginUsersLoginPostError = HTTPValidationError;
 
@@ -167,7 +192,7 @@ export type RegisterUsersRegisterPostData = {
   body: UserRegister;
 };
 
-export type RegisterUsersRegisterPostResponse = unknown;
+export type RegisterUsersRegisterPostResponse = UserLogined;
 
 export type RegisterUsersRegisterPostError = HTTPValidationError;
 

@@ -8,6 +8,7 @@ import { FormItem } from '@/components/library/FormItem';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { dataExtractionWrapper } from '@/query';
 import { registerUsersRegisterPost } from '@/api';
+import { useAppStore } from '@/state';
 
 const userRegisterScheme = z
   .object({
@@ -31,6 +32,8 @@ export const RegisterForm: React.FC = () => {
     resolver: zodResolver(userRegisterScheme),
   });
 
+  const closeAuthWindow = useAppStore((state) => state.closeAuthWindow);
+
   const queryClient = useQueryClient();
   const { mutate: registerUser, error } = useMutation({
     mutationFn: (data: UserRegisterData) =>
@@ -39,7 +42,10 @@ export const RegisterForm: React.FC = () => {
           body: { ...data, password: data.password1 },
         })
       ),
-    onSuccess: () => queryClient.resetQueries({ queryKey: ['profile'] }),
+    onSuccess: () => {
+      queryClient.resetQueries({ queryKey: ['profile'] });
+      closeAuthWindow();
+    },
   });
 
   return (

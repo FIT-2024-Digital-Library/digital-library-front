@@ -8,6 +8,7 @@ import { FormItem } from '@/components/library/FormItem';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { dataExtractionWrapper } from '@/query';
 import { loginUsersLoginPost } from '@/api';
+import { useAppStore } from '@/state';
 
 const userLoginScheme = z.object({
   email: z.string().email().min(1, 'Email is required'),
@@ -26,6 +27,8 @@ export const LoginForm: React.FC = () => {
     resolver: zodResolver(userLoginScheme),
   });
 
+  const closeAuthWindow = useAppStore((state) => state.closeAuthWindow);
+
   const queryClient = useQueryClient();
   const { mutate: login, error } = useMutation({
     mutationFn: (data: UserLoginData) =>
@@ -34,7 +37,10 @@ export const LoginForm: React.FC = () => {
           body: { ...data },
         })
       ),
-    onSuccess: () => queryClient.resetQueries({ queryKey: ['profile'] }),
+    onSuccess: () => {
+      queryClient.resetQueries({ queryKey: ['profile'] });
+      closeAuthWindow();
+    },
   });
 
   return (

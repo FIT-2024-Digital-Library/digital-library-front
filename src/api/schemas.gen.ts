@@ -204,6 +204,35 @@ export const HTTPValidationErrorSchema = {
   title: 'HTTPValidationError',
 } as const;
 
+export const UserSchema = {
+  properties: {
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
+    email: {
+      type: 'string',
+      format: 'email',
+      title: 'Email',
+      description: 'Электронная почта',
+    },
+    name: {
+      type: 'string',
+      maxLength: 50,
+      minLength: 3,
+      title: 'Name',
+      description: 'Имя, от 3 до 50 символов',
+    },
+    privileges: {
+      type: 'string',
+      title: 'Privileges',
+    },
+  },
+  type: 'object',
+  required: ['id', 'email', 'name', 'privileges'],
+  title: 'User',
+} as const;
+
 export const UserLoginSchema = {
   properties: {
     email: {
@@ -223,6 +252,31 @@ export const UserLoginSchema = {
   type: 'object',
   required: ['email', 'password'],
   title: 'UserLogin',
+} as const;
+
+export const UserLoginedSchema = {
+  properties: {
+    email: {
+      type: 'string',
+      format: 'email',
+      title: 'Email',
+      description: 'Электронная почта',
+    },
+    name: {
+      type: 'string',
+      maxLength: 50,
+      minLength: 3,
+      title: 'Name',
+      description: 'Имя, от 3 до 50 символов',
+    },
+    privileges: {
+      type: 'string',
+      title: 'Privileges',
+    },
+  },
+  type: 'object',
+  required: ['email', 'name', 'privileges'],
+  title: 'UserLogined',
 } as const;
 
 export const UserRegisterSchema = {

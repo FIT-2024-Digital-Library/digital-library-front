@@ -3,11 +3,20 @@ import { Link } from 'wouter';
 
 import { Button } from '@/components/library/Button';
 import { useAppStore } from '@/state/state';
-import { useProfile } from '@/query';
+import { dataExtractionWrapper, useProfile } from '@/query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { logoutUserUsersLogoutPost } from '@/api';
 
 export const Header: React.FC = () => {
   const showLoginWindow = useAppStore((state) => state.showLoginWindow);
+
   const { profile } = useProfile();
+
+  const queryClient = useQueryClient();
+  const { mutate: logout } = useMutation({
+    mutationFn: () => dataExtractionWrapper(logoutUserUsersLogoutPost()),
+    onSuccess: () => queryClient.resetQueries({ queryKey: ['profile'] }),
+  });
 
   return (
     <header>
@@ -25,11 +34,11 @@ export const Header: React.FC = () => {
         <div className="flex justify-end items-center">
           {profile ? (
             <>
-              <span>{profile?.name ?? ''}</span>
+              <span>{profile.name}</span>
               <Button
                 variant="plate-grey"
                 className="p-4 my-1 mx-2 font-bold"
-                onClick={showLoginWindow}
+                onClick={() => logout()}
               >
                 Sign out
               </Button>
