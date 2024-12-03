@@ -69,7 +69,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ review }) => {
                   </Button>
                 ))}
               </div>
-              <ProgressBar value={value} maxValue={5} />
+              <ProgressBar value={value} minValue={0} maxValue={5} />
             </>
           )}
         />
