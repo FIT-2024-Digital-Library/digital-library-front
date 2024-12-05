@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
 import { Toggle } from '@/components/library/Toggle';
 import { Button } from '@/components/library/Button';
+import { BookCard } from '@/components/book/BookCard';
+
+// Временный интерфейс для книги
+interface Book {
+  id: string;
+  title: string;
+  author: string;
+  coverUrl: string;
+  description: string;
+}
 
 export const BooksSearchPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSemanticSearch, setIsSemanticSearch] = useState(false);
+  const [searchResults, setSearchResults] = useState<Book[]>([]);
 
   const [structuredSearch, setStructuredSearch] = useState({
     title: '',
@@ -13,14 +24,30 @@ export const BooksSearchPage: React.FC = () => {
     year: '',
   });
 
+  // Временные данные для демонстрации
+  const mockSearch = () => {
+    const mockResults: Book[] = [
+      {
+        id: '1',
+        title: 'The Great Gatsby',
+        author: 'F. Scott Fitzgerald',
+        coverUrl: 'https://example.com/gatsby.jpg',
+        description: 'A story of the fabulously wealthy Jay Gatsby'
+      },
+      {
+        id: '2',
+        title: '1984',
+        author: 'George Orwell',
+        coverUrl: 'https://upload.wikimedia.org/wikipedia/ru/thumb/2/2e/1984_cover.jpg/401px-1984_cover.jpg?20200527161122',
+        description: 'A dystopian social science fiction novel'
+      },
+      // Можно добавить больше тестовых данных
+    ];
+    setSearchResults(mockResults);
+  };
+
   const handleSearch = () => {
-    if (isSemanticSearch) {
-      console.log('Semantic Searching for:', searchQuery);
-      // Логика семантического поиска
-    } else {
-      console.log('Structured Search:', structuredSearch);
-      // Логика структурированного поиска
-    }
+    mockSearch(); // Временно используем мок-данные
   };
 
   const handleStructuredChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,8 +121,8 @@ export const BooksSearchPage: React.FC = () => {
 
           <div className="mt-8 flex justify-center">
             <Button
-              variant="plate-black"
-              className="w-[300px] px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium text-lg transition-all duration-200"
+              variant="search"
+              className="w-[300px] px-8 py-3"
               onClick={handleSearch}
             >
               Search Books
@@ -103,16 +130,25 @@ export const BooksSearchPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Результаты поиска */}
         <div className="mt-12 border-t pt-8">
-          <div className="text-center">
-          <div className="inline-block p-4 rounded-full bg-gray-50 mb-4">
+          {searchResults.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {searchResults.map((book) => (
+                <BookCard key={book.id} book={book} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center">
+              <div className="inline-block p-4 rounded-full bg-gray-50 mb-4">
                 <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Results Found</h3>
-            <p className="text-gray-500">Try adjusting your search criteria or try different keywords</p>
-          </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No Results Found</h3>
+              <p className="text-gray-500">Try adjusting your search criteria or try different keywords</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
