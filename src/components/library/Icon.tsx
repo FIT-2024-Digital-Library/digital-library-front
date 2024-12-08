@@ -28,6 +28,8 @@ import {
   AiFillFileAdd,
   AiFillFilePdf,
   AiFillSave,
+  AiOutlineLoading,
+  AiOutlineLoading3Quarters,
 } from 'react-icons/ai';
 import {} from 'react-icons/ai';
 import React from 'react';
@@ -62,6 +64,8 @@ export const icons = [
   'add-file',
   'pdf',
   'save',
+  'loading-1/4',
+  'loading-3/4',
 ] as const;
 export type IconType = (typeof icons)[number];
 
@@ -104,6 +108,8 @@ export const Icon: React.FC<IconProps> = ({
     .with('add-file', () => AiFillFileAdd)
     .with('pdf', () => AiFillFilePdf)
     .with('save', () => AiFillSave)
+    .with('loading-1/4', () => AiOutlineLoading)
+    .with('loading-3/4', () => AiOutlineLoading3Quarters)
     .exhaustive();
 
   const modifiers = match(icon)

@@ -1,22 +1,22 @@
-// import { useQuery, queryOptions } from '@tanstack/react-query';
-// import { dataExtractionWrapper } from '@/query';
-// import { readCollectionCollectionsCollectionIdGet } from '@/api';
+import { useQuery, queryOptions } from '@tanstack/react-query';
+import { dataExtractionWrapper } from '@/query';
+import { getBookBooksBookIdGet } from '@/api';
 
-// export const getCollectionQueryOptions = (id: number) =>
-//   queryOptions({
-//     queryKey: ['collection', id],
-//     queryFn: () =>
-//       dataExtractionWrapper(
-//         readCollectionCollectionsCollectionIdGet({
-//           path: {
-//             collection_id: id,
-//           },
-//         })
-//       ),
-//   });
+export const getBookQueryOptions = (id: number) =>
+  queryOptions({
+    queryKey: ['book', id],
+    queryFn: () =>
+      dataExtractionWrapper(
+        getBookBooksBookIdGet({
+          path: {
+            book_id: id,
+          },
+        })
+      ),
+  });
 
-// export const useCollection = (id: number) => {
-//   const { data: collection, ...rest } = useQuery(getCollectionQueryOptions(id));
+export const useBook = (id: number) => {
+  const { data: book, ...rest } = useQuery(getBookQueryOptions(id));
 
-//   return { collection, ...rest };
-// };
+  return { book, ...rest };
+};
