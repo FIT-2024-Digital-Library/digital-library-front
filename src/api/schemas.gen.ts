@@ -28,6 +28,19 @@ export const AuthorCreateSchema = {
   title: 'AuthorCreate',
 } as const;
 
+export const Body_upload_file_storage_upload__postSchema = {
+  properties: {
+    file: {
+      type: 'string',
+      format: 'binary',
+      title: 'File',
+    },
+  },
+  type: 'object',
+  required: ['file'],
+  title: 'Body_upload_file_storage_upload__post',
+} as const;
+
 export const BookSchema = {
   properties: {
     id: {
@@ -53,7 +66,7 @@ export const BookSchema = {
       ],
       title: 'Genre',
     },
-    published_date: {
+    publishedDate: {
       anyOf: [
         {
           type: 'string',
@@ -63,7 +76,7 @@ export const BookSchema = {
           type: 'null',
         },
       ],
-      title: 'Published Date',
+      title: 'Publisheddate',
     },
     description: {
       anyOf: [
@@ -76,7 +89,7 @@ export const BookSchema = {
       ],
       title: 'Description',
     },
-    image: {
+    imageUrl: {
       anyOf: [
         {
           type: 'string',
@@ -85,15 +98,15 @@ export const BookSchema = {
           type: 'null',
         },
       ],
-      title: 'Image',
+      title: 'Imageurl',
     },
-    pdf_url: {
+    pdfUrl: {
       type: 'string',
-      title: 'Pdf Url',
+      title: 'Pdfurl',
     },
   },
   type: 'object',
-  required: ['id', 'title', 'author', 'pdf_url'],
+  required: ['id', 'title', 'author', 'pdfUrl'],
   title: 'Book',
 } as const;
 
@@ -118,7 +131,7 @@ export const CreateBookSchema = {
       ],
       title: 'Genre',
     },
-    published_date: {
+    publishedDate: {
       anyOf: [
         {
           type: 'string',
@@ -128,7 +141,7 @@ export const CreateBookSchema = {
           type: 'null',
         },
       ],
-      title: 'Published Date',
+      title: 'Publisheddate',
     },
     description: {
       anyOf: [
@@ -141,7 +154,7 @@ export const CreateBookSchema = {
       ],
       title: 'Description',
     },
-    image: {
+    imageUrl: {
       anyOf: [
         {
           type: 'string',
@@ -150,16 +163,28 @@ export const CreateBookSchema = {
           type: 'null',
         },
       ],
-      title: 'Image',
+      title: 'Imageurl',
     },
-    pdf_url: {
+    pdfUrl: {
       type: 'string',
-      title: 'Pdf Url',
+      title: 'Pdfurl',
     },
   },
   type: 'object',
-  required: ['title', 'author', 'pdf_url'],
+  required: ['title', 'author', 'pdfUrl'],
   title: 'CreateBook',
+} as const;
+
+export const FileUploadedSchemeSchema = {
+  properties: {
+    url: {
+      type: 'string',
+      title: 'Url',
+    },
+  },
+  type: 'object',
+  required: ['url'],
+  title: 'FileUploadedScheme',
 } as const;
 
 export const GenreSchema = {
@@ -202,35 +227,6 @@ export const HTTPValidationErrorSchema = {
   },
   type: 'object',
   title: 'HTTPValidationError',
-} as const;
-
-export const UserSchema = {
-  properties: {
-    id: {
-      type: 'integer',
-      title: 'Id',
-    },
-    email: {
-      type: 'string',
-      format: 'email',
-      title: 'Email',
-      description: 'Электронная почта',
-    },
-    name: {
-      type: 'string',
-      maxLength: 50,
-      minLength: 3,
-      title: 'Name',
-      description: 'Имя, от 3 до 50 символов',
-    },
-    privileges: {
-      type: 'string',
-      title: 'Privileges',
-    },
-  },
-  type: 'object',
-  required: ['id', 'email', 'name', 'privileges'],
-  title: 'User',
 } as const;
 
 export const UserLoginSchema = {

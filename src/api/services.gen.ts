@@ -4,23 +4,24 @@ import {
   createClient,
   createConfig,
   type Options,
+  formDataBodySerializer,
 } from '@hey-api/client-fetch';
 import type {
   GetBooksBooksGetData,
   GetBooksBooksGetError,
   GetBooksBooksGetResponse,
-  GetBookBooksIdGetData,
-  GetBookBooksIdGetError,
-  GetBookBooksIdGetResponse,
+  GetBookBooksBookIdGetData,
+  GetBookBooksBookIdGetError,
+  GetBookBooksBookIdGetResponse,
   CreateBookBooksCreatePostData,
   CreateBookBooksCreatePostError,
   CreateBookBooksCreatePostResponse,
-  UpdateBookBooksIdUpdatePutData,
-  UpdateBookBooksIdUpdatePutError,
-  UpdateBookBooksIdUpdatePutResponse,
-  DeleteBookBooksIdDeleteDeleteData,
-  DeleteBookBooksIdDeleteDeleteError,
-  DeleteBookBooksIdDeleteDeleteResponse,
+  UpdateBookBooksBookIdUpdatePutData,
+  UpdateBookBooksBookIdUpdatePutError,
+  UpdateBookBooksBookIdUpdatePutResponse,
+  DeleteBookBooksBookIdDeleteDeleteData,
+  DeleteBookBooksBookIdDeleteDeleteError,
+  DeleteBookBooksBookIdDeleteDeleteResponse,
   GetProfileUsersProfileGetError,
   GetProfileUsersProfileGetResponse,
   LoginUsersLoginPostData,
@@ -34,27 +35,39 @@ import type {
   GetAuthorsAuthorsGetData,
   GetAuthorsAuthorsGetError,
   GetAuthorsAuthorsGetResponse,
+  GetAuthorAuthorsAuthorIdGetData,
+  GetAuthorAuthorsAuthorIdGetError,
+  GetAuthorAuthorsAuthorIdGetResponse,
   CreateAuthorAuthorsCreatePostData,
   CreateAuthorAuthorsCreatePostError,
   CreateAuthorAuthorsCreatePostResponse,
-  DeleteAuthorAuthorsDeleteDeleteData,
-  DeleteAuthorAuthorsDeleteDeleteError,
-  DeleteAuthorAuthorsDeleteDeleteResponse,
-  DeleteAuthorAuthorsUpdateIdPutData,
-  DeleteAuthorAuthorsUpdateIdPutError,
-  DeleteAuthorAuthorsUpdateIdPutResponse,
+  DeleteAuthorAuthorsAuthorIdDeleteDeleteData,
+  DeleteAuthorAuthorsAuthorIdDeleteDeleteError,
+  DeleteAuthorAuthorsAuthorIdDeleteDeleteResponse,
+  UpdateAuthorAuthorsAuthorIdUpdatePutData,
+  UpdateAuthorAuthorsAuthorIdUpdatePutError,
+  UpdateAuthorAuthorsAuthorIdUpdatePutResponse,
   GetGenresGenresGetData,
   GetGenresGenresGetError,
   GetGenresGenresGetResponse,
+  GetGenreGenresGenreIdGetData,
+  GetGenreGenresGenreIdGetError,
+  GetGenreGenresGenreIdGetResponse,
   CreateGenreGenresCreatePostData,
   CreateGenreGenresCreatePostError,
   CreateGenreGenresCreatePostResponse,
-  DeleteGenreGenresDeleteDeleteData,
-  DeleteGenreGenresDeleteDeleteError,
-  DeleteGenreGenresDeleteDeleteResponse,
-  DeleteGenreGenresUpdateIdPutData,
-  DeleteGenreGenresUpdateIdPutError,
-  DeleteGenreGenresUpdateIdPutResponse,
+  DeleteGenreGenresGenreIdDeleteDeleteData,
+  DeleteGenreGenresGenreIdDeleteDeleteError,
+  DeleteGenreGenresGenreIdDeleteDeleteResponse,
+  UpdateGenreGenresGenreIdUpdatePutData,
+  UpdateGenreGenresGenreIdUpdatePutError,
+  UpdateGenreGenresGenreIdUpdatePutResponse,
+  UploadFileStorageUploadPostData,
+  UploadFileStorageUploadPostError,
+  UploadFileStorageUploadPostResponse,
+  DownloadFileStorageDownloadFileNameGetData,
+  DownloadFileStorageDownloadFileNameGetError,
+  DownloadFileStorageDownloadFileNameGetResponse,
 } from './types.gen';
 
 export const client = createClient(createConfig());
@@ -78,16 +91,16 @@ export const getBooksBooksGet = <ThrowOnError extends boolean = false>(
 /**
  * Returns book data
  */
-export const getBookBooksIdGet = <ThrowOnError extends boolean = false>(
-  options: Options<GetBookBooksIdGetData, ThrowOnError>
+export const getBookBooksBookIdGet = <ThrowOnError extends boolean = false>(
+  options: Options<GetBookBooksBookIdGetData, ThrowOnError>
 ) => {
   return (options?.client ?? client).get<
-    GetBookBooksIdGetResponse,
-    GetBookBooksIdGetError,
+    GetBookBooksBookIdGetResponse,
+    GetBookBooksBookIdGetError,
     ThrowOnError
   >({
     ...options,
-    url: '/books/{id}',
+    url: '/books/{book_id}',
   });
 };
 
@@ -110,36 +123,36 @@ export const createBookBooksCreatePost = <ThrowOnError extends boolean = false>(
 /**
  * Updates book data. Only for authorized user with admin previlegy
  */
-export const updateBookBooksIdUpdatePut = <
+export const updateBookBooksBookIdUpdatePut = <
   ThrowOnError extends boolean = false
 >(
-  options: Options<UpdateBookBooksIdUpdatePutData, ThrowOnError>
+  options: Options<UpdateBookBooksBookIdUpdatePutData, ThrowOnError>
 ) => {
   return (options?.client ?? client).put<
-    UpdateBookBooksIdUpdatePutResponse,
-    UpdateBookBooksIdUpdatePutError,
+    UpdateBookBooksBookIdUpdatePutResponse,
+    UpdateBookBooksBookIdUpdatePutError,
     ThrowOnError
   >({
     ...options,
-    url: '/books/{id}/update',
+    url: '/books/{book_id}/update',
   });
 };
 
 /**
  * Deletes book. Only for authorized user with admin previlegy
  */
-export const deleteBookBooksIdDeleteDelete = <
+export const deleteBookBooksBookIdDeleteDelete = <
   ThrowOnError extends boolean = false
 >(
-  options: Options<DeleteBookBooksIdDeleteDeleteData, ThrowOnError>
+  options: Options<DeleteBookBooksBookIdDeleteDeleteData, ThrowOnError>
 ) => {
   return (options?.client ?? client).delete<
-    DeleteBookBooksIdDeleteDeleteResponse,
-    DeleteBookBooksIdDeleteDeleteError,
+    DeleteBookBooksBookIdDeleteDeleteResponse,
+    DeleteBookBooksBookIdDeleteDeleteError,
     ThrowOnError
   >({
     ...options,
-    url: '/books/{id}/delete',
+    url: '/books/{book_id}/delete',
   });
 };
 
@@ -224,6 +237,24 @@ export const getAuthorsAuthorsGet = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Returns author
+ */
+export const getAuthorAuthorsAuthorIdGet = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<GetAuthorAuthorsAuthorIdGetData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetAuthorAuthorsAuthorIdGetResponse,
+    GetAuthorAuthorsAuthorIdGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/authors/{author_id}',
+  });
+};
+
+/**
  * Creates authors
  */
 export const createAuthorAuthorsCreatePost = <
@@ -244,36 +275,36 @@ export const createAuthorAuthorsCreatePost = <
 /**
  * Deletes authors
  */
-export const deleteAuthorAuthorsDeleteDelete = <
+export const deleteAuthorAuthorsAuthorIdDeleteDelete = <
   ThrowOnError extends boolean = false
 >(
-  options: Options<DeleteAuthorAuthorsDeleteDeleteData, ThrowOnError>
+  options: Options<DeleteAuthorAuthorsAuthorIdDeleteDeleteData, ThrowOnError>
 ) => {
   return (options?.client ?? client).delete<
-    DeleteAuthorAuthorsDeleteDeleteResponse,
-    DeleteAuthorAuthorsDeleteDeleteError,
+    DeleteAuthorAuthorsAuthorIdDeleteDeleteResponse,
+    DeleteAuthorAuthorsAuthorIdDeleteDeleteError,
     ThrowOnError
   >({
     ...options,
-    url: '/authors/delete',
+    url: '/authors/{author_id}/delete',
   });
 };
 
 /**
  * Updates authors
  */
-export const deleteAuthorAuthorsUpdateIdPut = <
+export const updateAuthorAuthorsAuthorIdUpdatePut = <
   ThrowOnError extends boolean = false
 >(
-  options: Options<DeleteAuthorAuthorsUpdateIdPutData, ThrowOnError>
+  options: Options<UpdateAuthorAuthorsAuthorIdUpdatePutData, ThrowOnError>
 ) => {
   return (options?.client ?? client).put<
-    DeleteAuthorAuthorsUpdateIdPutResponse,
-    DeleteAuthorAuthorsUpdateIdPutError,
+    UpdateAuthorAuthorsAuthorIdUpdatePutResponse,
+    UpdateAuthorAuthorsAuthorIdUpdatePutError,
     ThrowOnError
   >({
     ...options,
-    url: '/authors/update/{id}',
+    url: '/authors/{author_id}/update',
   });
 };
 
@@ -290,6 +321,22 @@ export const getGenresGenresGet = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: '/genres/',
+  });
+};
+
+/**
+ * Returns genre
+ */
+export const getGenreGenresGenreIdGet = <ThrowOnError extends boolean = false>(
+  options: Options<GetGenreGenresGenreIdGetData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetGenreGenresGenreIdGetResponse,
+    GetGenreGenresGenreIdGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/genres/{genre_id}',
   });
 };
 
@@ -314,35 +361,76 @@ export const createGenreGenresCreatePost = <
 /**
  * Deletes genres
  */
-export const deleteGenreGenresDeleteDelete = <
+export const deleteGenreGenresGenreIdDeleteDelete = <
   ThrowOnError extends boolean = false
 >(
-  options: Options<DeleteGenreGenresDeleteDeleteData, ThrowOnError>
+  options: Options<DeleteGenreGenresGenreIdDeleteDeleteData, ThrowOnError>
 ) => {
   return (options?.client ?? client).delete<
-    DeleteGenreGenresDeleteDeleteResponse,
-    DeleteGenreGenresDeleteDeleteError,
+    DeleteGenreGenresGenreIdDeleteDeleteResponse,
+    DeleteGenreGenresGenreIdDeleteDeleteError,
     ThrowOnError
   >({
     ...options,
-    url: '/genres/delete',
+    url: '/genres/{genre_id}/delete',
   });
 };
 
 /**
  * Updates genres
  */
-export const deleteGenreGenresUpdateIdPut = <
+export const updateGenreGenresGenreIdUpdatePut = <
   ThrowOnError extends boolean = false
 >(
-  options: Options<DeleteGenreGenresUpdateIdPutData, ThrowOnError>
+  options: Options<UpdateGenreGenresGenreIdUpdatePutData, ThrowOnError>
 ) => {
   return (options?.client ?? client).put<
-    DeleteGenreGenresUpdateIdPutResponse,
-    DeleteGenreGenresUpdateIdPutError,
+    UpdateGenreGenresGenreIdUpdatePutResponse,
+    UpdateGenreGenresGenreIdUpdatePutError,
     ThrowOnError
   >({
     ...options,
-    url: '/genres/update/{id}',
+    url: '/genres/{genre_id}/update',
+  });
+};
+
+/**
+ * Upload File
+ */
+export const uploadFileStorageUploadPost = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<UploadFileStorageUploadPostData, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    UploadFileStorageUploadPostResponse,
+    UploadFileStorageUploadPostError,
+    ThrowOnError
+  >({
+    ...options,
+    ...formDataBodySerializer,
+    headers: {
+      'Content-Type': null,
+      ...options?.headers,
+    },
+    url: '/storage/upload/',
+  });
+};
+
+/**
+ * Download File
+ */
+export const downloadFileStorageDownloadFileNameGet = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<DownloadFileStorageDownloadFileNameGetData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    DownloadFileStorageDownloadFileNameGetResponse,
+    DownloadFileStorageDownloadFileNameGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/storage/download/{file_name}',
   });
 };

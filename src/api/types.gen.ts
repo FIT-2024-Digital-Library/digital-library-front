@@ -9,25 +9,33 @@ export type AuthorCreate = {
   name: string;
 };
 
+export type Body_upload_file_storage_upload__post = {
+  file: Blob | File;
+};
+
 export type Book = {
   id: number;
   title: string;
   author: number;
   genre?: number | null;
-  published_date?: string | null;
+  publishedDate?: string | null;
   description?: string | null;
-  image?: string | null;
-  pdf_url: string;
+  imageUrl?: string | null;
+  pdfUrl: string;
 };
 
 export type CreateBook = {
   title: string;
   author: string;
   genre?: string | null;
-  published_date?: string | null;
+  publishedDate?: string | null;
   description?: string | null;
-  image?: string | null;
-  pdf_url: string;
+  imageUrl?: string | null;
+  pdfUrl: string;
+};
+
+export type FileUploadedScheme = {
+  url: string;
 };
 
 export type Genre = {
@@ -41,19 +49,6 @@ export type GenreCreate = {
 
 export type HTTPValidationError = {
   detail?: Array<ValidationError>;
-};
-
-export type User = {
-  id: number;
-  /**
-   * Электронная почта
-   */
-  email: string;
-  /**
-   * Имя, от 3 до 50 символов
-   */
-  name: string;
-  privileges: string;
 };
 
 export type UserLogin = {
@@ -115,9 +110,9 @@ export type GetBooksBooksGetData = {
      */
     genre?: string | null;
     /**
-     * Filter by book ID
+     * Filter by image's URL
      */
-    id?: number | null;
+    image_url?: string | null;
     /**
      * Filter by PDF URL
      */
@@ -137,15 +132,15 @@ export type GetBooksBooksGetResponse = Array<Book>;
 
 export type GetBooksBooksGetError = HTTPValidationError;
 
-export type GetBookBooksIdGetData = {
+export type GetBookBooksBookIdGetData = {
   path: {
-    id: number;
+    book_id: number;
   };
 };
 
-export type GetBookBooksIdGetResponse = Book;
+export type GetBookBooksBookIdGetResponse = Book;
 
-export type GetBookBooksIdGetError = HTTPValidationError;
+export type GetBookBooksBookIdGetError = HTTPValidationError;
 
 export type CreateBookBooksCreatePostData = {
   body: CreateBook;
@@ -155,28 +150,28 @@ export type CreateBookBooksCreatePostResponse = number;
 
 export type CreateBookBooksCreatePostError = HTTPValidationError;
 
-export type UpdateBookBooksIdUpdatePutData = {
+export type UpdateBookBooksBookIdUpdatePutData = {
   body: CreateBook;
   path: {
-    id: number;
+    book_id: number;
   };
 };
 
-export type UpdateBookBooksIdUpdatePutResponse = Book;
+export type UpdateBookBooksBookIdUpdatePutResponse = Book;
 
-export type UpdateBookBooksIdUpdatePutError = HTTPValidationError;
+export type UpdateBookBooksBookIdUpdatePutError = HTTPValidationError;
 
-export type DeleteBookBooksIdDeleteDeleteData = {
+export type DeleteBookBooksBookIdDeleteDeleteData = {
   path: {
-    id: number;
+    book_id: number;
   };
 };
 
-export type DeleteBookBooksIdDeleteDeleteResponse = Book;
+export type DeleteBookBooksBookIdDeleteDeleteResponse = Book;
 
-export type DeleteBookBooksIdDeleteDeleteError = HTTPValidationError;
+export type DeleteBookBooksBookIdDeleteDeleteError = HTTPValidationError;
 
-export type GetProfileUsersProfileGetResponse = User;
+export type GetProfileUsersProfileGetResponse = UserLogined;
 
 export type GetProfileUsersProfileGetError = unknown;
 
@@ -203,10 +198,6 @@ export type LogoutUserUsersLogoutPostError = unknown;
 export type GetAuthorsAuthorsGetData = {
   query?: {
     /**
-     * Filter by author id
-     */
-    id?: number | null;
-    /**
      * Find by author name
      */
     name?: string | null;
@@ -217,6 +208,16 @@ export type GetAuthorsAuthorsGetResponse = Array<Author>;
 
 export type GetAuthorsAuthorsGetError = HTTPValidationError;
 
+export type GetAuthorAuthorsAuthorIdGetData = {
+  path: {
+    author_id: number;
+  };
+};
+
+export type GetAuthorAuthorsAuthorIdGetResponse = Author;
+
+export type GetAuthorAuthorsAuthorIdGetError = HTTPValidationError;
+
 export type CreateAuthorAuthorsCreatePostData = {
   body: AuthorCreate;
 };
@@ -225,33 +226,29 @@ export type CreateAuthorAuthorsCreatePostResponse = number;
 
 export type CreateAuthorAuthorsCreatePostError = HTTPValidationError;
 
-export type DeleteAuthorAuthorsDeleteDeleteData = {
-  query: {
-    id: number;
+export type DeleteAuthorAuthorsAuthorIdDeleteDeleteData = {
+  path: {
+    author_id: number;
   };
 };
 
-export type DeleteAuthorAuthorsDeleteDeleteResponse = Author;
+export type DeleteAuthorAuthorsAuthorIdDeleteDeleteResponse = Author;
 
-export type DeleteAuthorAuthorsDeleteDeleteError = HTTPValidationError;
+export type DeleteAuthorAuthorsAuthorIdDeleteDeleteError = HTTPValidationError;
 
-export type DeleteAuthorAuthorsUpdateIdPutData = {
+export type UpdateAuthorAuthorsAuthorIdUpdatePutData = {
   body: AuthorCreate;
   path: {
-    id: number;
+    author_id: number;
   };
 };
 
-export type DeleteAuthorAuthorsUpdateIdPutResponse = Author;
+export type UpdateAuthorAuthorsAuthorIdUpdatePutResponse = Author;
 
-export type DeleteAuthorAuthorsUpdateIdPutError = HTTPValidationError;
+export type UpdateAuthorAuthorsAuthorIdUpdatePutError = HTTPValidationError;
 
 export type GetGenresGenresGetData = {
   query?: {
-    /**
-     * Filter by genre id
-     */
-    id?: number | null;
     /**
      * Find by genre name
      */
@@ -263,6 +260,16 @@ export type GetGenresGenresGetResponse = Array<Genre>;
 
 export type GetGenresGenresGetError = HTTPValidationError;
 
+export type GetGenreGenresGenreIdGetData = {
+  path: {
+    genre_id: number;
+  };
+};
+
+export type GetGenreGenresGenreIdGetResponse = Genre;
+
+export type GetGenreGenresGenreIdGetError = HTTPValidationError;
+
 export type CreateGenreGenresCreatePostData = {
   body: GenreCreate;
 };
@@ -271,23 +278,41 @@ export type CreateGenreGenresCreatePostResponse = number;
 
 export type CreateGenreGenresCreatePostError = HTTPValidationError;
 
-export type DeleteGenreGenresDeleteDeleteData = {
-  query: {
-    id: number;
+export type DeleteGenreGenresGenreIdDeleteDeleteData = {
+  path: {
+    genre_id: number;
   };
 };
 
-export type DeleteGenreGenresDeleteDeleteResponse = Genre;
+export type DeleteGenreGenresGenreIdDeleteDeleteResponse = Genre;
 
-export type DeleteGenreGenresDeleteDeleteError = HTTPValidationError;
+export type DeleteGenreGenresGenreIdDeleteDeleteError = HTTPValidationError;
 
-export type DeleteGenreGenresUpdateIdPutData = {
+export type UpdateGenreGenresGenreIdUpdatePutData = {
   body: GenreCreate;
   path: {
-    id: number;
+    genre_id: number;
   };
 };
 
-export type DeleteGenreGenresUpdateIdPutResponse = Genre;
+export type UpdateGenreGenresGenreIdUpdatePutResponse = Genre;
 
-export type DeleteGenreGenresUpdateIdPutError = HTTPValidationError;
+export type UpdateGenreGenresGenreIdUpdatePutError = HTTPValidationError;
+
+export type UploadFileStorageUploadPostData = {
+  body: Body_upload_file_storage_upload__post;
+};
+
+export type UploadFileStorageUploadPostResponse = FileUploadedScheme;
+
+export type UploadFileStorageUploadPostError = HTTPValidationError;
+
+export type DownloadFileStorageDownloadFileNameGetData = {
+  path: {
+    file_name: string;
+  };
+};
+
+export type DownloadFileStorageDownloadFileNameGetResponse = unknown;
+
+export type DownloadFileStorageDownloadFileNameGetError = HTTPValidationError;

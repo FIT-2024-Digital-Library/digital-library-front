@@ -3,7 +3,8 @@ import { Link } from 'wouter';
 
 import { Button } from '@/components/library/Button';
 import { useAppStore } from '@/state/state';
-import { dataExtractionWrapper, useProfile } from '@/query';
+import { dataExtractionWrapper } from '@/query';
+import { getProfileQueryOptions, useProfile } from '@/query/queryHooks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { logoutUserUsersLogoutPost } from '@/api';
 
@@ -15,7 +16,8 @@ export const Header: React.FC = () => {
   const queryClient = useQueryClient();
   const { mutate: logout } = useMutation({
     mutationFn: () => dataExtractionWrapper(logoutUserUsersLogoutPost()),
-    onSuccess: () => queryClient.resetQueries({ queryKey: ['profile'] }),
+    onSuccess: () =>
+      queryClient.resetQueries({ queryKey: getProfileQueryOptions().queryKey }),
   });
 
   return (

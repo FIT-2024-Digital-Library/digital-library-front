@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { dataExtractionWrapper } from '@/query';
 import { loginUsersLoginPost } from '@/api';
 import { useAppStore } from '@/state';
+import { getProfileQueryOptions } from '@/query/queryHooks';
 
 const userLoginScheme = z.object({
   email: z.string().email().min(1, 'Email is required'),
@@ -38,7 +39,7 @@ export const LoginForm: React.FC = () => {
         })
       ),
     onSuccess: () => {
-      queryClient.resetQueries({ queryKey: ['profile'] });
+      queryClient.resetQueries({ queryKey: getProfileQueryOptions().queryKey });
       closeAuthWindow();
     },
   });

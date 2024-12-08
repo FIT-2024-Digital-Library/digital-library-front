@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { dataExtractionWrapper } from '@/query';
 import { registerUsersRegisterPost } from '@/api';
 import { useAppStore } from '@/state';
+import { getProfileQueryOptions } from '@/query/queryHooks';
 
 const userRegisterScheme = z
   .object({
@@ -43,7 +44,7 @@ export const RegisterForm: React.FC = () => {
         })
       ),
     onSuccess: () => {
-      queryClient.resetQueries({ queryKey: ['profile'] });
+      queryClient.resetQueries({ queryKey: getProfileQueryOptions().queryKey });
       closeAuthWindow();
     },
   });
