@@ -16,9 +16,7 @@ export const DropDown: React.FC<DropDownProps> = ({
 
   return (
     <div className={clsx(className)}>
-      <div className="w-fit" onClick={() => setIsShown((s) => !s)}>
-        {buttonComponent}
-      </div>
+      <div onClick={() => setIsShown((s) => !s)}>{buttonComponent}</div>
       <div
         className={clsx(
           'absolute transition-all',
