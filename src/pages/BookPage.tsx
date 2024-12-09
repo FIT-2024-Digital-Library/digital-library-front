@@ -14,44 +14,6 @@ export type SelectOption = {
   label: string;
 };
 
-const authors: Options<SelectOption> = [
-  { value: 0, label: 'George R.R. Martin' },
-  { value: 1, label: 'George R.R. Martin' },
-  { value: 2, label: 'George R.R. Martin' },
-];
-
-const genres: Options<SelectOption> = [
-  { value: 0, label: 'Fantasy' },
-  { value: 1, label: 'Sci-Fi' },
-  { value: 2, label: 'Novel' },
-  { value: 0, label: 'Fantasy' },
-  { value: 1, label: 'Sci-Fi' },
-  { value: 2, label: 'Novel' },
-  { value: 0, label: 'Fantasy' },
-  { value: 1, label: 'Sci-Fi' },
-  { value: 2, label: 'Novel' },
-  { value: 0, label: 'Fantasy' },
-  { value: 1, label: 'Sci-Fi' },
-  { value: 2, label: 'Novel' },
-  { value: 0, label: 'Fantasy' },
-  { value: 1, label: 'Sci-Fi' },
-  { value: 2, label: 'Novel' },
-  { value: 0, label: 'Fantasy' },
-  { value: 1, label: 'Sci-Fi' },
-  { value: 2, label: 'Novel' },
-  { value: 0, label: 'Fantasy' },
-  { value: 1, label: 'Sci-Fi' },
-  { value: 2, label: 'Novel' },
-];
-
-export const allAuthorsPseudoReqeust = async () => {
-  return authors;
-};
-
-export const allGenresPseudoReqeust = async () => {
-  return genres;
-};
-
 export const BookPage: React.FC = () => {
   const { id } = useParams();
 
@@ -60,11 +22,11 @@ export const BookPage: React.FC = () => {
 
   return (
     <div className="vstack mx-2 md:mx-10 xl:mx-32 px-2 md:px-5 text-black rounded-md">
-      <BookDisplay bookId={Number(id)} />
       <>
-        {isEdit && (
-          <h2>Edit placeholder</h2>
-          // <BookEdit bookData={book} authorOption={author} genreOption={genre} />
+        {!isEdit ? (
+          <BookDisplay bookId={Number(id)} />
+        ) : (
+          <BookEdit bookId={Number(id)} />
         )}
         {canEdit && !isEdit && (
           <div className="grid grid-cols-3 my-2">

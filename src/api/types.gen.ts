@@ -9,7 +9,7 @@ export type AuthorCreate = {
   name: string;
 };
 
-export type Body_upload_file_storage_upload__post = {
+export type Body_upload_file_storage__post = {
   file: Blob | File;
 };
 
@@ -24,7 +24,7 @@ export type Book = {
   pdfUrl: string;
 };
 
-export type CreateBook = {
+export type BookCreate = {
   title: string;
   author: string;
   genre?: string | null;
@@ -143,7 +143,7 @@ export type GetBookBooksBookIdGetResponse = Book;
 export type GetBookBooksBookIdGetError = HTTPValidationError;
 
 export type CreateBookBooksCreatePostData = {
-  body: CreateBook;
+  body: BookCreate;
 };
 
 export type CreateBookBooksCreatePostResponse = number;
@@ -151,7 +151,7 @@ export type CreateBookBooksCreatePostResponse = number;
 export type CreateBookBooksCreatePostError = HTTPValidationError;
 
 export type UpdateBookBooksBookIdUpdatePutData = {
-  body: CreateBook;
+  body: BookCreate;
   path: {
     book_id: number;
   };
@@ -194,6 +194,41 @@ export type RegisterUsersRegisterPostError = HTTPValidationError;
 export type LogoutUserUsersLogoutPostResponse = unknown;
 
 export type LogoutUserUsersLogoutPostError = unknown;
+
+export type GetAdminRoleUsersUserIdGetAdminRolePostData = {
+  path: {
+    user_id: number;
+  };
+};
+
+export type GetAdminRoleUsersUserIdGetAdminRolePostResponse = UserLogined;
+
+export type GetAdminRoleUsersUserIdGetAdminRolePostError = HTTPValidationError;
+
+export type UpdateUserByIdUsersUserIdUpdatePutData = {
+  body: UserRegister;
+  path: {
+    user_id: number;
+  };
+};
+
+export type UpdateUserByIdUsersUserIdUpdatePutResponse = UserLogined;
+
+export type UpdateUserByIdUsersUserIdUpdatePutError = HTTPValidationError;
+
+export type GetUserByIdUsersUserIdGetData = {
+  path: {
+    user_id: number;
+  };
+};
+
+export type GetUserByIdUsersUserIdGetResponse = UserLogined;
+
+export type GetUserByIdUsersUserIdGetError = HTTPValidationError;
+
+export type GetUsersUsersGetResponse = Array<UserLogined>;
+
+export type GetUsersUsersGetError = unknown;
 
 export type GetAuthorsAuthorsGetData = {
   query?: {
@@ -299,20 +334,34 @@ export type UpdateGenreGenresGenreIdUpdatePutResponse = Genre;
 
 export type UpdateGenreGenresGenreIdUpdatePutError = HTTPValidationError;
 
-export type UploadFileStorageUploadPostData = {
-  body: Body_upload_file_storage_upload__post;
+export type UploadFileStoragePostData = {
+  body: Body_upload_file_storage__post;
 };
 
-export type UploadFileStorageUploadPostResponse = FileUploadedScheme;
+export type UploadFileStoragePostResponse = FileUploadedScheme;
 
-export type UploadFileStorageUploadPostError = HTTPValidationError;
+export type UploadFileStoragePostError = HTTPValidationError;
 
-export type DownloadFileStorageDownloadFileNameGetData = {
+export type DownloadFileStorageDownloadFilenameGetData = {
   path: {
-    file_name: string;
+    filename: string;
   };
 };
 
-export type DownloadFileStorageDownloadFileNameGetResponse = unknown;
+export type DownloadFileStorageDownloadFilenameGetResponse = unknown;
 
-export type DownloadFileStorageDownloadFileNameGetError = HTTPValidationError;
+export type DownloadFileStorageDownloadFilenameGetError = HTTPValidationError;
+
+export type ListFilesStorageListGetResponse = Array<FileUploadedScheme>;
+
+export type ListFilesStorageListGetError = unknown;
+
+export type DeleteFileStorageFilenameDeleteData = {
+  path: {
+    filename: string;
+  };
+};
+
+export type DeleteFileStorageFilenameDeleteResponse = unknown;
+
+export type DeleteFileStorageFilenameDeleteError = HTTPValidationError;

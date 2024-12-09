@@ -8,32 +8,33 @@ import { produce } from 'immer';
 
 import { Button } from '@/components/library/Button';
 import { FormItem } from '@/components/library/FormItem';
-import {
-  allGenresPseudoReqeust,
-  allAuthorsPseudoReqeust,
-  SelectOption,
-  BookType,
-} from '@/pages';
 import { Icon } from '@/components/library/Icon';
 import { UploadDropdown } from '@/components/library/UploadDropdown';
+import {
+  useAuthor,
+  useAuthors,
+  useBook,
+  useGenre,
+  useGenres,
+} from '@/query/queryHooks';
 
 export const bookEditScheme = z.object({
   title: z.string().min(1, 'Title is required'),
   author: z
     .object({
-      value: z.number(),
+      value: z.string(),
       label: z.string(),
     })
     .required(),
   genre: z
     .object({
-      value: z.number(),
+      value: z.string(),
       label: z.string(),
     })
     .required(),
-  published: z.string().date(),
-  description: z.string().min(1, 'Description is required'),
-  coverUrl: z.string().url(),
+  publishedDate: z.string().date(),
+  description: z.string(),
+  imageUrl: z.string(),
   pdfUrl: z.string().url().min(1, "Book's file is required"),
 });
 export type BookEditData = z.infer<typeof bookEditScheme>;
@@ -52,24 +53,27 @@ const selectComponentStaticProps = {
 };
 
 export interface BookEditProps {
-  isNew?: boolean;
-  bookData?: BookType;
-  genreOption?: SelectOption;
-  authorOption?: SelectOption;
+  bookId: number | 'new';
 }
 
-export const BookEdit: React.FC<BookEditProps> = ({
-  bookData,
-  genreOption,
-  authorOption,
-}) => {
-  const isNew = bookData === undefined;
-  const [allAuthors, setAllAuthors] = useState<Options<SelectOption>>([]);
-  const [allGenres, setAllGenres] = useState<Options<SelectOption>>([]);
-  useEffect(() => {
-    allAuthorsPseudoReqeust().then((authors) => setAllAuthors(authors));
-    allGenresPseudoReqeust().then((genres) => setAllGenres(genres));
-  }, []);
+export const BookEdit: React.FC<BookEditProps> = ({ bookId }) => {
+  const {
+    book,
+    isPending: isBookPending,
+    error: bookError,
+  } = useBook(bookId);
+  const {
+    author,
+    isPending: isAuthorPending,
+    error: authorError,
+  } = useAuthor(book?.author);
+  const {
+    genre,
+    isPending: isGenrePending,
+    error: genreError,
+  } = useGenre(book?.genre);
+  const { authors } = useAuthors();
+  const { genres } = useGenres();
 
   const {
     register,
@@ -80,16 +84,16 @@ export const BookEdit: React.FC<BookEditProps> = ({
   } = useForm<BookEditData>({
     resolver: zodResolver(bookEditScheme),
     defaultValues: {
-      author: authorOption,
-      genre: genreOption,
-      coverUrl: bookData?.coverUrl ?? '',
-      pdfUrl: bookData?.pdfUrl ?? '',
+      author: author ? { value: author.name, label: author.name } : undefined,
+      genre: genre ? { value: genre.name, label: genre.name } : undefined,
+      imageUrl: book?.imageUrl ?? '',
+      pdfUrl: book?.pdfUrl ?? '',
     },
   });
 
   const saveBookData: SubmitHandler<BookEditData> = (data) => {
-    if (isNew) console.log('Creating book...');
-    else console.log('Saving book...');
+    // if (isNew) console.log('Creating book...');
+    // else console.log('Saving book...');
     console.log(data);
   };
 
@@ -98,8 +102,8 @@ export const BookEdit: React.FC<BookEditProps> = ({
       <div className="grid grid-cols-3">
         <div className="center vstack">
           <img
-            src={watch('coverUrl')}
-            alt={`${bookData?.title ?? 'Book'}'s cover`}
+            src={watch('imageUrl')}
+            alt={`${book?.title ?? 'Book'}'s cover`}
             className="w-full h-full object-cover mb-2"
           />
         </div>
@@ -112,7 +116,7 @@ export const BookEdit: React.FC<BookEditProps> = ({
               id="title"
               placeholder="Title (reauired)"
               className="w-full pb-1 bg-transparent border-black border-b"
-              defaultValue={bookData?.title}
+              defaultValue={book?.title}
               {...register('title')}
             />
           </FormItem>
@@ -128,17 +132,20 @@ export const BookEdit: React.FC<BookEditProps> = ({
                   {...field}
                   {...selectComponentStaticProps}
                   placeholder="Select an author (required)"
-                  options={allAuthors}
-                  onCreateOption={(optionLabel) => {
-                    setAllAuthors(
-                      produce((authorsDraft) => {
-                        authorsDraft.push({
-                          value: authorsDraft.length,
-                          label: optionLabel,
-                        });
-                      })
-                    );
-                  }}
+                  options={authors?.map((author) => ({
+                    value: author.name,
+                    label: author.name,
+                  }))}
+                  // onCreateOption={(optionLabel) => {
+                  //   setAllAuthors(
+                  //     produce((authorsDraft) => {
+                  //       authorsDraft.push({
+                  //         value: authorsDraft.length,
+                  //         label: optionLabel,
+                  //       });
+                  //     })
+                  //   );
+                  // }}
                 />
               )}
             />
@@ -155,17 +162,20 @@ export const BookEdit: React.FC<BookEditProps> = ({
                   {...field}
                   {...selectComponentStaticProps}
                   placeholder="Select a genre (required)"
-                  options={allGenres}
-                  onCreateOption={(optionLabel) => {
-                    setAllGenres(
-                      produce((authorsDraft) => {
-                        authorsDraft.push({
-                          value: authorsDraft.length,
-                          label: optionLabel,
-                        });
-                      })
-                    );
-                  }}
+                  options={genres?.map((genre) => ({
+                    value: genre.name,
+                    label: genre.name,
+                  }))}
+                  // onCreateOption={(optionLabel) => {
+                  //   setAllGenres(
+                  //     produce((authorsDraft) => {
+                  //       authorsDraft.push({
+                  //         value: authorsDraft.length,
+                  //         label: optionLabel,
+                  //       });
+                  //     })
+                  //   );
+                  // }}
                 />
               )}
             />
@@ -173,14 +183,16 @@ export const BookEdit: React.FC<BookEditProps> = ({
           <FormItem
             className="text-xl flex justify-start mb-2 text-black"
             labelComponent={<span className="pr-1">Published:</span>}
-            errorMessage={errors.published?.message}
+            errorMessage={errors.publishedDate?.message}
           >
             <input
-              id="published"
+              id="publishedDate"
               type="date"
               className="pb-1 bg-transparent border-black border-b"
-              defaultValue={bookData?.published.toISOString().split('T')[0]}
-              {...register('published')}
+              defaultValue={
+                book?.publishedDate === null ? undefined : book?.publishedDate
+              }
+              {...register('publishedDate')}
             />
           </FormItem>
           <FormItem
@@ -190,16 +202,19 @@ export const BookEdit: React.FC<BookEditProps> = ({
             <textarea
               id="description"
               className="w-full p-2 bg-transparent border-black border h-32 resize-none rounded"
-              defaultValue={bookData?.description}
+              placeholder="Book's description"
+              defaultValue={
+                book?.description === null ? undefined : book?.description
+              }
               {...register('description')}
             />
           </FormItem>
         </div>
         <div className="center">
-          <FormItem errorMessage={errors.coverUrl?.message}>
+          <FormItem errorMessage={errors.imageUrl?.message}>
             <Controller
               control={control}
-              name="coverUrl"
+              name="imageUrl"
               rules={{ required: false }}
               render={({ field: { onChange } }) => (
                 <>

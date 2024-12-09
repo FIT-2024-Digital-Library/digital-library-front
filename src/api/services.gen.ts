@@ -32,6 +32,17 @@ import type {
   RegisterUsersRegisterPostResponse,
   LogoutUserUsersLogoutPostError,
   LogoutUserUsersLogoutPostResponse,
+  GetAdminRoleUsersUserIdGetAdminRolePostData,
+  GetAdminRoleUsersUserIdGetAdminRolePostError,
+  GetAdminRoleUsersUserIdGetAdminRolePostResponse,
+  UpdateUserByIdUsersUserIdUpdatePutData,
+  UpdateUserByIdUsersUserIdUpdatePutError,
+  UpdateUserByIdUsersUserIdUpdatePutResponse,
+  GetUserByIdUsersUserIdGetData,
+  GetUserByIdUsersUserIdGetError,
+  GetUserByIdUsersUserIdGetResponse,
+  GetUsersUsersGetError,
+  GetUsersUsersGetResponse,
   GetAuthorsAuthorsGetData,
   GetAuthorsAuthorsGetError,
   GetAuthorsAuthorsGetResponse,
@@ -62,12 +73,17 @@ import type {
   UpdateGenreGenresGenreIdUpdatePutData,
   UpdateGenreGenresGenreIdUpdatePutError,
   UpdateGenreGenresGenreIdUpdatePutResponse,
-  UploadFileStorageUploadPostData,
-  UploadFileStorageUploadPostError,
-  UploadFileStorageUploadPostResponse,
-  DownloadFileStorageDownloadFileNameGetData,
-  DownloadFileStorageDownloadFileNameGetError,
-  DownloadFileStorageDownloadFileNameGetResponse,
+  UploadFileStoragePostData,
+  UploadFileStoragePostError,
+  UploadFileStoragePostResponse,
+  DownloadFileStorageDownloadFilenameGetData,
+  DownloadFileStorageDownloadFilenameGetError,
+  DownloadFileStorageDownloadFilenameGetResponse,
+  ListFilesStorageListGetError,
+  ListFilesStorageListGetResponse,
+  DeleteFileStorageFilenameDeleteData,
+  DeleteFileStorageFilenameDeleteError,
+  DeleteFileStorageFilenameDeleteResponse,
 } from './types.gen';
 
 export const client = createClient(createConfig());
@@ -105,7 +121,7 @@ export const getBookBooksBookIdGet = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Creates new book. Only for authorized user with admin previlegy
+ * Creates new book. Only for authorized user with admin privilege
  */
 export const createBookBooksCreatePost = <ThrowOnError extends boolean = false>(
   options: Options<CreateBookBooksCreatePostData, ThrowOnError>
@@ -121,7 +137,7 @@ export const createBookBooksCreatePost = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Updates book data. Only for authorized user with admin previlegy
+ * Updates book data. Only for authorized user with admin privilege
  */
 export const updateBookBooksBookIdUpdatePut = <
   ThrowOnError extends boolean = false
@@ -139,7 +155,7 @@ export const updateBookBooksBookIdUpdatePut = <
 };
 
 /**
- * Deletes book. Only for authorized user with admin previlegy
+ * Deletes book. Only for authorized user with admin privilege
  */
 export const deleteBookBooksBookIdDeleteDelete = <
   ThrowOnError extends boolean = false
@@ -217,6 +233,74 @@ export const logoutUserUsersLogoutPost = <ThrowOnError extends boolean = false>(
   >({
     ...options,
     url: '/users/logout',
+  });
+};
+
+/**
+ * Logs user in
+ */
+export const getAdminRoleUsersUserIdGetAdminRolePost = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<GetAdminRoleUsersUserIdGetAdminRolePostData, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    GetAdminRoleUsersUserIdGetAdminRolePostResponse,
+    GetAdminRoleUsersUserIdGetAdminRolePostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/users/{user_id}/get_admin_role',
+  });
+};
+
+/**
+ * Updates user by id
+ */
+export const updateUserByIdUsersUserIdUpdatePut = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<UpdateUserByIdUsersUserIdUpdatePutData, ThrowOnError>
+) => {
+  return (options?.client ?? client).put<
+    UpdateUserByIdUsersUserIdUpdatePutResponse,
+    UpdateUserByIdUsersUserIdUpdatePutError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/users/{user_id}/update',
+  });
+};
+
+/**
+ * Returns user by id
+ */
+export const getUserByIdUsersUserIdGet = <ThrowOnError extends boolean = false>(
+  options: Options<GetUserByIdUsersUserIdGetData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetUserByIdUsersUserIdGetResponse,
+    GetUserByIdUsersUserIdGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/users/{user_id}',
+  });
+};
+
+/**
+ * Returns all users
+ */
+export const getUsersUsersGet = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetUsersUsersGetResponse,
+    GetUsersUsersGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/users/',
   });
 };
 
@@ -395,16 +479,14 @@ export const updateGenreGenresGenreIdUpdatePut = <
 };
 
 /**
- * Upload File
+ * Uploads new file. Privileged users only.
  */
-export const uploadFileStorageUploadPost = <
-  ThrowOnError extends boolean = false
->(
-  options: Options<UploadFileStorageUploadPostData, ThrowOnError>
+export const uploadFileStoragePost = <ThrowOnError extends boolean = false>(
+  options: Options<UploadFileStoragePostData, ThrowOnError>
 ) => {
   return (options?.client ?? client).post<
-    UploadFileStorageUploadPostResponse,
-    UploadFileStorageUploadPostError,
+    UploadFileStoragePostResponse,
+    UploadFileStoragePostError,
     ThrowOnError
   >({
     ...options,
@@ -413,24 +495,58 @@ export const uploadFileStorageUploadPost = <
       'Content-Type': null,
       ...options?.headers,
     },
-    url: '/storage/upload/',
+    url: '/storage/',
   });
 };
 
 /**
  * Download File
  */
-export const downloadFileStorageDownloadFileNameGet = <
+export const downloadFileStorageDownloadFilenameGet = <
   ThrowOnError extends boolean = false
 >(
-  options: Options<DownloadFileStorageDownloadFileNameGetData, ThrowOnError>
+  options: Options<DownloadFileStorageDownloadFilenameGetData, ThrowOnError>
 ) => {
   return (options?.client ?? client).get<
-    DownloadFileStorageDownloadFileNameGetResponse,
-    DownloadFileStorageDownloadFileNameGetError,
+    DownloadFileStorageDownloadFilenameGetResponse,
+    DownloadFileStorageDownloadFilenameGetError,
     ThrowOnError
   >({
     ...options,
-    url: '/storage/download/{file_name}',
+    url: '/storage/download/{filename}',
+  });
+};
+
+/**
+ * List Files
+ */
+export const listFilesStorageListGet = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    ListFilesStorageListGetResponse,
+    ListFilesStorageListGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/storage/list',
+  });
+};
+
+/**
+ * Deletes file. Privileged users only.
+ */
+export const deleteFileStorageFilenameDelete = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<DeleteFileStorageFilenameDeleteData, ThrowOnError>
+) => {
+  return (options?.client ?? client).delete<
+    DeleteFileStorageFilenameDeleteResponse,
+    DeleteFileStorageFilenameDeleteError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/storage{filename}',
   });
 };

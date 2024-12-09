@@ -28,7 +28,7 @@ export const AuthorCreateSchema = {
   title: 'AuthorCreate',
 } as const;
 
-export const Body_upload_file_storage_upload__postSchema = {
+export const Body_upload_file_storage__postSchema = {
   properties: {
     file: {
       type: 'string',
@@ -38,7 +38,7 @@ export const Body_upload_file_storage_upload__postSchema = {
   },
   type: 'object',
   required: ['file'],
-  title: 'Body_upload_file_storage_upload__post',
+  title: 'Body_upload_file_storage__post',
 } as const;
 
 export const BookSchema = {
@@ -110,7 +110,7 @@ export const BookSchema = {
   title: 'Book',
 } as const;
 
-export const CreateBookSchema = {
+export const BookCreateSchema = {
   properties: {
     title: {
       type: 'string',
@@ -172,7 +172,7 @@ export const CreateBookSchema = {
   },
   type: 'object',
   required: ['title', 'author', 'pdfUrl'],
-  title: 'CreateBook',
+  title: 'BookCreate',
 } as const;
 
 export const FileUploadedSchemeSchema = {

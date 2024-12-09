@@ -17,12 +17,12 @@ export const BookDisplay: React.FC<BookDisplayProps> = ({ bookId }) => {
     author,
     isPending: isAuthorPending,
     error: authorError,
-  } = useAuthor(book?.author ?? -1);
+  } = useAuthor(book?.author);
   const {
     genre,
     isPending: isGenrePending,
     error: genreError,
-  } = useGenre(book?.genre ?? -1);
+  } = useGenre(book?.genre);
 
   return (
     <LoadableComponent
