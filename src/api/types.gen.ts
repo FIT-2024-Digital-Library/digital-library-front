@@ -77,6 +77,18 @@ export type UserLogin = {
   password: string;
 };
 
+export type UserLogined = {
+  /**
+   * Электронная почта
+   */
+  email: string;
+  /**
+   * Имя, от 3 до 50 символов
+   */
+  name: string;
+  privileges: PrivilegesEnum;
+};
+
 export type UserRegister = {
   /**
    * Электронная почта
@@ -190,7 +202,7 @@ export type RegisterUsersRegisterPostData = {
   body: UserRegister;
 };
 
-export type RegisterUsersRegisterPostResponse = User;
+export type RegisterUsersRegisterPostResponse = UserLogined;
 
 export type RegisterUsersRegisterPostError = HTTPValidationError;
 

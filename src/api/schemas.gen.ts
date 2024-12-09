@@ -284,6 +284,30 @@ export const UserLoginSchema = {
   title: 'UserLogin',
 } as const;
 
+export const UserLoginedSchema = {
+  properties: {
+    email: {
+      type: 'string',
+      format: 'email',
+      title: 'Email',
+      description: 'Электронная почта',
+    },
+    name: {
+      type: 'string',
+      maxLength: 50,
+      minLength: 3,
+      title: 'Name',
+      description: 'Имя, от 3 до 50 символов',
+    },
+    privileges: {
+      $ref: '#/components/schemas/PrivilegesEnum',
+    },
+  },
+  type: 'object',
+  required: ['email', 'name', 'privileges'],
+  title: 'UserLogined',
+} as const;
+
 export const UserRegisterSchema = {
   properties: {
     email: {
