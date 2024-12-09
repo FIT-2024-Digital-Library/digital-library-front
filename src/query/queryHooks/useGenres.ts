@@ -2,8 +2,6 @@ import { useQuery, queryOptions } from '@tanstack/react-query';
 import { dataExtractionWrapper } from '@/query';
 import { getGenresGenresGet } from '@/api';
 
-
-
 export const getGenresQueryOptions = () =>
   queryOptions({
     queryKey: ['genres'],

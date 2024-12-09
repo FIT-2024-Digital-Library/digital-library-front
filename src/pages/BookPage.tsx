@@ -13,6 +13,7 @@ import { dataExtractionWrapper } from '@/query';
 import { deleteBookBooksBookIdDeleteDelete } from '@/api';
 import { navigate } from 'wouter/use-browser-location';
 import { DropDown } from '../components/library/DropDown';
+import { useProfile } from '@/query/queryHooks';
 
 export type SelectOption = {
   value: number;
@@ -23,7 +24,7 @@ export const BookPage: React.FC = () => {
   const { id } = useParams();
 
   const [isEdit, setIsEdit] = useState(false);
-  const [canEdit, setCanEdit] = useState(true);
+  const { profile } = useProfile();
 
   const { mutate: deleteBook, error: deleteError } = useMutation({
     mutationFn: (id: number) =>
@@ -45,7 +46,7 @@ export const BookPage: React.FC = () => {
         ) : (
           <BookEdit bookId={Number(id)} setIsEdit={setIsEdit} />
         )}
-        {canEdit && !isEdit && (
+        {profile && profile.privileges !== 'basic' && !isEdit && (
           <div className="grid grid-cols-3 my-2">
             <div className="grid grid-cols-2">
               <Button

@@ -51,6 +51,21 @@ export type HTTPValidationError = {
   detail?: Array<ValidationError>;
 };
 
+export type PrivilegesEnum = 'basic' | 'admin' | 'moderator';
+
+export type User = {
+  id: number;
+  /**
+   * Электронная почта
+   */
+  email: string;
+  /**
+   * Имя, от 3 до 50 символов
+   */
+  name: string;
+  privileges: PrivilegesEnum;
+};
+
 export type UserLogin = {
   /**
    * Электронная почта
@@ -60,18 +75,6 @@ export type UserLogin = {
    * Пароль, от 5 до 50 знаков
    */
   password: string;
-};
-
-export type UserLogined = {
-  /**
-   * Электронная почта
-   */
-  email: string;
-  /**
-   * Имя, от 3 до 50 символов
-   */
-  name: string;
-  privileges: string;
 };
 
 export type UserRegister = {
@@ -171,7 +174,7 @@ export type DeleteBookBooksBookIdDeleteDeleteResponse = Book;
 
 export type DeleteBookBooksBookIdDeleteDeleteError = HTTPValidationError;
 
-export type GetProfileUsersProfileGetResponse = UserLogined;
+export type GetProfileUsersProfileGetResponse = User;
 
 export type GetProfileUsersProfileGetError = unknown;
 
@@ -179,7 +182,7 @@ export type LoginUsersLoginPostData = {
   body: UserLogin;
 };
 
-export type LoginUsersLoginPostResponse = UserLogined;
+export type LoginUsersLoginPostResponse = User;
 
 export type LoginUsersLoginPostError = HTTPValidationError;
 
@@ -187,7 +190,7 @@ export type RegisterUsersRegisterPostData = {
   body: UserRegister;
 };
 
-export type RegisterUsersRegisterPostResponse = UserLogined;
+export type RegisterUsersRegisterPostResponse = User;
 
 export type RegisterUsersRegisterPostError = HTTPValidationError;
 
@@ -201,7 +204,7 @@ export type GetAdminRoleUsersUserIdGetAdminRolePostData = {
   };
 };
 
-export type GetAdminRoleUsersUserIdGetAdminRolePostResponse = UserLogined;
+export type GetAdminRoleUsersUserIdGetAdminRolePostResponse = User;
 
 export type GetAdminRoleUsersUserIdGetAdminRolePostError = HTTPValidationError;
 
@@ -212,9 +215,19 @@ export type UpdateUserByIdUsersUserIdUpdatePutData = {
   };
 };
 
-export type UpdateUserByIdUsersUserIdUpdatePutResponse = UserLogined;
+export type UpdateUserByIdUsersUserIdUpdatePutResponse = User;
 
 export type UpdateUserByIdUsersUserIdUpdatePutError = HTTPValidationError;
+
+export type DeleteUserByIdUsersUserIdDeleteDeleteData = {
+  path: {
+    user_id: number;
+  };
+};
+
+export type DeleteUserByIdUsersUserIdDeleteDeleteResponse = User;
+
+export type DeleteUserByIdUsersUserIdDeleteDeleteError = HTTPValidationError;
 
 export type GetUserByIdUsersUserIdGetData = {
   path: {
@@ -222,11 +235,11 @@ export type GetUserByIdUsersUserIdGetData = {
   };
 };
 
-export type GetUserByIdUsersUserIdGetResponse = UserLogined;
+export type GetUserByIdUsersUserIdGetResponse = User;
 
 export type GetUserByIdUsersUserIdGetError = HTTPValidationError;
 
-export type GetUsersUsersGetResponse = Array<UserLogined>;
+export type GetUsersUsersGetResponse = Array<User>;
 
 export type GetUsersUsersGetError = unknown;
 

@@ -38,6 +38,9 @@ import type {
   UpdateUserByIdUsersUserIdUpdatePutData,
   UpdateUserByIdUsersUserIdUpdatePutError,
   UpdateUserByIdUsersUserIdUpdatePutResponse,
+  DeleteUserByIdUsersUserIdDeleteDeleteData,
+  DeleteUserByIdUsersUserIdDeleteDeleteError,
+  DeleteUserByIdUsersUserIdDeleteDeleteResponse,
   GetUserByIdUsersUserIdGetData,
   GetUserByIdUsersUserIdGetError,
   GetUserByIdUsersUserIdGetResponse,
@@ -269,6 +272,24 @@ export const updateUserByIdUsersUserIdUpdatePut = <
   >({
     ...options,
     url: '/users/{user_id}/update',
+  });
+};
+
+/**
+ * Deletes user by id
+ */
+export const deleteUserByIdUsersUserIdDeleteDelete = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<DeleteUserByIdUsersUserIdDeleteDeleteData, ThrowOnError>
+) => {
+  return (options?.client ?? client).delete<
+    DeleteUserByIdUsersUserIdDeleteDeleteResponse,
+    DeleteUserByIdUsersUserIdDeleteDeleteError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/users/{user_id}/delete',
   });
 };
 
