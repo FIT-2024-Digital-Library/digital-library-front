@@ -26,7 +26,7 @@ export const BookPage: React.FC = () => {
         {!isEdit ? (
           <BookDisplay bookId={Number(id)} />
         ) : (
-          <BookEdit bookId={Number(id)} />
+          <BookEdit bookId={Number(id)} setIsEdit={setIsEdit} />
         )}
         {canEdit && !isEdit && (
           <div className="grid grid-cols-3 my-2">

@@ -25,6 +25,7 @@ import {
   createGenreGenresCreatePost,
   updateBookBooksBookIdUpdatePut,
 } from '@/api';
+import { navigate } from 'wouter/use-browser-location';
 
 export const bookEditScheme = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -62,9 +63,10 @@ const selectComponentStaticProps = {
 
 export interface BookEditProps {
   bookId: number | 'new';
+  setIsEdit?: (value: boolean) => void;
 }
 
-export const BookEdit: React.FC<BookEditProps> = ({ bookId }) => {
+export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
   const { book, isPending: isBookPending, error: bookError } = useBook(bookId);
   const {
     author,
@@ -122,6 +124,9 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId }) => {
           },
         })
       ),
+    onSuccess: (response) => {
+      navigate(`/books/${response}`, { replace: true });
+    },
   });
 
   const { mutate: updateBook, error: updateBookError } = useMutation({
@@ -138,6 +143,9 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId }) => {
           },
         })
       ),
+    onSuccess: (response) => {
+      setIsEdit?.(false);
+    },
   });
 
   const {
