@@ -20,7 +20,12 @@ export const UploadDropdown: React.FC<UploadDropDownProps> = ({
   setUploadedLink,
 }) => {
   const [file, setFile] = useState<File>();
-  const { mutate: uploadFile, error: uploadError } = useMutation({
+  const {
+    mutate: uploadFile,
+    isSuccess,
+    isPending,
+    error,
+  } = useMutation({
     mutationFn: (file: File) =>
       dataExtractionWrapper(
         uploadFileStoragePost({
@@ -43,12 +48,14 @@ export const UploadDropdown: React.FC<UploadDropDownProps> = ({
           'border border-black rounded'
         )}
       >
-        <FormItem errorMessage={uploadError?.message}>
+        <FormItem errorMessage={error?.message}>
           <input type="file" onChange={(e) => setFile(e.target.files?.[0])} />
         </FormItem>
 
         <Button variant="plate-black" onClick={() => file && uploadFile(file)}>
-          Upload
+          <span>Upload</span>
+          {isPending && <Icon className="animate-spin" icon="loading-3/4" />}
+          {isSuccess && <Icon icon="check" />}
         </Button>
       </div>
     </DropDown>

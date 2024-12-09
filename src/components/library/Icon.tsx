@@ -31,6 +31,9 @@ import {
   AiOutlineLoading,
   AiOutlineLoading3Quarters,
 } from 'react-icons/ai';
+import {
+  BiCheck
+} from 'react-icons/bi';
 import {} from 'react-icons/ai';
 import React from 'react';
 import { match } from 'ts-pattern';
@@ -66,6 +69,7 @@ export const icons = [
   'save',
   'loading-1/4',
   'loading-3/4',
+  'check',
 ] as const;
 export type IconType = (typeof icons)[number];
 
@@ -110,6 +114,7 @@ export const Icon: React.FC<IconProps> = ({
     .with('save', () => AiFillSave)
     .with('loading-1/4', () => AiOutlineLoading)
     .with('loading-3/4', () => AiOutlineLoading3Quarters)
+    .with('check', () => BiCheck)
     .exhaustive();
 
   const modifiers = match(icon)

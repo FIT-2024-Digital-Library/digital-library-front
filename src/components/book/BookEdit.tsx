@@ -81,38 +81,6 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
   const { authors } = useAuthors();
   const { genres } = useGenres();
 
-  const queryClient = useQueryClient();
-  const { mutate: addAuthor, error: addAuthorError } = useMutation({
-    mutationFn: (author: string) =>
-      dataExtractionWrapper(
-        createAuthorAuthorsCreatePost({
-          body: {
-            name: author,
-          },
-        })
-      ),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: getAuthorsQueryOptions().queryKey,
-      });
-    },
-  });
-  const { mutate: addGenre, error: addGenreError } = useMutation({
-    mutationFn: (genre: string) =>
-      dataExtractionWrapper(
-        createGenreGenresCreatePost({
-          body: {
-            name: genre,
-          },
-        })
-      ),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: getGenresQueryOptions().queryKey,
-      });
-    },
-  });
-
   const { mutate: createBook, error: createBookError } = useMutation({
     mutationFn: (data: { book: BookEditData }) =>
       dataExtractionWrapper(
@@ -194,7 +162,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
           </FormItem>
           <FormItem
             className="p-1 mb-2 w-full text-black"
-            errorMessage={addAuthorError?.message || errors.author?.message}
+            errorMessage={errors.author?.message}
           >
             <Controller
               name="author"
@@ -208,14 +176,13 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                     value: author.name,
                     label: author.name,
                   }))}
-                  onCreateOption={(optionLabel) => addAuthor(optionLabel)}
                 />
               )}
             />
           </FormItem>
           <FormItem
             className="p-1 mb-2 w-full text-black"
-            errorMessage={addGenreError?.message || errors.genre?.message}
+            errorMessage={errors.genre?.message}
           >
             <Controller
               name="genre"
@@ -229,9 +196,6 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                     value: genre.name,
                     label: genre.name,
                   }))}
-                  onCreateOption={(optionLabel) => {
-                    addGenre(optionLabel);
-                  }}
                 />
               )}
             />
@@ -297,7 +261,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                 <>
                   <UploadDropdown
                     buttonComponent={
-                      <Button className="rounded-md w-fit" variant="plate-grey">
+                      <Button className="rounded-md" variant="plate-grey">
                         <span>Upload new PDF</span>
                         <Icon icon="pdf" />
                       </Button>
