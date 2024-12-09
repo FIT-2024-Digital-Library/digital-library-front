@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod';
-import { Options } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { produce } from 'immer';
 
 import { Button } from '@/components/library/Button';
 import { FormItem } from '@/components/library/FormItem';
@@ -23,7 +21,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { dataExtractionWrapper } from '@/query';
 import {
   createAuthorAuthorsCreatePost,
+  createBookBooksCreatePost,
   createGenreGenresCreatePost,
+  updateBookBooksBookIdUpdatePut,
 } from '@/api';
 
 export const bookEditScheme = z.object({
@@ -111,6 +111,35 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId }) => {
     },
   });
 
+  const { mutate: createBook, error: createBookError } = useMutation({
+    mutationFn: (data: { book: BookEditData }) =>
+      dataExtractionWrapper(
+        createBookBooksCreatePost({
+          body: {
+            ...data.book,
+            author: data.book.author.value,
+            genre: data.book.genre.value,
+          },
+        })
+      ),
+  });
+
+  const { mutate: updateBook, error: updateBookError } = useMutation({
+    mutationFn: (data: { id: number; book: BookEditData }) =>
+      dataExtractionWrapper(
+        updateBookBooksBookIdUpdatePut({
+          path: {
+            book_id: data.id,
+          },
+          body: {
+            ...data.book,
+            author: data.book.author.value,
+            genre: data.book.genre.value,
+          },
+        })
+      ),
+  });
+
   const {
     register,
     control,
@@ -128,9 +157,8 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId }) => {
   });
 
   const saveBookData: SubmitHandler<BookEditData> = (data) => {
-    // if (isNew) console.log('Creating book...');
-    // else console.log('Saving book...');
-    console.log(data);
+    if (bookId !== 'new') updateBook({ id: bookId, book: data });
+    else createBook({ book: data });
   };
 
   return (
@@ -290,6 +318,11 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId }) => {
             <span>Save</span>
             <Icon icon="save" />
           </Button>
+          {(createBookError || updateBookError) && (
+            <span className="text-red-500 mx-3">
+              {createBookError?.message || updateBookError?.message}
+            </span>
+          )}
         </div>
       </div>
     </form>
