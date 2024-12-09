@@ -135,7 +135,9 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
   return (
     <LoadableComponent
       isPending={
-        isProfilePending || isBookPending || isAuthorPending || isGenrePending
+        isProfilePending ||
+        isBookPending ||
+        (bookId !== 'new' && (isAuthorPending || isGenrePending))
       }
       errorMessage={
         bookError?.message ||
