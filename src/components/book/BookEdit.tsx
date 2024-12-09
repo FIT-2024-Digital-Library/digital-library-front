@@ -9,20 +9,16 @@ import { FormItem } from '@/components/library/FormItem';
 import { Icon } from '@/components/library/Icon';
 import { UploadDropdown } from '@/components/library/UploadDropdown';
 import {
-  getAuthorsQueryOptions,
-  getGenresQueryOptions,
   useAuthor,
   useAuthors,
   useBook,
   useGenre,
   useGenres,
 } from '@/query/queryHooks';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { dataExtractionWrapper } from '@/query';
 import {
-  createAuthorAuthorsCreatePost,
   createBookBooksCreatePost,
-  createGenreGenresCreatePost,
   updateBookBooksBookIdUpdatePut,
 } from '@/api';
 import { navigate } from 'wouter/use-browser-location';
@@ -40,7 +36,7 @@ export const bookEditScheme = z.object({
       value: z.string(),
       label: z.string(),
     })
-    .required(),
+    .nullable(),
   publishedDate: z.string().date(),
   description: z.string(),
   imageUrl: z.string(),
@@ -88,7 +84,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
           body: {
             ...data.book,
             author: data.book.author.value,
-            genre: data.book.genre.value,
+            genre: data.book.genre !== null ? data.book.genre.value : null,
           },
         })
       ),
@@ -107,7 +103,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
           body: {
             ...data.book,
             author: data.book.author.value,
-            genre: data.book.genre.value,
+            genre: data.book.genre !== null ? data.book.genre.value : null,
           },
         })
       ),
@@ -187,11 +183,13 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
             <Controller
               name="genre"
               control={control}
+              rules={{ required: false }}
               render={({ field }) => (
                 <CreatableSelect
                   {...field}
                   {...selectComponentStaticProps}
-                  placeholder="Select a genre (required)"
+                  placeholder="Select a genre"
+                  isClearable
                   options={genres?.map((genre) => ({
                     value: genre.name,
                     label: genre.name,
