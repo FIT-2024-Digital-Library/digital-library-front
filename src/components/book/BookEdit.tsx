@@ -11,12 +11,20 @@ import { FormItem } from '@/components/library/FormItem';
 import { Icon } from '@/components/library/Icon';
 import { UploadDropdown } from '@/components/library/UploadDropdown';
 import {
+  getAuthorsQueryOptions,
+  getGenresQueryOptions,
   useAuthor,
   useAuthors,
   useBook,
   useGenre,
   useGenres,
 } from '@/query/queryHooks';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { dataExtractionWrapper } from '@/query';
+import {
+  createAuthorAuthorsCreatePost,
+  createGenreGenresCreatePost,
+} from '@/api';
 
 export const bookEditScheme = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -57,11 +65,7 @@ export interface BookEditProps {
 }
 
 export const BookEdit: React.FC<BookEditProps> = ({ bookId }) => {
-  const {
-    book,
-    isPending: isBookPending,
-    error: bookError,
-  } = useBook(bookId);
+  const { book, isPending: isBookPending, error: bookError } = useBook(bookId);
   const {
     author,
     isPending: isAuthorPending,
@@ -74,6 +78,38 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId }) => {
   } = useGenre(book?.genre);
   const { authors } = useAuthors();
   const { genres } = useGenres();
+
+  const queryClient = useQueryClient();
+  const { mutate: addAuthor, error: addAuthorError } = useMutation({
+    mutationFn: (author: string) =>
+      dataExtractionWrapper(
+        createAuthorAuthorsCreatePost({
+          body: {
+            name: author,
+          },
+        })
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: getAuthorsQueryOptions().queryKey,
+      });
+    },
+  });
+  const { mutate: addGenre, error: addGenreError } = useMutation({
+    mutationFn: (genre: string) =>
+      dataExtractionWrapper(
+        createGenreGenresCreatePost({
+          body: {
+            name: genre,
+          },
+        })
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: getGenresQueryOptions().queryKey,
+      });
+    },
+  });
 
   const {
     register,
@@ -122,7 +158,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId }) => {
           </FormItem>
           <FormItem
             className="p-1 mb-2 w-full text-black"
-            errorMessage={errors.author?.message}
+            errorMessage={addAuthorError?.message || errors.author?.message}
           >
             <Controller
               name="author"
@@ -136,23 +172,14 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId }) => {
                     value: author.name,
                     label: author.name,
                   }))}
-                  // onCreateOption={(optionLabel) => {
-                  //   setAllAuthors(
-                  //     produce((authorsDraft) => {
-                  //       authorsDraft.push({
-                  //         value: authorsDraft.length,
-                  //         label: optionLabel,
-                  //       });
-                  //     })
-                  //   );
-                  // }}
+                  onCreateOption={(optionLabel) => addAuthor(optionLabel)}
                 />
               )}
             />
           </FormItem>
           <FormItem
             className="p-1 mb-2 w-full text-black"
-            errorMessage={errors.genre?.message}
+            errorMessage={addGenreError?.message || errors.genre?.message}
           >
             <Controller
               name="genre"
@@ -166,16 +193,9 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId }) => {
                     value: genre.name,
                     label: genre.name,
                   }))}
-                  // onCreateOption={(optionLabel) => {
-                  //   setAllGenres(
-                  //     produce((authorsDraft) => {
-                  //       authorsDraft.push({
-                  //         value: authorsDraft.length,
-                  //         label: optionLabel,
-                  //       });
-                  //     })
-                  //   );
-                  // }}
+                  onCreateOption={(optionLabel) => {
+                    addGenre(optionLabel);
+                  }}
                 />
               )}
             />

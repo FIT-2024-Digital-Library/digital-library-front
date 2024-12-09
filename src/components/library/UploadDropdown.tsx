@@ -3,8 +3,12 @@ import { DropDown } from '@/components/library/DropDown';
 import { Button } from '@/components/library/Button';
 import { Icon } from '@/components/library/Icon';
 import { useForm } from 'react-hook-form';
-// import { serverUrl } from '@/main';
+import { serverUrl } from '@/main';
 import clsx from 'clsx';
+import { useMutation } from '@tanstack/react-query';
+import { dataExtractionWrapper } from '@/query';
+import { uploadFileStoragePost } from '@/api';
+import { FormItem } from './FormItem';
 
 interface UploadDropDownProps extends HTMLAttributes<React.FC> {
   buttonComponent: JSX.Element;
@@ -16,7 +20,19 @@ export const UploadDropdown: React.FC<UploadDropDownProps> = ({
   setUploadedLink,
 }) => {
   const [file, setFile] = useState<File>();
-  const [status, setStatus] = useState<string | undefined>(undefined);
+  const { mutate: uploadFile, error: uploadError } = useMutation({
+    mutationFn: (file: File) =>
+      dataExtractionWrapper(
+        uploadFileStoragePost({
+          body: {
+            file,
+          },
+        })
+      ),
+    onSuccess: (response) => {
+      setUploadedLink(serverUrl + response.url);
+    },
+  });
 
   return (
     <DropDown buttonComponent={buttonComponent}>
@@ -27,39 +43,13 @@ export const UploadDropdown: React.FC<UploadDropDownProps> = ({
           'border border-black rounded'
         )}
       >
-        <input
-          type="file"
-          onChange={(e) => {
-            setFile(e.target.files?.[0]);
-          }}
-        />
-        <Button
-          variant="plate-black"
-          onClick={() => {
-            console.log('File for uploading: ', file);
-            setStatus('Pseudo OK');
-            setUploadedLink('pseudo.url');
-            // addFileStorageUserIdPost({
-            //   path: {
-            //     user_id: 1,
-            //   },
-            //   body: {
-            //     file: data.file[0],
-            //   },
-            // })
-            //   .then((response) => {
-            //     if (response.response.ok)
-            //       setUploadedLink(serverUrl + response.data?.url);
-            //     else setUploadedLink(response.error?.detail?.toString());
-            //   })
-            //   .catch((error) => {
-            //     console.log(error);
-            //   });
-          }}
-        >
+        <FormItem errorMessage={uploadError?.message}>
+          <input type="file" onChange={(e) => setFile(e.target.files?.[0])} />
+        </FormItem>
+
+        <Button variant="plate-black" onClick={() => file && uploadFile(file)}>
           Upload
         </Button>
-        {status && <span className="mr-1">{status}</span>}
       </div>
     </DropDown>
   );
