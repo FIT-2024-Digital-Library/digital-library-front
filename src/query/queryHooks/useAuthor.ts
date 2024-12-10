@@ -7,7 +7,7 @@ export const getAuthorQueryOptions = (id?: number) =>
     queryKey: ['author', id],
     queryFn: () =>
       !id
-        ? undefined
+        ? null
         : dataExtractionWrapper(
             getAuthorAuthorsAuthorIdGet({
               path: {

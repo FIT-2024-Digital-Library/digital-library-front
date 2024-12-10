@@ -7,7 +7,7 @@ export const getGenreQueryOptions = (id?: number | null) =>
     queryKey: ['genre', id],
     queryFn: () =>
       !id
-        ? undefined
+        ? null
         : dataExtractionWrapper(
             getGenreGenresGenreIdGet({
               path: {

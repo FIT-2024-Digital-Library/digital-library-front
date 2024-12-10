@@ -8,7 +8,7 @@ export const bookDraft: Book = {
   id: -1,
   title: '',
   author: -1,
-  genre: -1,
+  genre: null,
   publishedDate: '',
   description: '',
   imageUrl: '',

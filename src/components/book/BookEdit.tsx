@@ -1,5 +1,5 @@
 import React from 'react';
-import { SubmitHandler, useForm, Controller } from 'react-hook-form';
+import { SubmitHandler, useForm, Controller, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod';
 import CreatableSelect from 'react-select/creatable';
@@ -38,10 +38,11 @@ export const bookEditScheme = z.object({
       value: z.string(),
       label: z.string(),
     })
+    .optional()
     .nullable(),
   publishedDate: z.string().date(),
   description: z.string(),
-  imageUrl: z.string(),
+  imageUrl: z.string().optional().nullable(),
   pdfUrl: z.string().url().min(1, "Book's file is required"),
 });
 export type BookEditData = z.infer<typeof bookEditScheme>;
@@ -71,7 +72,9 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
     error: profileError,
   } = useProfile();
   const { book, isPending: isBookPending, error: bookError } = useBook(bookId);
-  const { author, isPending: isAuthorPending } = useAuthor(book?.author);
+  const { author, isPending: isAuthorPending } = useAuthor(
+    book?.author === -1 ? undefined : book?.author
+  );
   const { genre, isPending: isGenrePending } = useGenre(book?.genre);
   const { authors } = useAuthors();
   const { genres } = useGenres();
@@ -83,7 +86,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
           body: {
             ...data.book,
             author: data.book.author.value,
-            genre: data.book.genre !== null ? data.book.genre.value : null,
+            genre: data.book.genre !== null ? data.book.genre?.value : null,
           },
         })
       ),
@@ -102,7 +105,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
           body: {
             ...data.book,
             author: data.book.author.value,
-            genre: data.book.genre !== null ? data.book.genre.value : null,
+            genre: data.book.genre !== null ? data.book.genre?.value : null,
           },
         })
       ),
@@ -114,7 +117,6 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
   const {
     register,
     control,
-    watch,
     handleSubmit,
     formState: { errors },
   } = useForm<BookEditData>({
@@ -122,10 +124,12 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
     defaultValues: {
       author: author ? { value: author.name, label: author.name } : undefined,
       genre: genre ? { value: genre.name, label: genre.name } : undefined,
-      imageUrl: book?.imageUrl ?? '',
+      imageUrl: book?.imageUrl,
       pdfUrl: book?.pdfUrl ?? '',
     },
   });
+  const imageUrlWatched = useWatch({ name: 'imageUrl', control: control });
+  const pdfUrlWatched = useWatch({ name: 'pdfUrl', control: control });
 
   const saveBookData: SubmitHandler<BookEditData> = (data) => {
     if (bookId !== 'new') updateBook({ id: bookId, book: data });
@@ -152,7 +156,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
         <div className="grid grid-cols-3">
           <div className="center vstack">
             <img
-              src={watch('imageUrl')}
+              src={imageUrlWatched !== null ? imageUrlWatched : ''}
               alt={`${book?.title ?? 'Book'}'s cover`}
               className="w-full h-full object-cover mb-2"
             />
@@ -197,7 +201,6 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
               <Controller
                 name="genre"
                 control={control}
-                rules={{ required: false }}
                 render={({ field }) => (
                   <CreatableSelect
                     {...field}
@@ -289,7 +292,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
             </FormItem>
           </div>
           <div className="center">
-            <a href={watch('pdfUrl')}>
+            <a href={pdfUrlWatched}>
               <Button className="rounded-md w-fit" variant="plate-grey">
                 <span>Download book</span>
                 <Icon icon="download" />
