@@ -1,35 +1,34 @@
 import React, { HTMLAttributes, PropsWithChildren, useState } from 'react';
-import { ReviewType } from './ReviewsList';
 import { Review } from './Review';
 import { Button } from '../library/Button';
 import { ReviewForm } from './ReviewForm';
 
 export interface MyReviewProps
   extends PropsWithChildren<HTMLAttributes<React.FC>> {
-  review?: ReviewType;
+  reviewId?: number;
 }
 
-export const MyReview: React.FC<MyReviewProps> = ({ review }) => {
+export const MyReview: React.FC<MyReviewProps> = ({ reviewId }) => {
   const [isEdit, setIsEdit] = useState(false);
 
   return (
-    <div className="grid grid-cols-1 gap-y-1">
-      {review ? (
+    <div className="grid grid-cols-1 gap-y-1 my-3">
+      {reviewId ? (
         <h2 className="text-center text-xl">Your review</h2>
       ) : (
         <h2 className="text-center text-xl">Share your opinion!</h2>
       )}
-      {review && !isEdit && (
+      {reviewId && !isEdit && (
         <>
-          <Review review={review} />
+          <Review reviewId={reviewId} />
           <Button variant="plate-black" onClick={() => setIsEdit(true)}>
             Edit
           </Button>
         </>
       )}
-      {(!review || isEdit) && (
+      {(!reviewId || isEdit) && (
         <>
-          <ReviewForm review={review} />
+          <ReviewForm reviewId={reviewId} setIsEdit={setIsEdit} />
         </>
       )}
     </div>

@@ -235,6 +235,81 @@ export const PrivilegesEnumSchema = {
   title: 'PrivilegesEnum',
 } as const;
 
+export const ReviewSchema = {
+  properties: {
+    mark: {
+      type: 'integer',
+      maximum: 5,
+      minimum: 1,
+      title: 'Mark',
+    },
+    text: {
+      type: 'string',
+      title: 'Text',
+    },
+    bookId: {
+      type: 'integer',
+      title: 'Bookid',
+    },
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
+    ownerId: {
+      type: 'integer',
+      title: 'Ownerid',
+    },
+    lastEditDate: {
+      type: 'string',
+      format: 'date',
+      title: 'Lasteditdate',
+    },
+  },
+  type: 'object',
+  required: ['mark', 'text', 'bookId', 'id', 'ownerId', 'lastEditDate'],
+  title: 'Review',
+} as const;
+
+export const ReviewCreateSchema = {
+  properties: {
+    mark: {
+      type: 'integer',
+      maximum: 5,
+      minimum: 1,
+      title: 'Mark',
+    },
+    text: {
+      type: 'string',
+      title: 'Text',
+    },
+    bookId: {
+      type: 'integer',
+      title: 'Bookid',
+    },
+  },
+  type: 'object',
+  required: ['mark', 'text', 'bookId'],
+  title: 'ReviewCreate',
+} as const;
+
+export const ReviewUpdateSchema = {
+  properties: {
+    mark: {
+      type: 'integer',
+      maximum: 5,
+      minimum: 1,
+      title: 'Mark',
+    },
+    text: {
+      type: 'string',
+      title: 'Text',
+    },
+  },
+  type: 'object',
+  required: ['mark', 'text'],
+  title: 'ReviewUpdate',
+} as const;
+
 export const UserSchema = {
   properties: {
     id: {

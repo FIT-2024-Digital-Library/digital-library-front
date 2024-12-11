@@ -32,11 +32,13 @@ export const BookDisplay: React.FC<BookDisplayProps> = ({ bookId }) => {
     >
       <div className="grid grid-cols-3">
         <div>
-          <img
-            src={book?.imageUrl === null ? '' : book?.imageUrl}
-            alt={`${book?.title}'s cover`}
-            className="w-full h-full object-cover"
-          />
+          {book?.imageUrl && book?.imageUrl !== null && (
+            <img
+              src={book?.imageUrl}
+              alt={`${book?.title}'s cover`}
+              className="w-full h-full object-cover"
+            />
+          )}
         </div>
         <div className="col-span-2 vstack px-8">
           <h1 className="text-2xl font-bold mb-4">{book?.title}</h1>
@@ -45,14 +47,22 @@ export const BookDisplay: React.FC<BookDisplayProps> = ({ bookId }) => {
             errorMessage={authorError?.message}
             animated
           >
-            {author && <h2 className="text-xl mb-2 italic">{author.name}</h2>}
+            {author && (
+              <h2 className="text-xl mb-2">
+                Author: <span className="italic">{author.name}</span>
+              </h2>
+            )}
           </LoadableComponent>
           <LoadableComponent
             isPending={isGenrePending}
             errorMessage={genreError?.message}
             animated
           >
-            {genre && <h2 className="text-xl mb-2 italic">{genre.name}</h2>}
+            {genre && (
+              <h2 className="text-xl mb-2">
+                Genre: <span className="italic">{genre.name}</span>
+              </h2>
+            )}
           </LoadableComponent>
 
           <h2 className="text-xl mb-2">Published at {book?.publishedDate}</h2>

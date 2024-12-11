@@ -1,10 +1,4 @@
-import React, {
-  HTMLAttributes,
-  PropsWithChildren,
-  useEffect,
-  useState,
-} from 'react';
-import { ReviewType } from './ReviewsList';
+import React, { HTMLAttributes, PropsWithChildren } from 'react';
 import { Button } from '../library/Button';
 import { z } from 'zod';
 import { Controller, useForm } from 'react-hook-form';
@@ -13,6 +7,20 @@ import { FormItem } from '../library/FormItem';
 import clsx from 'clsx';
 import { Icon } from '../library/Icon';
 import { ProgressBar } from '../library/ProgressBar';
+import {
+  getAverageQueryOptions,
+  getReviewQueryOptions,
+  getReviewsQueryOptions,
+  useReview,
+} from '@/query/queryHooks';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { dataExtractionWrapper } from '@/query';
+import {
+  createReviewReviewsCreatePost,
+  Review,
+  updateReviewReviewsReviewIdUpdatePut,
+} from '@/api';
+import { useParams } from 'wouter';
 
 const marks = [1, 2, 3, 4, 5] as const;
 const reviewScheme = z.object({
@@ -23,10 +31,14 @@ export type ReviwSchemeType = z.infer<typeof reviewScheme>;
 
 export interface ReviewFormProps
   extends PropsWithChildren<HTMLAttributes<React.FC>> {
-  review?: ReviewType;
+  reviewId?: number;
+  setIsEdit: (value: boolean) => void;
 }
 
-export const ReviewForm: React.FC<ReviewFormProps> = ({ review }) => {
+export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewId, setIsEdit }) => {
+  const { id: bookId } = useParams();
+  const { review } = useReview(reviewId);
+
   const {
     register,
     handleSubmit,
@@ -39,6 +51,49 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ review }) => {
     },
   });
 
+  const queryClient = useQueryClient();
+  const onSuccessFn = (response: Review) => {
+    queryClient.invalidateQueries({
+      queryKey: getReviewsQueryOptions({ bookId: Number(bookId) }).queryKey,
+    });
+    queryClient.invalidateQueries({
+      queryKey: getAverageQueryOptions(Number(bookId)).queryKey,
+    });
+    queryClient.setQueryData(
+      getReviewQueryOptions(response.id).queryKey,
+      response
+    );
+    setIsEdit(false);
+  }
+
+  const { mutate: addReview } = useMutation({
+    mutationFn: (data: ReviwSchemeType) =>
+      dataExtractionWrapper(
+        createReviewReviewsCreatePost({
+          body: {
+            ...data,
+            bookId: Number(bookId),
+          },
+        })
+      ),
+    onSuccess: onSuccessFn,
+  });
+
+  const { mutate: updateReview } = useMutation({
+    mutationFn: (data: { id: number; review: ReviwSchemeType }) =>
+      dataExtractionWrapper(
+        updateReviewReviewsReviewIdUpdatePut({
+          path: {
+            review_id: data.id,
+          },
+          body: {
+            ...data.review,
+          },
+        })
+      ),
+    onSuccess: onSuccessFn,
+  });
+
   return (
     <form
       className={clsx(
@@ -46,7 +101,11 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ review }) => {
         'divide-x divide-black',
         'border border-black rounded-lg'
       )}
-      onSubmit={handleSubmit((data) => console.log(data))}
+      onSubmit={handleSubmit((data) =>
+        reviewId
+          ? updateReview({ id: reviewId, review: data })
+          : addReview(data)
+      )}
     >
       <FormItem
         className="grid grid-cols-1 p-2"

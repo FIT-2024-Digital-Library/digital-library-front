@@ -53,6 +53,26 @@ export type HTTPValidationError = {
 
 export type PrivilegesEnum = 'basic' | 'admin' | 'moderator';
 
+export type Review = {
+  mark: number;
+  text: string;
+  bookId: number;
+  id: number;
+  ownerId: number;
+  lastEditDate: string;
+};
+
+export type ReviewCreate = {
+  mark: number;
+  text: string;
+  bookId: number;
+};
+
+export type ReviewUpdate = {
+  mark: number;
+  text: string;
+};
+
 export type User = {
   id: number;
   /**
@@ -390,3 +410,65 @@ export type DeleteFileStorageFilenameDeleteData = {
 export type DeleteFileStorageFilenameDeleteResponse = unknown;
 
 export type DeleteFileStorageFilenameDeleteError = HTTPValidationError;
+
+export type GetReviewsReviewsGetData = {
+  query?: {
+    bookId?: number | null;
+    limit?: number;
+    offset?: number;
+    ownerId?: number | null;
+  };
+};
+
+export type GetReviewsReviewsGetResponse = Array<number>;
+
+export type GetReviewsReviewsGetError = HTTPValidationError;
+
+export type GetReviewReviewsReviewIdGetData = {
+  path: {
+    review_id: number;
+  };
+};
+
+export type GetReviewReviewsReviewIdGetResponse = Review;
+
+export type GetReviewReviewsReviewIdGetError = HTTPValidationError;
+
+export type GetAverageMarkReviewsAverageBookIdGetData = {
+  path: {
+    book_id: number;
+  };
+};
+
+export type GetAverageMarkReviewsAverageBookIdGetResponse = number;
+
+export type GetAverageMarkReviewsAverageBookIdGetError = HTTPValidationError;
+
+export type CreateReviewReviewsCreatePostData = {
+  body: ReviewCreate;
+};
+
+export type CreateReviewReviewsCreatePostResponse = Review;
+
+export type CreateReviewReviewsCreatePostError = HTTPValidationError;
+
+export type UpdateReviewReviewsReviewIdUpdatePutData = {
+  body: ReviewUpdate;
+  path: {
+    review_id: number;
+  };
+};
+
+export type UpdateReviewReviewsReviewIdUpdatePutResponse = Review;
+
+export type UpdateReviewReviewsReviewIdUpdatePutError = HTTPValidationError;
+
+export type DeleteReviewReviewsReviewIdDeleteDeleteData = {
+  path: {
+    review_id: number;
+  };
+};
+
+export type DeleteReviewReviewsReviewIdDeleteDeleteResponse = Review;
+
+export type DeleteReviewReviewsReviewIdDeleteDeleteError = HTTPValidationError;
