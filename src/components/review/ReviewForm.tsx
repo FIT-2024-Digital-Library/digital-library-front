@@ -25,18 +25,22 @@ import { useParams } from 'wouter';
 const marks = [1, 2, 3, 4, 5] as const;
 const reviewScheme = z.object({
   mark: z.number({ coerce: true }).min(1).max(5),
-  text: z.string(),
+  text: z.string().min(1, 'Please, write something in your review'),
 });
 export type ReviwSchemeType = z.infer<typeof reviewScheme>;
 
 export interface ReviewFormProps
   extends PropsWithChildren<HTMLAttributes<React.FC>> {
   reviewId?: number;
+  bookId: number;
   setIsEdit: (value: boolean) => void;
 }
 
-export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewId, setIsEdit }) => {
-  const { id: bookId } = useParams();
+export const ReviewForm: React.FC<ReviewFormProps> = ({
+  reviewId,
+  bookId,
+  setIsEdit,
+}) => {
   const { review } = useReview(reviewId);
 
   const {
@@ -54,17 +58,21 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewId, setIsEdit }) =
   const queryClient = useQueryClient();
   const onSuccessFn = (response: Review) => {
     queryClient.invalidateQueries({
-      queryKey: getReviewsQueryOptions({ bookId: Number(bookId) }).queryKey,
+      queryKey: getReviewsQueryOptions({ bookId }).queryKey,
     });
     queryClient.invalidateQueries({
-      queryKey: getAverageQueryOptions(Number(bookId)).queryKey,
+      queryKey: getReviewsQueryOptions({ bookId, ownerId: response.ownerId })
+        .queryKey,
+    });
+    queryClient.invalidateQueries({
+      queryKey: getAverageQueryOptions(bookId).queryKey,
     });
     queryClient.setQueryData(
       getReviewQueryOptions(response.id).queryKey,
       response
     );
     setIsEdit(false);
-  }
+  };
 
   const { mutate: addReview } = useMutation({
     mutationFn: (data: ReviwSchemeType) =>
@@ -139,7 +147,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewId, setIsEdit }) =
       >
         <textarea
           id="text"
-          placeholder="Review text (optional)"
+          placeholder="Review's text"
           className="w-full p-2 bg-transparent resize-none"
           defaultValue={review?.text}
           {...register('text')}

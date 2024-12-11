@@ -31,7 +31,7 @@ export const ReviewsList: React.FC<ReviewListProps> = ({ bookId }) => {
         <div className="my-3 text-center text-2xl font-medium">
           Average mark: {average}/5
         </div>
-        {profile && <MyReview reviewId={userReviewsIds?.[0]} />}
+        {profile && <MyReview reviewId={userReviewsIds?.[0]} bookId={bookId} />}
         <div
           className="grid gap-y-3 gap-x-3 w-full"
           style={{
