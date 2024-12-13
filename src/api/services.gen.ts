@@ -87,6 +87,24 @@ import type {
   DeleteFileStorageFilenameDeleteData,
   DeleteFileStorageFilenameDeleteError,
   DeleteFileStorageFilenameDeleteResponse,
+  GetReviewsReviewsGetData,
+  GetReviewsReviewsGetError,
+  GetReviewsReviewsGetResponse,
+  GetReviewReviewsReviewIdGetData,
+  GetReviewReviewsReviewIdGetError,
+  GetReviewReviewsReviewIdGetResponse,
+  GetAverageMarkReviewsAverageBookIdGetData,
+  GetAverageMarkReviewsAverageBookIdGetError,
+  GetAverageMarkReviewsAverageBookIdGetResponse,
+  CreateReviewReviewsCreatePostData,
+  CreateReviewReviewsCreatePostError,
+  CreateReviewReviewsCreatePostResponse,
+  UpdateReviewReviewsReviewIdUpdatePutData,
+  UpdateReviewReviewsReviewIdUpdatePutError,
+  UpdateReviewReviewsReviewIdUpdatePutResponse,
+  DeleteReviewReviewsReviewIdDeleteDeleteData,
+  DeleteReviewReviewsReviewIdDeleteDeleteError,
+  DeleteReviewReviewsReviewIdDeleteDeleteResponse,
 } from './types.gen';
 
 export const client = createClient(createConfig());
@@ -569,5 +587,111 @@ export const deleteFileStorageFilenameDelete = <
   >({
     ...options,
     url: '/storage{filename}',
+  });
+};
+
+/**
+ * Returns reviews's ids maybe filtered by book and user
+ */
+export const getReviewsReviewsGet = <ThrowOnError extends boolean = false>(
+  options?: Options<GetReviewsReviewsGetData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetReviewsReviewsGetResponse,
+    GetReviewsReviewsGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/reviews/',
+  });
+};
+
+/**
+ * Returns review
+ */
+export const getReviewReviewsReviewIdGet = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<GetReviewReviewsReviewIdGetData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetReviewReviewsReviewIdGetResponse,
+    GetReviewReviewsReviewIdGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/reviews/{review_id}',
+  });
+};
+
+/**
+ * Returns average mark for book
+ */
+export const getAverageMarkReviewsAverageBookIdGet = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<GetAverageMarkReviewsAverageBookIdGetData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetAverageMarkReviewsAverageBookIdGetResponse,
+    GetAverageMarkReviewsAverageBookIdGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/reviews/average/{book_id}',
+  });
+};
+
+/**
+ * Creates new review. Only for authorized users. One review from one user for one book
+ */
+export const createReviewReviewsCreatePost = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<CreateReviewReviewsCreatePostData, ThrowOnError>
+) => {
+  return (options?.client ?? client).post<
+    CreateReviewReviewsCreatePostResponse,
+    CreateReviewReviewsCreatePostError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/reviews/create',
+  });
+};
+
+/**
+ * Updates existing review. Only for reviews' owners
+ */
+export const updateReviewReviewsReviewIdUpdatePut = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<UpdateReviewReviewsReviewIdUpdatePutData, ThrowOnError>
+) => {
+  return (options?.client ?? client).put<
+    UpdateReviewReviewsReviewIdUpdatePutResponse,
+    UpdateReviewReviewsReviewIdUpdatePutError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/reviews/{review_id}/update',
+  });
+};
+
+/**
+ * Deletes existing review. Only for reviews' owners
+ */
+export const deleteReviewReviewsReviewIdDeleteDelete = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<DeleteReviewReviewsReviewIdDeleteDeleteData, ThrowOnError>
+) => {
+  return (options?.client ?? client).delete<
+    DeleteReviewReviewsReviewIdDeleteDeleteResponse,
+    DeleteReviewReviewsReviewIdDeleteDeleteError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/reviews/{review_id}/delete',
   });
 };

@@ -40,50 +40,54 @@ export const BookPage: React.FC = () => {
 
   return (
     <div className="vstack mx-2 md:mx-10 xl:mx-32 px-2 md:px-5 text-black rounded-md">
-      <>
-        {!isEdit ? (
-          <BookDisplay bookId={Number(id)} />
-        ) : (
-          <BookEdit bookId={Number(id)} setIsEdit={setIsEdit} />
-        )}
-        {profile && profile.privileges !== 'basic' && !isEdit && (
-          <div className="grid grid-cols-3 my-2">
-            <div className="grid grid-cols-2">
-              <Button
-                className="mx-1 py-2 text-xl"
-                variant="plate-black"
-                onClick={() => setIsEdit(true)}
-              >
-                <span>Edit</span>
-                <Icon icon="editor" />
-              </Button>
-              <DropDown
-                className="w-full"
-                buttonComponent={
-                  <Button className="w-full text-xl" variant="plate-black">
-                    <span>Delete</span>
-                    <Icon icon="trash" />
-                  </Button>
-                }
-              >
-                <div className="py-1 px-2 bg-1-9 around border border-black rounded-md">
-                  <span>Are you sure? This action cannot be cancelled</span>
-                  <Button
-                    className="mx-1 py-2 text-xl"
-                    variant="plate-black"
-                    onClick={() => deleteBook(Number(id))}
-                  >
-                    <span>YES!</span>
-                    <Icon icon="trash" />
-                  </Button>
-                </div>
-              </DropDown>
+      {Number(id) ? (
+        <>
+          {!isEdit ? (
+            <BookDisplay bookId={Number(id)} />
+          ) : (
+            <BookEdit bookId={Number(id)} setIsEdit={setIsEdit} />
+          )}
+          {profile && profile.privileges !== 'basic' && !isEdit && (
+            <div className="grid grid-cols-3 my-2">
+              <div className="grid grid-cols-2">
+                <Button
+                  className="mx-1 py-2 text-xl"
+                  variant="plate-black"
+                  onClick={() => setIsEdit(true)}
+                >
+                  <span>Edit</span>
+                  <Icon icon="editor" />
+                </Button>
+                <DropDown
+                  className="w-full"
+                  buttonComponent={
+                    <Button className="w-full text-xl" variant="plate-black">
+                      <span>Delete</span>
+                      <Icon icon="trash" />
+                    </Button>
+                  }
+                >
+                  <div className="py-1 px-2 bg-1-9 around border border-black rounded-md">
+                    <span>Are you sure? This action cannot be cancelled</span>
+                    <Button
+                      className="mx-1 py-2 text-xl"
+                      variant="plate-black"
+                      onClick={() => deleteBook(Number(id))}
+                    >
+                      <span>YES!</span>
+                      <Icon icon="trash" />
+                    </Button>
+                  </div>
+                </DropDown>
+              </div>
             </div>
-          </div>
-        )}
-        <hr className="border-2 border-1-7 my-3 rounded" />
-        <ReviewsList bookId={Number(id)} />
-      </>
+          )}
+          <hr className="border-2 border-1-7 my-3 rounded" />
+          <ReviewsList bookId={Number(id)} />
+        </>
+      ) : (
+        <h2 className="text-xl text-center text-red-500">Invalid book id</h2>
+      )}
     </div>
   );
 };
