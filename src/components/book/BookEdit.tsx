@@ -2,12 +2,19 @@ import React from 'react';
 import { SubmitHandler, useForm, Controller, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod';
+import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
+import { useMutation } from '@tanstack/react-query';
+import { navigate } from 'wouter/use-browser-location';
 
-import { Button } from '@/components/library/Button';
-import { FormItem } from '@/components/library/FormItem';
-import { Icon } from '@/components/library/Icon';
-import { UploadDropdown } from '@/components/library/UploadDropdown';
+import {
+  Button,
+  FormItem,
+  Icon,
+  UploadDropdown,
+  LoadableComponent,
+} from '@/components/library';
+import { dataExtractionWrapper } from '@/query';
 import {
   useAuthor,
   useAuthors,
@@ -16,17 +23,20 @@ import {
   useGenres,
   useProfile,
 } from '@/query/queryHooks';
-import { useMutation } from '@tanstack/react-query';
-import { dataExtractionWrapper } from '@/query';
 import {
   createBookBooksCreatePost,
   updateBookBooksBookIdUpdatePut,
 } from '@/api';
-import { navigate } from 'wouter/use-browser-location';
-import { LoadableComponent } from '../library/LoadableComponent';
+import { getTheme, themes } from './themes';
 
 export const bookEditScheme = z.object({
   title: z.string().min(1, 'Title is required'),
+  theme: z
+    .object({
+      value: z.number(),
+      label: z.string(),
+    })
+    .required(),
   author: z
     .object({
       value: z.string(),
@@ -85,6 +95,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
         createBookBooksCreatePost({
           body: {
             ...data.book,
+            themeId: data.book.theme.value,
             author: data.book.author.value,
             genre: data.book.genre !== null ? data.book.genre?.value : null,
           },
@@ -104,6 +115,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
           },
           body: {
             ...data.book,
+            themeId: data.book.theme.value,
             author: data.book.author.value,
             genre: data.book.genre !== null ? data.book.genre?.value : null,
           },
@@ -122,6 +134,9 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
   } = useForm<BookEditData>({
     resolver: zodResolver(bookEditScheme),
     defaultValues: {
+      theme: book
+        ? { value: book.themeId, label: getTheme(book.themeId).name }
+        : undefined,
       author: author ? { value: author.name, label: author.name } : undefined,
       genre: genre ? { value: genre.name, label: genre.name } : undefined,
       imageUrl: book?.imageUrl,
@@ -172,6 +187,26 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                 className="w-full pb-1 bg-transparent border-black border-b"
                 defaultValue={book?.title}
                 {...register('title')}
+              />
+            </FormItem>
+            <FormItem
+              className="p-1 mb-2 w-full text-black"
+              errorMessage={errors.theme?.message}
+            >
+              <Controller
+                name="theme"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    {...selectComponentStaticProps}
+                    placeholder="Select a book's displaying theme (required)"
+                    options={themes.map((theme) => ({
+                      value: theme.id,
+                      label: theme.name,
+                    }))}
+                  />
+                )}
               />
             </FormItem>
             <FormItem
