@@ -1,6 +1,9 @@
 import { Book } from '@/api';
 import React, { HTMLAttributes } from 'react';
 import { DefaultThemeComponent } from './DefaultThemeComponent';
+import { WithoutCoverThemeComponennt } from './WithoutCoverThemeComponent copy';
+import { MinimizedThemeComponent } from './MinimizedThemeComponent';
+import { ComposedThemeComponent } from './ComposedThemeComponent';
 
 export interface BookThemeComponentProps extends HTMLAttributes<React.FC> {
   book: Book;
@@ -16,26 +19,26 @@ export type Theme = {
 export const defaultTheme: Theme = {
   id: 0,
   name: 'Default',
-  getComponent: (book: Book) => <DefaultThemeComponent book={book} />,
+  getComponent: (book) => <DefaultThemeComponent book={book} />,
 };
 
 export const themes: Theme[] = [
   defaultTheme,
-  // {
-  //   id: 1,
-  //   name: 'Without cover',
-  //   component:
-  // },
-  // {
-  //   id: 2,
-  //   name: 'Minimized (only required fields)',
-  //   component:
-  // },
-  // {
-  //   id: 3,
-  //   name: 'Composed',
-  //   component:
-  // },
+  {
+    id: 1,
+    name: 'Without cover',
+    getComponent: (book) => <WithoutCoverThemeComponennt book={book} />,
+  },
+  {
+    id: 2,
+    name: 'Minimized (only required fields)',
+    getComponent: (book) => <MinimizedThemeComponent book={book} />,
+  },
+  {
+    id: 3,
+    name: 'Composed',
+    getComponent: (book) => <ComposedThemeComponent book={book} />,
+  },
 ];
 
 export const getTheme = (id: number) =>

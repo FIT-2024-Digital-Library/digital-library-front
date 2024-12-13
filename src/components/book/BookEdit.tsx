@@ -258,7 +258,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
               <input
                 id="publishedDate"
                 type="date"
-                className="pb-1 bg-transparent border-black border-b"
+                className="pb-1 bg-transparent border-black border-b font-mono"
                 defaultValue={
                   book?.publishedDate === null ? undefined : book?.publishedDate
                 }

@@ -19,7 +19,7 @@ export const BookDisplay: React.FC<BookDisplayProps> = ({ bookId }) => {
       errorMessage={bookError?.message}
       animated
     >
-      {book && getTheme(book.id).getComponent(book)}
+      {book && getTheme(book.themeId).getComponent(book)}
     </LoadableComponent>
   );
 };

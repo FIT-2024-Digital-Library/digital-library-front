@@ -4,7 +4,7 @@ import { Icon, LoadableComponent } from '@/components/library';
 import { useAuthor, useGenre } from '@/query/queryHooks';
 import { BookThemeComponent } from './themes';
 
-export const DefaultThemeComponent: BookThemeComponent = ({ book }) => {
+export const WithoutCoverThemeComponennt: BookThemeComponent = ({ book }) => {
   const {
     author,
     isPending: isAuthorPending,
@@ -17,17 +17,8 @@ export const DefaultThemeComponent: BookThemeComponent = ({ book }) => {
   } = useGenre(book.genre);
 
   return (
-    <div className="grid grid-cols-3">
-      <div>
-        {book?.imageUrl && book?.imageUrl !== null && (
-          <img
-            src={book?.imageUrl}
-            alt={`${book?.title}'s cover`}
-            className="w-full h-full object-cover"
-          />
-        )}
-      </div>
-      <div className="col-span-2 vstack px-8">
+    <div className="center">
+      <div className="w-1/2">
         <h1 className="text-2xl font-bold mb-4">{book?.title}</h1>
         <LoadableComponent
           isPending={isAuthorPending}

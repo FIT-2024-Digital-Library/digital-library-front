@@ -4,7 +4,7 @@ import { Icon, LoadableComponent } from '@/components/library';
 import { useAuthor, useGenre } from '@/query/queryHooks';
 import { BookThemeComponent } from './themes';
 
-export const DefaultThemeComponent: BookThemeComponent = ({ book }) => {
+export const ComposedThemeComponent: BookThemeComponent = ({ book }) => {
   const {
     author,
     isPending: isAuthorPending,
@@ -28,33 +28,24 @@ export const DefaultThemeComponent: BookThemeComponent = ({ book }) => {
         )}
       </div>
       <div className="col-span-2 vstack px-8">
-        <h1 className="text-2xl font-bold mb-4">{book?.title}</h1>
         <LoadableComponent
           isPending={isAuthorPending}
           errorMessage={authorError?.message}
           animated
         >
-          {author && (
-            <h2 className="text-xl mb-2">
-              Author: <span className="italic">{author.name}</span>
-            </h2>
-          )}
-        </LoadableComponent>
-        <LoadableComponent
-          isPending={isGenrePending}
-          errorMessage={genreError?.message}
-          animated
-        >
-          {genre && (
-            <h2 className="text-xl mb-2">
-              Genre: <span className="italic">{genre.name}</span>
-            </h2>
-          )}
+          <h1 className="text-xl font-bold mb-4 around">
+          <span className="text-2xl">{book?.title}</span>
+            {genre && <span className="italic">of {genre.name}</span>}
+            {author && <span className="italic">by {author.name}</span>}
+            {book?.publishedDate && (
+              <div className="inline">
+                <span className="mx-1">from</span>
+                <span className="font-mono">{book?.publishedDate}</span>
+              </div>
+            )}
+          </h1>
         </LoadableComponent>
 
-        <h2 className="text-xl mb-2">
-          Published at <span className="font-mono">{book?.publishedDate}</span>
-        </h2>
         <p className="my-4">{book?.description}</p>
         <a className="w-fit" href={book?.pdfUrl}>
           <Button
