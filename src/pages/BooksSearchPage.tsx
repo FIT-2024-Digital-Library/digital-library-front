@@ -10,6 +10,7 @@ interface Book {
   author: string;
   coverUrl: string;
   description: string;
+  averageRating?: number;
 }
 
 export const BooksSearchPage: React.FC = () => {
@@ -22,6 +23,8 @@ export const BooksSearchPage: React.FC = () => {
     author: '',
     genre: '',
     year: '',
+    minRating: 0,
+    maxRating: 5,
   });
 
   // Временные данные для демонстрации
@@ -32,14 +35,16 @@ export const BooksSearchPage: React.FC = () => {
         title: 'The Great Gatsby',
         author: 'F. Scott Fitzgerald',
         coverUrl: 'https://example.com/gatsby.jpg',
-        description: 'A story of the fabulously wealthy Jay Gatsby'
+        description: 'A story of the fabulously wealthy Jay Gatsby',
+        averageRating: 4.5
       },
       {
         id: '2',
         title: '1984',
         author: 'George Orwell',
         coverUrl: 'https://upload.wikimedia.org/wikipedia/ru/thumb/2/2e/1984_cover.jpg/401px-1984_cover.jpg?20200527161122',
-        description: 'A dystopian social science fiction novel'
+        description: 'A dystopian social science fiction novel',
+        averageRating: 4.8
       },
       // Можно добавить больше тестовых данных
     ];
@@ -51,9 +56,10 @@ export const BooksSearchPage: React.FC = () => {
   };
 
   const handleStructuredChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.type === 'range' ? parseFloat(e.target.value) : e.target.value;
     setStructuredSearch({
       ...structuredSearch,
-      [e.target.name]: e.target.value,
+      [e.target.name]: value,
     });
   };
 
@@ -83,39 +89,75 @@ export const BooksSearchPage: React.FC = () => {
               />
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                name="title"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200  focus:border-transparent transition-all duration-200 ease-in-out"
-                placeholder="Book Title"
-                value={structuredSearch.title}
-                onChange={handleStructuredChange}
-              />
-              <input
-                type="text"
-                name="author"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-transparent transition-all duration-200 ease-in-out"
-                placeholder="Author Name"
-                value={structuredSearch.author}
-                onChange={handleStructuredChange}
-              />
-              <input
-                type="text"
-                name="genre"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-transparent transition-all duration-200 ease-in-out"
-                placeholder="Genre"
-                value={structuredSearch.genre}
-                onChange={handleStructuredChange}
-              />
-              <input
-                type="number"
-                name="year"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200  focus:border-transparent transition-all duration-200 ease-in-out"
-                placeholder="Publication Year"
-                value={structuredSearch.year}
-                onChange={handleStructuredChange}
-              />
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  name="title"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-transparent transition-all duration-200 ease-in-out"
+                  placeholder="Book Title"
+                  value={structuredSearch.title}
+                  onChange={handleStructuredChange}
+                />
+                <input
+                  type="text"
+                  name="author"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-transparent transition-all duration-200 ease-in-out"
+                  placeholder="Author Name"
+                  value={structuredSearch.author}
+                  onChange={handleStructuredChange}
+                />
+                <input
+                  type="text"
+                  name="genre"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-transparent transition-all duration-200 ease-in-out"
+                  placeholder="Genre"
+                  value={structuredSearch.genre}
+                  onChange={handleStructuredChange}
+                />
+                <input
+                  type="number"
+                  name="year"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-transparent transition-all duration-200 ease-in-out"
+                  placeholder="Publication Year"
+                  value={structuredSearch.year}
+                  onChange={handleStructuredChange}
+                />
+              </div>
+              
+              <div className="bg-gray-50 p-4 rounded-xl">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Rating Range: {structuredSearch.minRating} - {structuredSearch.maxRating}
+                </label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Min Rating</label>
+                    <input
+                      type="range"
+                      name="minRating"
+                      min="0"
+                      max="5"
+                      step="0.1"
+                      value={structuredSearch.minRating}
+                      onChange={handleStructuredChange}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Max Rating</label>
+                    <input
+                      type="range"
+                      name="maxRating"
+                      min="0"
+                      max="5"
+                      step="0.1"
+                      value={structuredSearch.maxRating}
+                      onChange={handleStructuredChange}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
