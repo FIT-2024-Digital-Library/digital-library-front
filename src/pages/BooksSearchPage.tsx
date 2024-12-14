@@ -2,21 +2,14 @@ import React, { useState } from 'react';
 import { Toggle } from '@/components/library/Toggle';
 import { Button } from '@/components/library/Button';
 import { BookCard } from '@/components/book/BookCard';
-
-// Временный интерфейс для книги
-interface Book {
-  id: string;
-  title: string;
-  author: string;
-  coverUrl: string;
-  description: string;
-  averageRating?: number;
-}
+import { useBooks, BooksSearchParams } from '@/query/queryHooks';
+import { LoadableComponent } from '@/components/library/LoadableComponent';
 
 export const BooksSearchPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSemanticSearch, setIsSemanticSearch] = useState(false);
-  const [searchResults, setSearchResults] = useState<Book[]>([]);
+  const [searchParams, setSearchParams] = useState<BooksSearchParams | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const [structuredSearch, setStructuredSearch] = useState({
     title: '',
@@ -27,32 +20,22 @@ export const BooksSearchPage: React.FC = () => {
     maxRating: 5,
   });
 
-  // Временные данные для демонстрации
-  const mockSearch = () => {
-    const mockResults: Book[] = [
-      {
-        id: '1',
-        title: 'The Great Gatsby',
-        author: 'F. Scott Fitzgerald',
-        coverUrl: 'https://example.com/gatsby.jpg',
-        description: 'A story of the fabulously wealthy Jay Gatsby',
-        averageRating: 4.5
-      },
-      {
-        id: '2',
-        title: '1984',
-        author: 'George Orwell',
-        coverUrl: 'https://upload.wikimedia.org/wikipedia/ru/thumb/2/2e/1984_cover.jpg/401px-1984_cover.jpg?20200527161122',
-        description: 'A dystopian social science fiction novel',
-        averageRating: 4.8
-      },
-      // Можно добавить больше тестовых данных
-    ];
-    setSearchResults(mockResults);
-  };
+  const { books, isPending, error } = useBooks(hasSearched ? searchParams : null);
 
   const handleSearch = () => {
-    mockSearch(); // Временно используем мок-данные
+    setHasSearched(true);
+    setSearchParams(
+      isSemanticSearch
+        ? { description: searchQuery }
+        : {
+            title: structuredSearch.title || undefined,
+            author: structuredSearch.author || undefined,
+            genre: structuredSearch.genre || undefined,
+            published_date: structuredSearch.year || undefined,
+            min_rating: structuredSearch.minRating || undefined,
+            max_rating: structuredSearch.maxRating || undefined,
+          }
+    );
   };
 
   const handleStructuredChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,6 +70,14 @@ export const BooksSearchPage: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              <Button
+                variant="search"
+                className="w-full px-4 py-3"
+                onClick={handleSearch}
+                loading={isPending}
+              >
+                Search Books
+              </Button>
             </div>
           ) : (
             <div className="space-y-4">
@@ -124,7 +115,7 @@ export const BooksSearchPage: React.FC = () => {
                   onChange={handleStructuredChange}
                 />
               </div>
-              
+
               <div className="bg-gray-50 p-4 rounded-xl">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Rating Range: {structuredSearch.minRating} - {structuredSearch.maxRating}
@@ -158,26 +149,73 @@ export const BooksSearchPage: React.FC = () => {
                   </div>
                 </div>
               </div>
+              <Button
+                variant="search"
+                className="w-full mt-4 px-4 py-3"
+                onClick={handleSearch}
+                loading={isPending}
+              >
+                Search Books
+              </Button>
             </div>
           )}
-
-          <div className="mt-8 flex justify-center">
-            <Button
-              variant="search"
-              className="w-[300px] px-8 py-3"
-              onClick={handleSearch}
-            >
-              Search Books
-            </Button>
-          </div>
         </div>
 
-        {/* Результаты поиска */}
+        {/* Search Results */}
         <div className="mt-12 border-t pt-8">
-          {searchResults.length > 0 ? (
+          {isPending ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {searchResults.map((book) => (
-                <BookCard key={book.id} book={book} />
+              {[...Array(6)].map((_, index) => (
+                <div key={index} className="animate-pulse">
+                  <div className="bg-gray-200 h-[300px] rounded-xl mb-4"></div>
+                  <div className="space-y-3">
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : error ? (
+            <div className="text-center">
+              <div className="inline-block p-4 rounded-full bg-red-50 mb-4">
+                <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Error Loading Results</h3>
+              <p className="text-gray-500">{error.message || 'An unexpected error occurred. Please try again.'}</p>
+              <Button
+                variant="search"
+                className="mt-4"
+                onClick={handleSearch}
+              >
+                Retry Search
+              </Button>
+            </div>
+          ) : !hasSearched ? (
+            <div className="text-center">
+              <div className="inline-block p-4 rounded-full bg-gray-50 mb-4">
+                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Start Your Search</h3>
+              <p className="text-gray-500">Enter your search criteria and click the search button</p>
+            </div>
+          ) : books && books.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {books.map((book) => (
+                <BookCard
+                  key={book.id}
+                  book={{
+                    id: book.id.toString(),
+                    title: book.title,
+                    author: book.author.toString(),
+                    coverUrl: book.imageUrl || 'https://via.placeholder.com/200x300?text=No+Cover',
+                    description: book.description,
+                    averageRating: 3 + Math.random() * 2,
+                  }}
+                />
               ))}
             </div>
           ) : (
