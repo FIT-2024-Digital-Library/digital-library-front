@@ -3,14 +3,9 @@ import { produce } from 'immer';
 import { devtools } from 'zustand/middleware';
 
 import { Mutator } from './types';
-import {
-  CollectionsState,
-  UIState,
-  createCollectionsStateSlice,
-  createUIStateSlice,
-} from './slices';
+import { UIState, createUIStateSlice } from './slices';
 
-type StoreType = UIState & CollectionsState;
+type StoreType = UIState;
 
 export const useAppStore = create<StoreType>()(
   devtools((set, ...rest) => {
@@ -18,7 +13,6 @@ export const useAppStore = create<StoreType>()(
 
     return {
       ...createUIStateSlice(mutate, set, ...rest),
-      ...createCollectionsStateSlice(mutate, set, ...rest),
     };
   })
 );

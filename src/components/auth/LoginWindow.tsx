@@ -27,7 +27,7 @@ export const LoginWindow: React.FC = () => {
           <div>
             <img
               src="https://avatars.mds.yandex.net/i?id=814637c78277135739ec143a4f3ff0a5_l-5235819-images-thumbs&n=13"
-              alt="Image"
+              alt="Books image"
               className="w-full h-full object-cover"
             />
           </div>

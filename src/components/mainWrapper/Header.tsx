@@ -3,9 +3,22 @@ import { Link } from 'wouter';
 
 import { Button } from '@/components/library/Button';
 import { useAppStore } from '@/state/state';
+import { dataExtractionWrapper } from '@/query';
+import { getProfileQueryOptions, useProfile } from '@/query/queryHooks';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { logoutUserUsersLogoutPost } from '@/api';
 
 export const Header: React.FC = () => {
   const showLoginWindow = useAppStore((state) => state.showLoginWindow);
+
+  const { profile } = useProfile();
+
+  const queryClient = useQueryClient();
+  const { mutate: logout } = useMutation({
+    mutationFn: () => dataExtractionWrapper(logoutUserUsersLogoutPost()),
+    onSuccess: () =>
+      queryClient.resetQueries({ queryKey: getProfileQueryOptions().queryKey }),
+  });
 
   return (
     <header>
@@ -21,13 +34,26 @@ export const Header: React.FC = () => {
           </Link>
         </div>
         <div className="flex justify-end items-center">
-          <Button
-            variant="plate-grey"
-            className="p-4 my-1 mx-2 font-bold"
-            onClick={showLoginWindow}
-          >
-            Sign in
-          </Button>
+          {profile ? (
+            <>
+              <span>{profile.name}</span>
+              <Button
+                variant="plate-grey"
+                className="p-4 my-1 mx-2 font-bold"
+                onClick={() => logout()}
+              >
+                Sign out
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="plate-grey"
+              className="p-4 my-1 mx-2 font-bold"
+              onClick={showLoginWindow}
+            >
+              Sign in
+            </Button>
+          )}
         </div>
       </div>
     </header>
