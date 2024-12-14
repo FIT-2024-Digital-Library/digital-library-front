@@ -47,6 +47,10 @@ export const BookSchema = {
       type: 'integer',
       title: 'Id',
     },
+    themeId: {
+      type: 'integer',
+      title: 'Themeid',
+    },
     title: {
       type: 'string',
       title: 'Title',
@@ -106,12 +110,16 @@ export const BookSchema = {
     },
   },
   type: 'object',
-  required: ['id', 'title', 'author', 'pdfUrl'],
+  required: ['id', 'themeId', 'title', 'author', 'pdfUrl'],
   title: 'Book',
 } as const;
 
 export const BookCreateSchema = {
   properties: {
+    themeId: {
+      type: 'integer',
+      title: 'Themeid',
+    },
     title: {
       type: 'string',
       title: 'Title',
@@ -171,7 +179,7 @@ export const BookCreateSchema = {
     },
   },
   type: 'object',
-  required: ['title', 'author', 'pdfUrl'],
+  required: ['themeId', 'title', 'author', 'pdfUrl'],
   title: 'BookCreate',
 } as const;
 
