@@ -15,6 +15,7 @@ export type Body_upload_file_storage__post = {
 
 export type Book = {
   id: number;
+  themeId: number;
   title: string;
   author: number;
   genre?: number | null;
@@ -25,6 +26,7 @@ export type Book = {
 };
 
 export type BookCreate = {
+  themeId: number;
   title: string;
   author: string;
   genre?: string | null;

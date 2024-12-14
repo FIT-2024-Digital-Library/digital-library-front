@@ -48,8 +48,8 @@ export const BookPage: React.FC = () => {
             <BookEdit bookId={Number(id)} setIsEdit={setIsEdit} />
           )}
           {profile && profile.privileges !== 'basic' && !isEdit && (
-            <div className="grid grid-cols-3 my-2">
-              <div className="grid grid-cols-2">
+            <div className="center my-5">
+              <div className="grid grid-cols-2 w-1/2">
                 <Button
                   className="mx-1 py-2 text-xl"
                   variant="plate-black"
