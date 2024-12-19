@@ -8,7 +8,7 @@ import { LoadableComponent } from '@/components/library/LoadableComponent';
 export const BooksSearchPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSemanticSearch, setIsSemanticSearch] = useState(false);
-  const [searchParams, setSearchParams] = useState<BooksSearchParams | null>(null);
+  const [searchParams, setSearchParams] = useState<BooksSearchParams | undefined>(undefined);
   const [hasSearched, setHasSearched] = useState(false);
 
   const [structuredSearch, setStructuredSearch] = useState({
@@ -20,7 +20,7 @@ export const BooksSearchPage: React.FC = () => {
     maxRating: 5,
   });
 
-  const { books, isPending, error } = useBooks(hasSearched ? searchParams : null);
+  const { books, isPending, error } = useBooks(hasSearched ? searchParams : undefined);
 
   const handleSearch = () => {
     setHasSearched(true);
@@ -207,14 +207,7 @@ export const BooksSearchPage: React.FC = () => {
               {books.map((book) => (
                 <BookCard
                   key={book.id}
-                  book={{
-                    id: book.id.toString(),
-                    title: book.title,
-                    author: book.author.toString(),
-                    coverUrl: book.imageUrl || 'https://via.placeholder.com/200x300?text=No+Cover',
-                    description: book.description,
-                    averageRating: 3 + Math.random() * 2,
-                  }}
+                  bookId={book.id.toString()}
                 />
               ))}
             </div>
