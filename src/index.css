@@ -30,6 +30,119 @@
   .font-inter {
     font-family: 'Inter';
   }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-down {
+    from {
+      transform: translateY(-30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes text-focus-in {
+    0% {
+      filter: blur(12px);
+      opacity: 0;
+    }
+    100% {
+      filter: blur(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes text-shimmer {
+    0% {
+      background-position: -200% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.85;
+      transform: scale(1.02);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 1s ease-out;
+  }
+
+  .animate-fade-in-delayed {
+    animation: fade-in 1s ease-out 0.8s backwards;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 1s ease-out;
+  }
+
+  .animate-slide-up-delayed {
+    animation: slide-up 1s ease-out 0.4s backwards;
+  }
+
+  .animate-slide-down {
+    animation: slide-down 1s ease-out;
+  }
+
+  .animate-text-focus-in {
+    animation: text-focus-in 1s ease-out;
+  }
+
+  .animate-text-focus-in-delay-1 {
+    animation: text-focus-in 1s ease-out 0.3s backwards;
+  }
+
+  .animate-text-focus-in-delay-2 {
+    animation: text-focus-in 1s ease-out 0.6s backwards;
+  }
+
+  .animate-text-shimmer {
+    background: linear-gradient(
+      to right,
+      var(--color-1-9) 20%,
+      var(--color-1-5) 40%,
+      var(--color-1-4) 60%,
+      var(--color-1-9) 80%
+    );
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: text-shimmer 3s linear infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 2s ease-in-out infinite;
+  }
 }
 
 
