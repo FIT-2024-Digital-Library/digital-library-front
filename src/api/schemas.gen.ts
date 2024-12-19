@@ -183,6 +183,102 @@ export const BookCreateSchema = {
   title: 'BookCreate',
 } as const;
 
+export const BookUpdateSchema = {
+  properties: {
+    themeId: {
+      anyOf: [
+        {
+          type: 'integer',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Themeid',
+    },
+    title: {
+      anyOf: [
+        {
+          type: 'string',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Title',
+    },
+    author: {
+      anyOf: [
+        {
+          type: 'string',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Author',
+    },
+    genre: {
+      anyOf: [
+        {
+          type: 'string',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Genre',
+    },
+    publishedDate: {
+      anyOf: [
+        {
+          type: 'string',
+          format: 'date',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Publisheddate',
+    },
+    description: {
+      anyOf: [
+        {
+          type: 'string',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Description',
+    },
+    imageUrl: {
+      anyOf: [
+        {
+          type: 'string',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Imageurl',
+    },
+    pdfUrl: {
+      anyOf: [
+        {
+          type: 'string',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Pdfurl',
+    },
+  },
+  type: 'object',
+  title: 'BookUpdate',
+} as const;
+
 export const FileUploadedSchemeSchema = {
   properties: {
     url: {
@@ -239,7 +335,7 @@ export const HTTPValidationErrorSchema = {
 
 export const PrivilegesEnumSchema = {
   type: 'string',
-  enum: ['basic', 'admin', 'moderator'],
+  enum: ['basic', 'moderator', 'admin'],
   title: 'PrivilegesEnum',
 } as const;
 
@@ -417,6 +513,41 @@ export const UserRegisterSchema = {
   type: 'object',
   required: ['email', 'password', 'name'],
   title: 'UserRegister',
+} as const;
+
+export const UserUpdateSchema = {
+  properties: {
+    password: {
+      anyOf: [
+        {
+          type: 'string',
+          maxLength: 50,
+          minLength: 5,
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Password',
+      description: 'Пароль, от 5 до 50 знаков',
+    },
+    name: {
+      anyOf: [
+        {
+          type: 'string',
+          maxLength: 50,
+          minLength: 3,
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Name',
+      description: 'Имя, от 3 до 50 символов',
+    },
+  },
+  type: 'object',
+  title: 'UserUpdate',
 } as const;
 
 export const ValidationErrorSchema = {

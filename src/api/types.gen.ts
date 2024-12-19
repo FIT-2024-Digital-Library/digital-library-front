@@ -36,6 +36,17 @@ export type BookCreate = {
   pdfUrl: string;
 };
 
+export type BookUpdate = {
+  themeId?: number | null;
+  title?: string | null;
+  author?: string | null;
+  genre?: string | null;
+  publishedDate?: string | null;
+  description?: string | null;
+  imageUrl?: string | null;
+  pdfUrl?: string | null;
+};
+
 export type FileUploadedScheme = {
   url: string;
 };
@@ -53,7 +64,7 @@ export type HTTPValidationError = {
   detail?: Array<ValidationError>;
 };
 
-export type PrivilegesEnum = 'basic' | 'admin' | 'moderator';
+export type PrivilegesEnum = 'basic' | 'moderator' | 'admin';
 
 export type Review = {
   mark: number;
@@ -126,6 +137,17 @@ export type UserRegister = {
   name: string;
 };
 
+export type UserUpdate = {
+  /**
+   * Пароль, от 5 до 50 знаков
+   */
+  password?: string | null;
+  /**
+   * Имя, от 3 до 50 символов
+   */
+  name?: string | null;
+};
+
 export type ValidationError = {
   loc: Array<string | number>;
   msg: string;
@@ -146,14 +168,6 @@ export type GetBooksBooksGetData = {
      * Filter by name
      */
     genre?: string | null;
-    /**
-     * Filter by image's URL
-     */
-    image_url?: string | null;
-    /**
-     * Filter by PDF URL
-     */
-    pdf_url?: string | null;
     /**
      * Filter by publication date
      */
@@ -188,7 +202,7 @@ export type CreateBookBooksCreatePostResponse = number;
 export type CreateBookBooksCreatePostError = HTTPValidationError;
 
 export type UpdateBookBooksBookIdUpdatePutData = {
-  body: BookCreate;
+  body: BookUpdate;
   path: {
     book_id: number;
   };
@@ -232,18 +246,22 @@ export type LogoutUserUsersLogoutPostResponse = unknown;
 
 export type LogoutUserUsersLogoutPostError = unknown;
 
-export type GetAdminRoleUsersUserIdGetAdminRolePostData = {
+export type SetPrivilegeForUserUsersUserIdSetPrivilegePostData = {
   path: {
     user_id: number;
   };
+  query: {
+    privilege: PrivilegesEnum;
+  };
 };
 
-export type GetAdminRoleUsersUserIdGetAdminRolePostResponse = User;
+export type SetPrivilegeForUserUsersUserIdSetPrivilegePostResponse = User;
 
-export type GetAdminRoleUsersUserIdGetAdminRolePostError = HTTPValidationError;
+export type SetPrivilegeForUserUsersUserIdSetPrivilegePostError =
+  HTTPValidationError;
 
 export type UpdateUserByIdUsersUserIdUpdatePutData = {
-  body: UserRegister;
+  body: UserUpdate;
   path: {
     user_id: number;
   };

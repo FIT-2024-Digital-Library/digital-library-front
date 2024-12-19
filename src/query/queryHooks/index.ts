@@ -1,4 +1,5 @@
 export * from './useProfile';
+export * from './useUser';
 
 export * from './useBook';
 export * from './useBooks';

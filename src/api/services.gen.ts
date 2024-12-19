@@ -32,9 +32,9 @@ import type {
   RegisterUsersRegisterPostResponse,
   LogoutUserUsersLogoutPostError,
   LogoutUserUsersLogoutPostResponse,
-  GetAdminRoleUsersUserIdGetAdminRolePostData,
-  GetAdminRoleUsersUserIdGetAdminRolePostError,
-  GetAdminRoleUsersUserIdGetAdminRolePostResponse,
+  SetPrivilegeForUserUsersUserIdSetPrivilegePostData,
+  SetPrivilegeForUserUsersUserIdSetPrivilegePostError,
+  SetPrivilegeForUserUsersUserIdSetPrivilegePostResponse,
   UpdateUserByIdUsersUserIdUpdatePutData,
   UpdateUserByIdUsersUserIdUpdatePutError,
   UpdateUserByIdUsersUserIdUpdatePutResponse,
@@ -142,7 +142,7 @@ export const getBookBooksBookIdGet = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Creates new book. Only for authorized user with admin privilege
+ * Creates new book. Only for authorized user with moderator privilege
  */
 export const createBookBooksCreatePost = <ThrowOnError extends boolean = false>(
   options: Options<CreateBookBooksCreatePostData, ThrowOnError>
@@ -258,20 +258,23 @@ export const logoutUserUsersLogoutPost = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Logs user in
+ * Sets the privilege for user
  */
-export const getAdminRoleUsersUserIdGetAdminRolePost = <
+export const setPrivilegeForUserUsersUserIdSetPrivilegePost = <
   ThrowOnError extends boolean = false
 >(
-  options: Options<GetAdminRoleUsersUserIdGetAdminRolePostData, ThrowOnError>
+  options: Options<
+    SetPrivilegeForUserUsersUserIdSetPrivilegePostData,
+    ThrowOnError
+  >
 ) => {
   return (options?.client ?? client).post<
-    GetAdminRoleUsersUserIdGetAdminRolePostResponse,
-    GetAdminRoleUsersUserIdGetAdminRolePostError,
+    SetPrivilegeForUserUsersUserIdSetPrivilegePostResponse,
+    SetPrivilegeForUserUsersUserIdSetPrivilegePostError,
     ThrowOnError
   >({
     ...options,
-    url: '/users/{user_id}/get_admin_role',
+    url: '/users/{user_id}/set_privilege',
   });
 };
 
