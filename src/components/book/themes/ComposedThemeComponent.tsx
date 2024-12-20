@@ -3,7 +3,7 @@ import { Button } from '@/components/library/Button';
 import { Icon, LoadableComponent } from '@/components/library';
 import { useAuthor, useGenre } from '@/query/queryHooks';
 import { BookThemeComponent } from './themes';
-import { getFileRealUrl } from '../BookCard';
+import { getFileRealUrl } from '@/query';
 
 export const ComposedThemeComponent: BookThemeComponent = ({ book }) => {
   const {

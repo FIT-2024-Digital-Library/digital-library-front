@@ -1,9 +1,6 @@
 import React from 'react';
-import { Button } from '@/components/library/Button';
-import { Icon } from '../library/Icon';
 import { useBook } from '@/query/queryHooks/useBook';
 import { LoadableComponent } from '../library/LoadableComponent';
-import { useAuthor, useGenre } from '@/query/queryHooks';
 import { getTheme } from './themes';
 
 export interface BookDisplayProps {

@@ -2,14 +2,11 @@ import React from 'react';
 import { Link } from 'wouter';
 import { useBook, useAuthor, useAverage } from '@/query/queryHooks';
 import { LoadableComponent } from '@/components/library';
-import { serverUrl } from '@/main';
+import { getFileRealUrl } from '@/query';
 
 interface BookCardProps {
   bookId: string;
 }
-
-export const getFileRealUrl = (qname: string) =>
-  `${serverUrl}/storage/download/${qname}`;
 
 export const BookCard: React.FC<BookCardProps> = ({ bookId }) => {
   const { book } = useBook(parseInt(bookId));

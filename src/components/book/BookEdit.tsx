@@ -28,7 +28,7 @@ import {
   updateBookBooksBookIdUpdatePut,
 } from '@/api';
 import { getTheme, themes } from './themes';
-import { getFileRealUrl } from './BookCard';
+import { getFileRealUrl } from '@/query';
 
 export const bookEditScheme = z.object({
   title: z.string().min(1, 'Title is required'),
