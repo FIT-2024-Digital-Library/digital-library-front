@@ -21,8 +21,8 @@ export type Book = {
   genre?: number | null;
   publishedDate?: string | null;
   description?: string | null;
-  imageUrl?: string | null;
-  pdfUrl: string;
+  imageQname?: string | null;
+  pdfQname: string;
 };
 
 export type BookCreate = {
@@ -32,8 +32,8 @@ export type BookCreate = {
   genre?: string | null;
   publishedDate?: string | null;
   description?: string | null;
-  imageUrl?: string | null;
-  pdfUrl: string;
+  imageQname?: string | null;
+  pdfQname: string;
 };
 
 export type BookUpdate = {
@@ -43,12 +43,12 @@ export type BookUpdate = {
   genre?: string | null;
   publishedDate?: string | null;
   description?: string | null;
-  imageUrl?: string | null;
-  pdfUrl?: string | null;
+  imageQname?: string | null;
+  pdfQname?: string | null;
 };
 
 export type FileUploadedScheme = {
-  url: string;
+  qname: string;
 };
 
 export type Genre = {

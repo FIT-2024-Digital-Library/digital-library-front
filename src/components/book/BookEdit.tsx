@@ -28,6 +28,7 @@ import {
   updateBookBooksBookIdUpdatePut,
 } from '@/api';
 import { getTheme, themes } from './themes';
+import { getFileRealUrl } from './BookCard';
 
 export const bookEditScheme = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -52,8 +53,8 @@ export const bookEditScheme = z.object({
     .nullable(),
   publishedDate: z.string().date(),
   description: z.string(),
-  imageUrl: z.string().optional().nullable(),
-  pdfUrl: z.string().url().min(1, "Book's file is required"),
+  imageQname: z.string().optional().nullable(),
+  pdfQname: z.string().min(1, 'Book file is required'),
 });
 export type BookEditData = z.infer<typeof bookEditScheme>;
 
@@ -139,12 +140,12 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
         : undefined,
       author: author ? { value: author.name, label: author.name } : undefined,
       genre: genre ? { value: genre.name, label: genre.name } : undefined,
-      imageUrl: book?.imageUrl,
-      pdfUrl: book?.pdfUrl ?? '',
+      imageQname: book?.imageQname,
+      pdfQname: book?.pdfQname ?? '',
     },
   });
-  const imageUrlWatched = useWatch({ name: 'imageUrl', control: control });
-  const pdfUrlWatched = useWatch({ name: 'pdfUrl', control: control });
+  const imageUrlWatched = useWatch({ name: 'imageQname', control: control });
+  const pdfUrlWatched = useWatch({ name: 'pdfQname', control: control });
 
   const saveBookData: SubmitHandler<BookEditData> = (data) => {
     if (bookId !== 'new') updateBook({ id: bookId, book: data });
@@ -171,7 +172,11 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
         <div className="grid grid-cols-3">
           <div className="center vstack">
             <img
-              src={imageUrlWatched !== null ? imageUrlWatched : ''}
+              src={
+                imageUrlWatched && imageUrlWatched !== null
+                  ? getFileRealUrl(imageUrlWatched)
+                  : ''
+              }
               alt={`${book?.title ?? 'Book'}'s cover`}
               className="w-full h-full object-cover mb-2"
             />
@@ -281,10 +286,10 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
             </FormItem>
           </div>
           <div className="center">
-            <FormItem errorMessage={errors.imageUrl?.message}>
+            <FormItem errorMessage={errors.imageQname?.message}>
               <Controller
                 control={control}
-                name="imageUrl"
+                name="imageQname"
                 rules={{ required: false }}
                 render={({ field: { onChange } }) => (
                   <>
@@ -306,10 +311,10 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
             </FormItem>
           </div>
           <div className="center">
-            <FormItem errorMessage={errors.pdfUrl?.message}>
+            <FormItem errorMessage={errors.pdfQname?.message}>
               <Controller
                 control={control}
-                name="pdfUrl"
+                name="pdfQname"
                 render={({ field: { onChange } }) => (
                   <>
                     <UploadDropdown
@@ -327,7 +332,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
             </FormItem>
           </div>
           <div className="center">
-            <a href={pdfUrlWatched}>
+            <a href={getFileRealUrl(pdfUrlWatched)}>
               <Button className="rounded-md w-fit" variant="plate-grey">
                 <span>Download book</span>
                 <Icon icon="download" />

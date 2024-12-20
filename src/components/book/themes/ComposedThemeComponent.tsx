@@ -3,6 +3,7 @@ import { Button } from '@/components/library/Button';
 import { Icon, LoadableComponent } from '@/components/library';
 import { useAuthor, useGenre } from '@/query/queryHooks';
 import { BookThemeComponent } from './themes';
+import { getFileRealUrl } from '../BookCard';
 
 export const ComposedThemeComponent: BookThemeComponent = ({ book }) => {
   const {
@@ -19,9 +20,9 @@ export const ComposedThemeComponent: BookThemeComponent = ({ book }) => {
   return (
     <div className="grid grid-cols-3">
       <div>
-        {book?.imageUrl && book?.imageUrl !== null && (
+        {book?.imageQname && book?.imageQname !== null && (
           <img
-            src={book?.imageUrl}
+            src={getFileRealUrl(book?.imageQname)}
             alt={`${book?.title}'s cover`}
             className="w-full h-full object-cover"
           />
@@ -34,7 +35,7 @@ export const ComposedThemeComponent: BookThemeComponent = ({ book }) => {
           animated
         >
           <h1 className="text-xl font-bold mb-4 around">
-          <span className="text-2xl">{book?.title}</span>
+            <span className="text-2xl">{book?.title}</span>
             {genre && <span className="italic">of {genre.name}</span>}
             {author && <span className="italic">by {author.name}</span>}
             {book?.publishedDate && (
@@ -47,7 +48,7 @@ export const ComposedThemeComponent: BookThemeComponent = ({ book }) => {
         </LoadableComponent>
 
         <p className="my-4">{book?.description}</p>
-        <a className="w-fit" href={book?.pdfUrl}>
+        <a className="w-fit" href={getFileRealUrl(book?.pdfQname)}>
           <Button
             className="px-4 py-2 font-bold text-xl rounded-lg"
             variant="plate-grey"

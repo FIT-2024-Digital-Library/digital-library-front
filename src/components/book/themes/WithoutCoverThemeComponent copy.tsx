@@ -3,6 +3,7 @@ import { Button } from '@/components/library/Button';
 import { Icon, LoadableComponent } from '@/components/library';
 import { useAuthor, useGenre } from '@/query/queryHooks';
 import { BookThemeComponent } from './themes';
+import { getFileRealUrl } from '../BookCard';
 
 export const WithoutCoverThemeComponennt: BookThemeComponent = ({ book }) => {
   const {
@@ -47,7 +48,7 @@ export const WithoutCoverThemeComponennt: BookThemeComponent = ({ book }) => {
           Published at <span className="font-mono">{book?.publishedDate}</span>
         </h2>
         <p className="my-4">{book?.description}</p>
-        <a className="w-fit" href={book?.pdfUrl}>
+        <a className="w-fit" href={getFileRealUrl(book?.pdfQname)}>
           <Button
             className="px-4 py-2 font-bold text-xl rounded-lg"
             variant="plate-grey"

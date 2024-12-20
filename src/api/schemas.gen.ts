@@ -93,7 +93,7 @@ export const BookSchema = {
       ],
       title: 'Description',
     },
-    imageUrl: {
+    imageQname: {
       anyOf: [
         {
           type: 'string',
@@ -102,15 +102,15 @@ export const BookSchema = {
           type: 'null',
         },
       ],
-      title: 'Imageurl',
+      title: 'Imageqname',
     },
-    pdfUrl: {
+    pdfQname: {
       type: 'string',
-      title: 'Pdfurl',
+      title: 'Pdfqname',
     },
   },
   type: 'object',
-  required: ['id', 'themeId', 'title', 'author', 'pdfUrl'],
+  required: ['id', 'themeId', 'title', 'author', 'pdfQname'],
   title: 'Book',
 } as const;
 
@@ -162,7 +162,7 @@ export const BookCreateSchema = {
       ],
       title: 'Description',
     },
-    imageUrl: {
+    imageQname: {
       anyOf: [
         {
           type: 'string',
@@ -171,15 +171,15 @@ export const BookCreateSchema = {
           type: 'null',
         },
       ],
-      title: 'Imageurl',
+      title: 'Imageqname',
     },
-    pdfUrl: {
+    pdfQname: {
       type: 'string',
-      title: 'Pdfurl',
+      title: 'Pdfqname',
     },
   },
   type: 'object',
-  required: ['themeId', 'title', 'author', 'pdfUrl'],
+  required: ['themeId', 'title', 'author', 'pdfQname'],
   title: 'BookCreate',
 } as const;
 
@@ -252,7 +252,7 @@ export const BookUpdateSchema = {
       ],
       title: 'Description',
     },
-    imageUrl: {
+    imageQname: {
       anyOf: [
         {
           type: 'string',
@@ -261,9 +261,9 @@ export const BookUpdateSchema = {
           type: 'null',
         },
       ],
-      title: 'Imageurl',
+      title: 'Imageqname',
     },
-    pdfUrl: {
+    pdfQname: {
       anyOf: [
         {
           type: 'string',
@@ -272,7 +272,7 @@ export const BookUpdateSchema = {
           type: 'null',
         },
       ],
-      title: 'Pdfurl',
+      title: 'Pdfqname',
     },
   },
   type: 'object',
@@ -281,13 +281,13 @@ export const BookUpdateSchema = {
 
 export const FileUploadedSchemeSchema = {
   properties: {
-    url: {
+    qname: {
       type: 'string',
-      title: 'Url',
+      title: 'Qname',
     },
   },
   type: 'object',
-  required: ['url'],
+  required: ['qname'],
   title: 'FileUploadedScheme',
 } as const;
 

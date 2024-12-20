@@ -3,6 +3,7 @@ import { Button } from '@/components/library/Button';
 import { Icon, LoadableComponent } from '@/components/library';
 import { useAuthor } from '@/query/queryHooks';
 import { BookThemeComponent } from './themes';
+import { getFileRealUrl } from '../BookCard';
 
 export const MinimizedThemeComponent: BookThemeComponent = ({ book }) => {
   const {
@@ -15,7 +16,7 @@ export const MinimizedThemeComponent: BookThemeComponent = ({ book }) => {
     <div className="center">
       <div className="w-1/2">
         <div className="flex justify-left">
-          <a className="w-fit mx-2" href={book?.pdfUrl}>
+          <a className="w-fit mx-2" href={getFileRealUrl(book?.pdfQname)}>
             <Button
               className="p-2 font-bold text-xl rounded-lg"
               variant="plate-grey"
