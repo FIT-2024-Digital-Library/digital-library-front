@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, PropsWithChildren, useState } from 'react';
+import React, { HTMLAttributes, useState } from 'react';
 import { Review } from './Review';
 import { Button } from '../library/Button';
 import { ReviewForm } from './ReviewForm';
@@ -11,8 +11,7 @@ import {
   getReviewsQueryOptions,
 } from '@/query/queryHooks';
 
-export interface MyReviewProps
-  extends PropsWithChildren<HTMLAttributes<React.FC>> {
+export interface MyReviewProps extends HTMLAttributes<React.FC> {
   reviewId?: number;
   bookId: number;
 }

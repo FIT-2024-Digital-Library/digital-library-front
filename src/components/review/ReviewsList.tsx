@@ -1,16 +1,10 @@
-import React, {
-  HTMLAttributes,
-  PropsWithChildren,
-  useEffect,
-  useState,
-} from 'react';
+import React, { HTMLAttributes } from 'react';
 import { Review } from './Review';
 import { MyReview } from './MyReview';
 import { useReviews, useProfile, useAverage } from '@/query/queryHooks';
 import { LoadableComponent } from '../library/LoadableComponent';
 
-export interface ReviewListProps
-  extends PropsWithChildren<HTMLAttributes<React.FC>> {
+export interface ReviewListProps extends HTMLAttributes<React.FC> {
   bookId: number;
 }
 

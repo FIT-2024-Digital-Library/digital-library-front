@@ -11,7 +11,7 @@ import {
   Button,
   FormItem,
   Icon,
-  UploadDropdown,
+  UploadButton,
   LoadableComponent,
 } from '@/components/library';
 import { dataExtractionWrapper } from '@/query';
@@ -122,7 +122,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
           },
         })
       ),
-    onSuccess: (response) => {
+    onSuccess: () => {
       setIsEdit?.(false);
     },
   });
@@ -293,17 +293,10 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                 rules={{ required: false }}
                 render={({ field: { onChange } }) => (
                   <>
-                    <UploadDropdown
-                      buttonComponent={
-                        <Button
-                          className="rounded-md w-fit"
-                          variant="plate-grey"
-                        >
-                          <span>Upload new cover</span>
-                          <Icon icon="add-file" />
-                        </Button>
-                      }
-                      setUploadedLink={onChange}
+                    <UploadButton
+                      buttonText="Upload new image"
+                      buttonClassname="rounded-md w-fit"
+                      onSuccess={(response) => onChange(response.qname)}
                     />
                   </>
                 )}
@@ -317,14 +310,10 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                 name="pdfQname"
                 render={({ field: { onChange } }) => (
                   <>
-                    <UploadDropdown
-                      buttonComponent={
-                        <Button className="rounded-md" variant="plate-grey">
-                          <span>Upload new PDF</span>
-                          <Icon icon="pdf" />
-                        </Button>
-                      }
-                      setUploadedLink={onChange}
+                    <UploadButton
+                      buttonText="Upload new PDF"
+                      buttonClassname="rounded-md"
+                      onSuccess={(response) => onChange(response.qname)}
                     />
                   </>
                 )}

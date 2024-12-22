@@ -6,4 +6,4 @@ export * from './LoadableComponent';
 export * from './PopUp';
 export * from './ProgressBar';
 export * from './SliderCheckbox';
-export * from './UploadDropdown';
+export * from './UploadButton';
