@@ -23,6 +23,8 @@ import {
   TbX,
   TbDownload,
   TbUpload,
+  TbUser,
+  TbChevronDown,
 } from 'react-icons/tb';
 import {
   AiFillFileAdd,
@@ -70,6 +72,8 @@ export const icons = [
   'loading-1/4',
   'loading-3/4',
   'check',
+  'user',
+  'chevron-down',
 ] as const;
 export type IconType = (typeof icons)[number];
 
@@ -115,6 +119,8 @@ export const Icon: React.FC<IconProps> = ({
     .with('loading-1/4', () => AiOutlineLoading)
     .with('loading-3/4', () => AiOutlineLoading3Quarters)
     .with('check', () => BiCheck)
+    .with('user', () => TbUser)
+    .with('chevron-down', () => TbChevronDown)
     .exhaustive();
 
   const modifiers = match(icon)
