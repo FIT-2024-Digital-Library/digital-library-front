@@ -2,17 +2,17 @@
 
 export const AuthorSchema = {
   properties: {
-    id: {
-      type: 'integer',
-      title: 'Id',
-    },
     name: {
       type: 'string',
       title: 'Name',
     },
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
   },
   type: 'object',
-  required: ['id', 'name'],
+  required: ['name', 'id'],
   title: 'Author',
 } as const;
 
@@ -43,10 +43,6 @@ export const Body_upload_file_storage__postSchema = {
 
 export const BookSchema = {
   properties: {
-    id: {
-      type: 'integer',
-      title: 'Id',
-    },
     themeId: {
       type: 'integer',
       title: 'Themeid',
@@ -108,9 +104,37 @@ export const BookSchema = {
       type: 'string',
       title: 'Pdfqname',
     },
+    avgMark: {
+      anyOf: [
+        {
+          type: 'number',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Avgmark',
+      default: 0,
+    },
+    marksCount: {
+      anyOf: [
+        {
+          type: 'integer',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Markscount',
+      default: 0,
+    },
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
   },
   type: 'object',
-  required: ['id', 'themeId', 'title', 'author', 'pdfQname'],
+  required: ['themeId', 'title', 'author', 'pdfQname', 'id'],
   title: 'Book',
 } as const;
 
@@ -176,6 +200,30 @@ export const BookCreateSchema = {
     pdfQname: {
       type: 'string',
       title: 'Pdfqname',
+    },
+    avgMark: {
+      anyOf: [
+        {
+          type: 'number',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Avgmark',
+      default: 0,
+    },
+    marksCount: {
+      anyOf: [
+        {
+          type: 'integer',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Markscount',
+      default: 0,
     },
   },
   type: 'object',
@@ -274,6 +322,28 @@ export const BookUpdateSchema = {
       ],
       title: 'Pdfqname',
     },
+    avgMark: {
+      anyOf: [
+        {
+          type: 'number',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Avgmark',
+    },
+    marksCount: {
+      anyOf: [
+        {
+          type: 'integer',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Markscount',
+    },
   },
   type: 'object',
   title: 'BookUpdate',
@@ -293,17 +363,17 @@ export const FileUploadedSchemeSchema = {
 
 export const GenreSchema = {
   properties: {
-    id: {
-      type: 'integer',
-      title: 'Id',
-    },
     name: {
       type: 'string',
       title: 'Name',
     },
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
   },
   type: 'object',
-  required: ['id', 'name'],
+  required: ['name', 'id'],
   title: 'Genre',
 } as const;
 
@@ -416,16 +486,6 @@ export const ReviewUpdateSchema = {
 
 export const UserSchema = {
   properties: {
-    id: {
-      type: 'integer',
-      title: 'Id',
-    },
-    email: {
-      type: 'string',
-      format: 'email',
-      title: 'Email',
-      description: 'Электронная почта',
-    },
     name: {
       type: 'string',
       maxLength: 50,
@@ -433,12 +493,22 @@ export const UserSchema = {
       title: 'Name',
       description: 'Имя, от 3 до 50 символов',
     },
+    email: {
+      type: 'string',
+      format: 'email',
+      title: 'Email',
+      description: 'Электронная почта',
+    },
     privileges: {
       $ref: '#/components/schemas/PrivilegesEnum',
     },
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
   },
   type: 'object',
-  required: ['id', 'email', 'name', 'privileges'],
+  required: ['name', 'email', 'privileges', 'id'],
   title: 'User',
 } as const;
 
@@ -465,12 +535,6 @@ export const UserLoginSchema = {
 
 export const UserLoginedSchema = {
   properties: {
-    email: {
-      type: 'string',
-      format: 'email',
-      title: 'Email',
-      description: 'Электронная почта',
-    },
     name: {
       type: 'string',
       maxLength: 50,
@@ -478,12 +542,18 @@ export const UserLoginedSchema = {
       title: 'Name',
       description: 'Имя, от 3 до 50 символов',
     },
+    email: {
+      type: 'string',
+      format: 'email',
+      title: 'Email',
+      description: 'Электронная почта',
+    },
     privileges: {
       $ref: '#/components/schemas/PrivilegesEnum',
     },
   },
   type: 'object',
-  required: ['email', 'name', 'privileges'],
+  required: ['name', 'email', 'privileges'],
   title: 'UserLogined',
 } as const;
 
@@ -517,20 +587,6 @@ export const UserRegisterSchema = {
 
 export const UserUpdateSchema = {
   properties: {
-    password: {
-      anyOf: [
-        {
-          type: 'string',
-          maxLength: 50,
-          minLength: 5,
-        },
-        {
-          type: 'null',
-        },
-      ],
-      title: 'Password',
-      description: 'Пароль, от 5 до 50 знаков',
-    },
     name: {
       anyOf: [
         {
@@ -544,6 +600,20 @@ export const UserUpdateSchema = {
       ],
       title: 'Name',
       description: 'Имя, от 3 до 50 символов',
+    },
+    password: {
+      anyOf: [
+        {
+          type: 'string',
+          maxLength: 50,
+          minLength: 5,
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Password',
+      description: 'Пароль, от 5 до 50 знаков',
     },
   },
   type: 'object',

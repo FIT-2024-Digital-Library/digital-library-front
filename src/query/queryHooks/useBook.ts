@@ -13,8 +13,8 @@ export const bookDraft: Book = {
   genre: null,
   publishedDate: '',
   description: '',
-  imageUrl: '',
-  pdfUrl: '',
+  imageQname: '',
+  pdfQname: '',
 };
 
 export const getBookQueryOptions = (id: BookId) =>

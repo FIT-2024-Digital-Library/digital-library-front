@@ -5,13 +5,13 @@ import { LoadableComponent } from '@/components/library';
 import { getFileRealUrl } from '@/query';
 
 interface BookCardProps {
-  bookId: string;
+  bookId: number;
 }
 
 export const BookCard: React.FC<BookCardProps> = ({ bookId }) => {
-  const { book } = useBook(parseInt(bookId));
+  const { book } = useBook(bookId);
   const { author } = useAuthor(book?.author);
-  const { average } = useAverage(parseInt(bookId));
+  const { average } = useAverage(bookId);
 
   if (!book) return null;
 

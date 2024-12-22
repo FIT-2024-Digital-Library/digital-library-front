@@ -29,7 +29,7 @@ export const ReviewsList: React.FC<ReviewListProps> = ({ bookId }) => {
     <div className="grid grid-cols-1 gap-y-3 my-3">
       <LoadableComponent isPending={isAllReviewsPending}>
         <div className="my-3 text-center text-2xl font-medium">
-          Average mark: {average}/5
+          Average mark: {average || 0}/5
         </div>
         {profile && <MyReview reviewId={userReviewsIds?.[0]} bookId={bookId} />}
         <div

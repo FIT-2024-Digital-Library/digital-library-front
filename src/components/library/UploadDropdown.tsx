@@ -35,7 +35,7 @@ export const UploadDropdown: React.FC<UploadDropDownProps> = ({
         })
       ),
     onSuccess: (response) => {
-      setUploadedLink(serverUrl + response.url);
+      setUploadedLink(response.qname);
     },
   });
 

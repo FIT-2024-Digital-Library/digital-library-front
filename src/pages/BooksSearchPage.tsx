@@ -3,12 +3,13 @@ import { Toggle } from '@/components/library/Toggle';
 import { Button } from '@/components/library/Button';
 import { BookCard } from '@/components/book/BookCard';
 import { useBooks, BooksSearchParams } from '@/query/queryHooks';
-import { LoadableComponent } from '@/components/library/LoadableComponent';
 
 export const BooksSearchPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSemanticSearch, setIsSemanticSearch] = useState(false);
-  const [searchParams, setSearchParams] = useState<BooksSearchParams | undefined>(undefined);
+  const [searchParams, setSearchParams] = useState<
+    BooksSearchParams | undefined
+  >(undefined);
   const [hasSearched, setHasSearched] = useState(false);
 
   const [structuredSearch, setStructuredSearch] = useState({
@@ -20,7 +21,9 @@ export const BooksSearchPage: React.FC = () => {
     maxRating: 5,
   });
 
-  const { books, isPending, error } = useBooks(hasSearched ? searchParams : undefined);
+  const { booksIds, isPending, error } = useBooks(
+    hasSearched ? searchParams : undefined
+  );
 
   const handleSearch = () => {
     setHasSearched(true);
@@ -32,14 +35,15 @@ export const BooksSearchPage: React.FC = () => {
             author: structuredSearch.author || undefined,
             genre: structuredSearch.genre || undefined,
             published_date: structuredSearch.year || undefined,
-            min_rating: structuredSearch.minRating || undefined,
-            max_rating: structuredSearch.maxRating || undefined,
+            min_mark: structuredSearch.minRating || undefined,
+            max_mark: structuredSearch.maxRating || undefined,
           }
     );
   };
 
   const handleStructuredChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.type === 'range' ? parseFloat(e.target.value) : e.target.value;
+    const value =
+      e.target.type === 'range' ? parseFloat(e.target.value) : e.target.value;
     setStructuredSearch({
       ...structuredSearch,
       [e.target.name]: value,
@@ -118,11 +122,14 @@ export const BooksSearchPage: React.FC = () => {
 
               <div className="bg-gray-50 p-4 rounded-xl">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Rating Range: {structuredSearch.minRating} - {structuredSearch.maxRating}
+                  Rating Range: {structuredSearch.minRating} -{' '}
+                  {structuredSearch.maxRating}
                 </label>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">Min Rating</label>
+                    <label className="block text-xs text-gray-500 mb-1">
+                      Min Rating
+                    </label>
                     <input
                       type="range"
                       name="minRating"
@@ -135,7 +142,9 @@ export const BooksSearchPage: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">Max Rating</label>
+                    <label className="block text-xs text-gray-500 mb-1">
+                      Max Rating
+                    </label>
                     <input
                       type="range"
                       name="maxRating"
@@ -178,48 +187,84 @@ export const BooksSearchPage: React.FC = () => {
           ) : error ? (
             <div className="text-center">
               <div className="inline-block p-4 rounded-full bg-red-50 mb-4">
-                <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-8 h-8 text-red-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Error Loading Results</h3>
-              <p className="text-gray-500">{error.message || 'An unexpected error occurred. Please try again.'}</p>
-              <Button
-                variant="search"
-                className="mt-4"
-                onClick={handleSearch}
-              >
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Error Loading Results
+              </h3>
+              <p className="text-gray-500">
+                {error.message ||
+                  'An unexpected error occurred. Please try again.'}
+              </p>
+              <Button variant="search" className="mt-4" onClick={handleSearch}>
                 Retry Search
               </Button>
             </div>
           ) : !hasSearched ? (
             <div className="text-center">
               <div className="inline-block p-4 rounded-full bg-gray-50 mb-4">
-                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg
+                  className="w-8 h-8 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Start Your Search</h3>
-              <p className="text-gray-500">Enter your search criteria and click the search button</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Start Your Search
+              </h3>
+              <p className="text-gray-500">
+                Enter your search criteria and click the search button
+              </p>
             </div>
-          ) : books && books.length > 0 ? (
+          ) : booksIds && booksIds.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {books.map((book) => (
-                <BookCard
-                  key={book.id}
-                  bookId={book.id.toString()}
-                />
+              {booksIds.map((bookId) => (
+                <BookCard key={bookId} bookId={bookId} />
               ))}
             </div>
           ) : (
             <div className="text-center">
               <div className="inline-block p-4 rounded-full bg-gray-50 mb-4">
-                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg
+                  className="w-8 h-8 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No Results Found</h3>
-              <p className="text-gray-500">Try adjusting your search criteria or try different keywords</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No Results Found
+              </h3>
+              <p className="text-gray-500">
+                Try adjusting your search criteria or try different keywords
+              </p>
             </div>
           )}
         </div>

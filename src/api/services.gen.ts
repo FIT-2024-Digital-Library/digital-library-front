@@ -96,6 +96,9 @@ import type {
   GetAverageMarkReviewsAverageBookIdGetData,
   GetAverageMarkReviewsAverageBookIdGetError,
   GetAverageMarkReviewsAverageBookIdGetResponse,
+  GetMarksCountReviewsCountBookIdGetData,
+  GetMarksCountReviewsCountBookIdGetError,
+  GetMarksCountReviewsCountBookIdGetResponse,
   CreateReviewReviewsCreatePostData,
   CreateReviewReviewsCreatePostError,
   CreateReviewReviewsCreatePostResponse,
@@ -642,6 +645,24 @@ export const getAverageMarkReviewsAverageBookIdGet = <
   >({
     ...options,
     url: '/reviews/average/{book_id}',
+  });
+};
+
+/**
+ * Returns marks count for book
+ */
+export const getMarksCountReviewsCountBookIdGet = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<GetMarksCountReviewsCountBookIdGetData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    GetMarksCountReviewsCountBookIdGetResponse,
+    GetMarksCountReviewsCountBookIdGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/reviews/count/{book_id}',
   });
 };
 
