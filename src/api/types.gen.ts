@@ -17,7 +17,7 @@ export type Book = {
   themeId: number;
   title: string;
   author: number;
-  genre?: number | null;
+  genre: number | null;
   publishedDate?: string | null;
   description?: string | null;
   imageQname?: string | null;
@@ -235,6 +235,16 @@ export type DeleteBookBooksBookIdDeleteDeleteData = {
 export type DeleteBookBooksBookIdDeleteDeleteResponse = Book;
 
 export type DeleteBookBooksBookIdDeleteDeleteError = HTTPValidationError;
+
+export type ContextSearchComplexSearchContextGetData = {
+  query: {
+    query: string;
+  };
+};
+
+export type ContextSearchComplexSearchContextGetResponse = Array<number>;
+
+export type ContextSearchComplexSearchContextGetError = HTTPValidationError;
 
 export type GetProfileUsersProfileGetResponse = User;
 

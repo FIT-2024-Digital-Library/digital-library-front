@@ -134,7 +134,7 @@ export const BookSchema = {
     },
   },
   type: 'object',
-  required: ['themeId', 'title', 'author', 'pdfQname', 'id'],
+  required: ['themeId', 'title', 'author', 'genre', 'pdfQname', 'id'],
   title: 'Book',
 } as const;
 
