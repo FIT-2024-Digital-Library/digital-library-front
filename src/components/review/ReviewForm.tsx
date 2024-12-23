@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import { Icon } from '../library/Icon';
 import { ProgressBar } from '../library/ProgressBar';
 import {
-  getAverageQueryOptions,
   getReviewQueryOptions,
   getReviewsQueryOptions,
   useReview,
@@ -20,7 +19,6 @@ import {
   Review,
   updateReviewReviewsReviewIdUpdatePut,
 } from '@/api';
-import { useParams } from 'wouter';
 
 const marks = [1, 2, 3, 4, 5] as const;
 const reviewScheme = z.object({
@@ -63,9 +61,6 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
     queryClient.invalidateQueries({
       queryKey: getReviewsQueryOptions({ bookId, ownerId: response.ownerId })
         .queryKey,
-    });
-    queryClient.invalidateQueries({
-      queryKey: getAverageQueryOptions(bookId).queryKey,
     });
     queryClient.setQueryData(
       getReviewQueryOptions(response.id).queryKey,

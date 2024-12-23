@@ -38,11 +38,13 @@ export const ComposedThemeComponent: BookThemeComponent = ({ book }) => {
             <span className="text-2xl">{book?.title}</span>
             {genre && <span className="italic">of {genre.name}</span>}
             {author && <span className="italic">by {author.name}</span>}
-            {book?.publishedDate && (
+            {book?.publishedDate ? (
               <div className="inline">
                 <span className="mx-1">from</span>
                 <span className="font-mono">{book?.publishedDate}</span>
               </div>
+            ) : (
+              ''
             )}
           </h1>
         </LoadableComponent>

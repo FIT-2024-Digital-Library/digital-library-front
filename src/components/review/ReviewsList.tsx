@@ -1,7 +1,7 @@
 import React, { HTMLAttributes } from 'react';
 import { Review } from './Review';
 import { MyReview } from './MyReview';
-import { useReviews, useProfile, useAverage } from '@/query/queryHooks';
+import { useReviews, useProfile, useBook } from '@/query/queryHooks';
 import { LoadableComponent } from '../library/LoadableComponent';
 
 export interface ReviewListProps extends HTMLAttributes<React.FC> {
@@ -17,13 +17,13 @@ export const ReviewsList: React.FC<ReviewListProps> = ({ bookId }) => {
     bookId,
     ownerId: profile?.id,
   });
-  const { average } = useAverage(bookId);
+  const { book } = useBook(bookId);
 
   return (
     <div className="grid grid-cols-1 gap-y-3 my-3">
       <LoadableComponent isPending={isAllReviewsPending}>
         <div className="my-3 text-center text-2xl font-medium">
-          Average mark: {average || 0}/5
+          Average mark: {book?.avgMark || 0}/5
         </div>
         {profile && <MyReview reviewId={userReviewsIds?.[0]} bookId={bookId} />}
         <div

@@ -22,6 +22,9 @@ import type {
   DeleteBookBooksBookIdDeleteDeleteData,
   DeleteBookBooksBookIdDeleteDeleteError,
   DeleteBookBooksBookIdDeleteDeleteResponse,
+  ContextSearchComplexSearchContextGetData,
+  ContextSearchComplexSearchContextGetError,
+  ContextSearchComplexSearchContextGetResponse,
   GetProfileUsersProfileGetError,
   GetProfileUsersProfileGetResponse,
   LoginUsersLoginPostData,
@@ -193,6 +196,24 @@ export const deleteBookBooksBookIdDeleteDelete = <
   >({
     ...options,
     url: '/books/{book_id}/delete',
+  });
+};
+
+/**
+ * Context Search
+ */
+export const contextSearchComplexSearchContextGet = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<ContextSearchComplexSearchContextGetData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    ContextSearchComplexSearchContextGetResponse,
+    ContextSearchComplexSearchContextGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/complex_search/context',
   });
 };
 

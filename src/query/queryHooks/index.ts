@@ -4,6 +4,7 @@ export * from './useUsers';
 
 export * from './useBook';
 export * from './useBooks';
+export * from './useBooksSemantic';
 
 export * from './useAuthors';
 export * from './useAuthor';
@@ -13,4 +14,3 @@ export * from './useGenre';
 
 export * from './useReviews';
 export * from './useReview';
-export * from './useAverage';

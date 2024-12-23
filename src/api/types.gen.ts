@@ -17,8 +17,8 @@ export type Book = {
   themeId: number;
   title: string;
   author: number;
-  genre?: number | null;
-  publishedDate?: string | null;
+  genre: number | null;
+  publishedDate?: number | null;
   description?: string | null;
   imageQname?: string | null;
   pdfQname: string;
@@ -32,7 +32,7 @@ export type BookCreate = {
   title: string;
   author: string;
   genre?: string | null;
-  publishedDate?: string | null;
+  publishedDate?: number | null;
   description?: string | null;
   imageQname?: string | null;
   pdfQname: string;
@@ -45,7 +45,7 @@ export type BookUpdate = {
   title?: string | null;
   author?: string | null;
   genre?: string | null;
-  publishedDate?: string | null;
+  publishedDate?: number | null;
   description?: string | null;
   imageQname?: string | null;
   pdfQname?: string | null;
@@ -183,9 +183,9 @@ export type GetBooksBooksGetData = {
      */
     min_mark?: number | null;
     /**
-     * Filter by publication date
+     * Filter by publication year
      */
-    published_date?: string | null;
+    published_date?: number | null;
     /**
      * Filter by book title
      */
@@ -235,6 +235,16 @@ export type DeleteBookBooksBookIdDeleteDeleteData = {
 export type DeleteBookBooksBookIdDeleteDeleteResponse = Book;
 
 export type DeleteBookBooksBookIdDeleteDeleteError = HTTPValidationError;
+
+export type ContextSearchComplexSearchContextGetData = {
+  query: {
+    query: string;
+  };
+};
+
+export type ContextSearchComplexSearchContextGetResponse = Array<number>;
+
+export type ContextSearchComplexSearchContextGetError = HTTPValidationError;
 
 export type GetProfileUsersProfileGetResponse = User;
 

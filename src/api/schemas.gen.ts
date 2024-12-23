@@ -69,8 +69,7 @@ export const BookSchema = {
     publishedDate: {
       anyOf: [
         {
-          type: 'string',
-          format: 'date',
+          type: 'integer',
         },
         {
           type: 'null',
@@ -134,7 +133,7 @@ export const BookSchema = {
     },
   },
   type: 'object',
-  required: ['themeId', 'title', 'author', 'pdfQname', 'id'],
+  required: ['themeId', 'title', 'author', 'genre', 'pdfQname', 'id'],
   title: 'Book',
 } as const;
 
@@ -166,8 +165,7 @@ export const BookCreateSchema = {
     publishedDate: {
       anyOf: [
         {
-          type: 'string',
-          format: 'date',
+          type: 'integer',
         },
         {
           type: 'null',
@@ -280,8 +278,7 @@ export const BookUpdateSchema = {
     publishedDate: {
       anyOf: [
         {
-          type: 'string',
-          format: 'date',
+          type: 'integer',
         },
         {
           type: 'null',

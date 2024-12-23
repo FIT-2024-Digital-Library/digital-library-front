@@ -6,7 +6,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { dataExtractionWrapper } from '@/query';
 import { deleteReviewReviewsReviewIdDeleteDelete } from '@/api';
 import {
-  getAverageQueryOptions,
   getReviewQueryOptions,
   getReviewsQueryOptions,
 } from '@/query/queryHooks';
@@ -32,9 +31,6 @@ export const MyReview: React.FC<MyReviewProps> = ({ reviewId, bookId }) => {
     onSuccess: (deleted) => {
       queryClient.invalidateQueries({
         queryKey: getReviewsQueryOptions({ bookId }).queryKey,
-      });
-      queryClient.invalidateQueries({
-        queryKey: getAverageQueryOptions(bookId).queryKey,
       });
       queryClient.resetQueries({
         queryKey: getReviewQueryOptions(deleted.id).queryKey,
