@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { Toggle } from '@/components/library/Toggle';
 import { Button } from '@/components/library/Button';
 import { BookCard } from '@/components/book/BookCard';
-import { useBooks, BooksSearchParams } from '@/query/queryHooks';
+import {
+  useBooks,
+  BooksSearchParams,
+  useBooksSemantic,
+} from '@/query/queryHooks';
 
 export const BooksSearchPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,24 +25,32 @@ export const BooksSearchPage: React.FC = () => {
     maxRating: 5,
   });
 
-  const { booksIds, isPending, error } = useBooks(
-    hasSearched ? searchParams : undefined
-  );
+  const {
+    booksIds: structuredIds,
+    isPending: isStructuredPending,
+    error: structuredError,
+  } = useBooks(hasSearched ? searchParams : undefined);
+  const {
+    booksIds: semanticIds,
+    isPending: isSemanticPending,
+    error: semanticError,
+  } = useBooksSemantic(hasSearched ? searchQuery : '');
 
   const handleSearch = () => {
     setHasSearched(true);
-    setSearchParams(
-      isSemanticSearch
-        ? { description: searchQuery }
-        : {
-            title: structuredSearch.title || undefined,
-            author: structuredSearch.author || undefined,
-            genre: structuredSearch.genre || undefined,
-            published_date: structuredSearch.year || undefined,
-            min_mark: structuredSearch.minRating || undefined,
-            max_mark: structuredSearch.maxRating || undefined,
-          }
-    );
+    if (!isSemanticSearch)
+      setSearchParams(
+        isSemanticSearch
+          ? { description: searchQuery }
+          : {
+              title: structuredSearch.title || undefined,
+              author: structuredSearch.author || undefined,
+              genre: structuredSearch.genre || undefined,
+              published_date: structuredSearch.year || undefined,
+              min_mark: structuredSearch.minRating || undefined,
+              max_mark: structuredSearch.maxRating || undefined,
+            }
+      );
   };
 
   const handleStructuredChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +90,7 @@ export const BooksSearchPage: React.FC = () => {
                 variant="search"
                 className="w-full px-4 py-3"
                 onClick={handleSearch}
-                loading={isPending}
+                loading={isSemanticPending}
               >
                 Search Books
               </Button>
@@ -162,7 +174,7 @@ export const BooksSearchPage: React.FC = () => {
                 variant="search"
                 className="w-full mt-4 px-4 py-3"
                 onClick={handleSearch}
-                loading={isPending}
+                loading={isStructuredPending}
               >
                 Search Books
               </Button>
@@ -172,7 +184,7 @@ export const BooksSearchPage: React.FC = () => {
 
         {/* Search Results */}
         <div className="mt-12 border-t pt-8">
-          {isPending ? (
+          {isStructuredPending || isSemanticPending ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, index) => (
                 <div key={index} className="animate-pulse">
@@ -184,7 +196,7 @@ export const BooksSearchPage: React.FC = () => {
                 </div>
               ))}
             </div>
-          ) : error ? (
+          ) : structuredError || semanticError ? (
             <div className="text-center">
               <div className="inline-block p-4 rounded-full bg-red-50 mb-4">
                 <svg
@@ -205,7 +217,8 @@ export const BooksSearchPage: React.FC = () => {
                 Error Loading Results
               </h3>
               <p className="text-gray-500">
-                {error.message ||
+                {structuredError?.message ||
+                  semanticError?.message ||
                   'An unexpected error occurred. Please try again.'}
               </p>
               <Button variant="search" className="mt-4" onClick={handleSearch}>
@@ -236,9 +249,15 @@ export const BooksSearchPage: React.FC = () => {
                 Enter your search criteria and click the search button
               </p>
             </div>
-          ) : booksIds && booksIds.length > 0 ? (
+          ) : !isSemanticSearch && structuredIds && structuredIds.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {booksIds.map((bookId) => (
+              {structuredIds.map((bookId) => (
+                <BookCard key={bookId} bookId={bookId} />
+              ))}
+            </div>
+          ) : isSemanticSearch && semanticIds && semanticIds.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {semanticIds.map((bookId) => (
                 <BookCard key={bookId} bookId={bookId} />
               ))}
             </div>
