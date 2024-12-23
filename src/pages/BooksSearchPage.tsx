@@ -46,7 +46,10 @@ export const BooksSearchPage: React.FC = () => {
               title: structuredSearch.title || undefined,
               author: structuredSearch.author || undefined,
               genre: structuredSearch.genre || undefined,
-              published_date: structuredSearch.year || undefined,
+              published_date:
+                structuredSearch.year === ''
+                  ? undefined
+                  : Number(structuredSearch.year),
               min_mark: structuredSearch.minRating || undefined,
               max_mark: structuredSearch.maxRating || undefined,
             }

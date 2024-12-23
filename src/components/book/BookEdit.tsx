@@ -51,7 +51,7 @@ export const bookEditScheme = z.object({
     })
     .optional()
     .nullable(),
-  publishedDate: z.string().date(),
+  publishedDate: z.number({ coerce: true }),
   description: z.string(),
   imageQname: z.string().optional().nullable(),
   pdfQname: z.string().min(1, 'Book file is required'),
@@ -257,12 +257,12 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
             </FormItem>
             <FormItem
               className="text-xl flex justify-start mb-2 text-black"
-              labelComponent={<span className="pr-1">Published:</span>}
+              labelComponent={<span className="pr-1">Publication year:</span>}
               errorMessage={errors.publishedDate?.message}
             >
               <input
                 id="publishedDate"
-                type="date"
+                type="number"
                 className="pb-1 bg-transparent border-black border-b font-mono"
                 defaultValue={
                   book?.publishedDate === null ? undefined : book?.publishedDate

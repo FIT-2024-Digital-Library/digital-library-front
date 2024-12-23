@@ -69,8 +69,7 @@ export const BookSchema = {
     publishedDate: {
       anyOf: [
         {
-          type: 'string',
-          format: 'date',
+          type: 'integer',
         },
         {
           type: 'null',
@@ -166,8 +165,7 @@ export const BookCreateSchema = {
     publishedDate: {
       anyOf: [
         {
-          type: 'string',
-          format: 'date',
+          type: 'integer',
         },
         {
           type: 'null',
@@ -280,8 +278,7 @@ export const BookUpdateSchema = {
     publishedDate: {
       anyOf: [
         {
-          type: 'string',
-          format: 'date',
+          type: 'integer',
         },
         {
           type: 'null',

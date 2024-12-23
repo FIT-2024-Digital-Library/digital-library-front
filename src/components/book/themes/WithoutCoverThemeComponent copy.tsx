@@ -44,9 +44,14 @@ export const WithoutCoverThemeComponennt: BookThemeComponent = ({ book }) => {
           )}
         </LoadableComponent>
 
-        <h2 className="text-xl mb-2">
-          Published at <span className="font-mono">{book?.publishedDate}</span>
-        </h2>
+        {book?.publishedDate ? (
+          <h2 className="text-xl mb-2">
+            Published at{' '}
+            <span className="font-mono">{book?.publishedDate}</span>
+          </h2>
+        ) : (
+          ''
+        )}
         <p className="my-4">{book?.description}</p>
         <a className="w-fit" href={getFileRealUrl(book?.pdfQname)}>
           <Button
