@@ -10,6 +10,7 @@ import {
 
 export const BooksSearchPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [submittedQuery, setSubmittedQuery] = useState('');
   const [isSemanticSearch, setIsSemanticSearch] = useState(false);
   const [searchParams, setSearchParams] = useState<
     BooksSearchParams | undefined
@@ -34,26 +35,25 @@ export const BooksSearchPage: React.FC = () => {
     booksIds: semanticIds,
     isPending: isSemanticPending,
     error: semanticError,
-  } = useBooksSemantic(hasSearched ? searchQuery : '');
+  } = useBooksSemantic(hasSearched && isSemanticSearch ? submittedQuery : '');
 
   const handleSearch = () => {
     setHasSearched(true);
-    if (!isSemanticSearch)
-      setSearchParams(
-        isSemanticSearch
-          ? { description: searchQuery }
-          : {
-              title: structuredSearch.title || undefined,
-              author: structuredSearch.author || undefined,
-              genre: structuredSearch.genre || undefined,
-              published_date:
-                structuredSearch.year === ''
-                  ? undefined
-                  : Number(structuredSearch.year),
-              min_mark: structuredSearch.minRating || undefined,
-              max_mark: structuredSearch.maxRating || undefined,
-            }
-      );
+    if (isSemanticSearch) {
+      setSubmittedQuery(searchQuery);
+    } else {
+      setSearchParams({
+        title: structuredSearch.title || undefined,
+        author: structuredSearch.author || undefined,
+        genre: structuredSearch.genre || undefined,
+        published_date:
+          structuredSearch.year === ''
+            ? undefined
+            : Number(structuredSearch.year),
+        min_mark: structuredSearch.minRating || undefined,
+        max_mark: structuredSearch.maxRating || undefined,
+      });
+    }
   };
 
   const handleStructuredChange = (e: React.ChangeEvent<HTMLInputElement>) => {
