@@ -6,12 +6,18 @@ import {
   useBooks,
   BooksSearchParams,
   useBooksSemantic,
+  useBooksContext,
 } from '@/query/queryHooks';
+import { match } from 'ts-pattern';
+
+type SearchTypes = 'strucutred' | 'context' | 'semantic';
 
 export const BooksSearchPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [submittedQuery, setSubmittedQuery] = useState('');
   const [isSemanticSearch, setIsSemanticSearch] = useState(false);
+  const [lastSearchMethod, setLastSearchMethod] =
+    useState<SearchTypes>('strucutred');
   const [searchParams, setSearchParams] = useState<
     BooksSearchParams | undefined
   >(undefined);
@@ -32,28 +38,40 @@ export const BooksSearchPage: React.FC = () => {
     error: structuredError,
   } = useBooks(hasSearched ? searchParams : undefined);
   const {
+    booksIds: contextIds,
+    isPending: isContextPending,
+    error: contextError,
+  } = useBooksContext(
+    hasSearched && lastSearchMethod === 'context' ? submittedQuery : ''
+  );
+  const {
     booksIds: semanticIds,
     isPending: isSemanticPending,
     error: semanticError,
-  } = useBooksSemantic(hasSearched && isSemanticSearch ? submittedQuery : '');
+  } = useBooksSemantic(
+    hasSearched && lastSearchMethod === 'semantic' ? submittedQuery : ''
+  );
 
-  const handleSearch = () => {
+  const handleSearch = (searchType: SearchTypes) => {
+    setLastSearchMethod(searchType);
+    match(searchType)
+      .with('strucutred', () =>
+        setSearchParams({
+          title: structuredSearch.title || undefined,
+          author: structuredSearch.author || undefined,
+          genre: structuredSearch.genre || undefined,
+          published_date:
+            structuredSearch.year === ''
+              ? undefined
+              : Number(structuredSearch.year),
+          min_mark: structuredSearch.minRating || undefined,
+          max_mark: structuredSearch.maxRating || undefined,
+        })
+      )
+      .with('context', () => setSubmittedQuery(searchQuery))
+      .with('semantic', () => setSubmittedQuery(searchQuery))
+      .exhaustive();
     setHasSearched(true);
-    if (isSemanticSearch) {
-      setSubmittedQuery(searchQuery);
-    } else {
-      setSearchParams({
-        title: structuredSearch.title || undefined,
-        author: structuredSearch.author || undefined,
-        genre: structuredSearch.genre || undefined,
-        published_date:
-          structuredSearch.year === ''
-            ? undefined
-            : Number(structuredSearch.year),
-        min_mark: structuredSearch.minRating || undefined,
-        max_mark: structuredSearch.maxRating || undefined,
-      });
-    }
   };
 
   const handleStructuredChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,14 +107,24 @@ export const BooksSearchPage: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <Button
-                variant="search"
-                className="w-full px-4 py-3"
-                onClick={handleSearch}
-                loading={isSemanticPending}
-              >
-                Search Books
-              </Button>
+              <div className="around">
+                <Button
+                  variant="search"
+                  className="w-1/3 px-4 py-3"
+                  onClick={() => handleSearch('context')}
+                  loading={isContextPending}
+                >
+                  Context search
+                </Button>
+                <Button
+                  variant="search"
+                  className="w-1/3 px-4 py-3"
+                  onClick={() => handleSearch('semantic')}
+                  loading={isContextPending}
+                >
+                  Semantic search
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="space-y-4">
@@ -176,7 +204,7 @@ export const BooksSearchPage: React.FC = () => {
               <Button
                 variant="search"
                 className="w-full mt-4 px-4 py-3"
-                onClick={handleSearch}
+                onClick={() => handleSearch('strucutred')}
                 loading={isStructuredPending}
               >
                 Search Books
@@ -187,7 +215,7 @@ export const BooksSearchPage: React.FC = () => {
 
         {/* Search Results */}
         <div className="mt-12 border-t pt-8">
-          {isStructuredPending || isSemanticPending ? (
+          {isStructuredPending || isContextPending || isSemanticPending ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, index) => (
                 <div key={index} className="animate-pulse">
@@ -199,7 +227,7 @@ export const BooksSearchPage: React.FC = () => {
                 </div>
               ))}
             </div>
-          ) : structuredError || semanticError ? (
+          ) : structuredError || contextError || semanticError ? (
             <div className="text-center">
               <div className="inline-block p-4 rounded-full bg-red-50 mb-4">
                 <svg
@@ -221,10 +249,15 @@ export const BooksSearchPage: React.FC = () => {
               </h3>
               <p className="text-gray-500">
                 {structuredError?.message ||
+                  contextError?.message ||
                   semanticError?.message ||
                   'An unexpected error occurred. Please try again.'}
               </p>
-              <Button variant="search" className="mt-4" onClick={handleSearch}>
+              <Button
+                variant="search"
+                className="mt-4"
+                onClick={() => handleSearch(lastSearchMethod)}
+              >
                 Retry Search
               </Button>
             </div>
@@ -258,7 +291,19 @@ export const BooksSearchPage: React.FC = () => {
                 <BookCard key={bookId} bookId={bookId} />
               ))}
             </div>
-          ) : isSemanticSearch && semanticIds && semanticIds.length > 0 ? (
+          ) : isSemanticSearch &&
+            lastSearchMethod === 'context' &&
+            contextIds &&
+            contextIds.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {contextIds.map((bookId) => (
+                <BookCard key={bookId} bookId={bookId} />
+              ))}
+            </div>
+          ) : isSemanticSearch &&
+            lastSearchMethod === 'semantic' &&
+            semanticIds &&
+            semanticIds.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {semanticIds.map((bookId) => (
                 <BookCard key={bookId} bookId={bookId} />

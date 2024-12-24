@@ -20,7 +20,7 @@ export type Book = {
   genre: number | null;
   publishedDate?: number | null;
   description?: string | null;
-  imageQname?: string | null;
+  imageQname?: string;
   pdfQname: string;
   avgMark?: number | null;
   marksCount?: number | null;
@@ -34,7 +34,7 @@ export type BookCreate = {
   genre?: string | null;
   publishedDate?: number | null;
   description?: string | null;
-  imageQname?: string | null;
+  imageQname?: string;
   pdfQname: string;
   avgMark?: number | null;
   marksCount?: number | null;
@@ -245,6 +245,16 @@ export type ContextSearchComplexSearchContextGetData = {
 export type ContextSearchComplexSearchContextGetResponse = Array<number>;
 
 export type ContextSearchComplexSearchContextGetError = HTTPValidationError;
+
+export type SemanticSearchComplexSearchSemanticGetData = {
+  query: {
+    query: string;
+  };
+};
+
+export type SemanticSearchComplexSearchSemanticGetResponse = Array<number>;
+
+export type SemanticSearchComplexSearchSemanticGetError = HTTPValidationError;
 
 export type GetProfileUsersProfileGetResponse = User;
 

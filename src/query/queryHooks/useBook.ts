@@ -11,7 +11,7 @@ export const bookDraft: Book = {
   title: '',
   author: -1,
   genre: null,
-  publishedDate: '',
+  publishedDate: null,
   description: '',
   imageQname: '',
   pdfQname: '',

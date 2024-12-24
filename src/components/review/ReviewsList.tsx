@@ -9,7 +9,11 @@ export interface ReviewListProps extends HTMLAttributes<React.FC> {
 }
 
 export const ReviewsList: React.FC<ReviewListProps> = ({ bookId }) => {
-  const { reviewsIds, isPending: isAllReviewsPending } = useReviews({
+  const {
+    reviewsIds,
+    isPending: isAllReviewsPending,
+    error: allReviewsError,
+  } = useReviews({
     bookId,
   });
   const { profile } = useProfile();
@@ -17,11 +21,14 @@ export const ReviewsList: React.FC<ReviewListProps> = ({ bookId }) => {
     bookId,
     ownerId: profile?.id,
   });
-  const { book } = useBook(bookId);
+  const { book, isPending: isBookPending, error: bookError } = useBook(bookId);
 
   return (
     <div className="grid grid-cols-1 gap-y-3 my-3">
-      <LoadableComponent isPending={isAllReviewsPending}>
+      <LoadableComponent
+        isPending={isAllReviewsPending || isBookPending}
+        errorMessage={allReviewsError?.message || bookError?.message}
+      >
         <div className="my-3 text-center text-2xl font-medium">
           Average mark: {book?.avgMark || 0}/5
         </div>

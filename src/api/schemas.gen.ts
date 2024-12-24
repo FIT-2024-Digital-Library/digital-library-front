@@ -89,15 +89,9 @@ export const BookSchema = {
       title: 'Description',
     },
     imageQname: {
-      anyOf: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'null',
-        },
-      ],
+      type: 'string',
       title: 'Imageqname',
+      default: '',
     },
     pdfQname: {
       type: 'string',
@@ -185,15 +179,9 @@ export const BookCreateSchema = {
       title: 'Description',
     },
     imageQname: {
-      anyOf: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'null',
-        },
-      ],
+      type: 'string',
       title: 'Imageqname',
+      default: '',
     },
     pdfQname: {
       type: 'string',

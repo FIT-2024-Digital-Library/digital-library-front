@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { Icon } from '../library/Icon';
 import { ProgressBar } from '../library/ProgressBar';
 import {
+  getBookQueryOptions,
   getReviewQueryOptions,
   getReviewsQueryOptions,
   useReview,
@@ -55,6 +56,9 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
 
   const queryClient = useQueryClient();
   const onSuccessFn = (response: Review) => {
+    queryClient.invalidateQueries({
+      queryKey: getBookQueryOptions(bookId).queryKey,
+    });
     queryClient.invalidateQueries({
       queryKey: getReviewsQueryOptions({ bookId }).queryKey,
     });

@@ -25,6 +25,9 @@ import type {
   ContextSearchComplexSearchContextGetData,
   ContextSearchComplexSearchContextGetError,
   ContextSearchComplexSearchContextGetResponse,
+  SemanticSearchComplexSearchSemanticGetData,
+  SemanticSearchComplexSearchSemanticGetError,
+  SemanticSearchComplexSearchSemanticGetResponse,
   GetProfileUsersProfileGetError,
   GetProfileUsersProfileGetResponse,
   LoginUsersLoginPostData,
@@ -214,6 +217,24 @@ export const contextSearchComplexSearchContextGet = <
   >({
     ...options,
     url: '/complex_search/context',
+  });
+};
+
+/**
+ * Semantic Search
+ */
+export const semanticSearchComplexSearchSemanticGet = <
+  ThrowOnError extends boolean = false
+>(
+  options: Options<SemanticSearchComplexSearchSemanticGetData, ThrowOnError>
+) => {
+  return (options?.client ?? client).get<
+    SemanticSearchComplexSearchSemanticGetResponse,
+    SemanticSearchComplexSearchSemanticGetError,
+    ThrowOnError
+  >({
+    ...options,
+    url: '/complex_search/semantic',
   });
 };
 

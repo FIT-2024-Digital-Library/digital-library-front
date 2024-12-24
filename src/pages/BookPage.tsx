@@ -77,6 +77,11 @@ export const BookPage: React.FC = () => {
                       <span>YES!</span>
                       <Icon icon="trash" />
                     </Button>
+                    {deleteError && (
+                      <span className="text-red-500">
+                        {deleteError.message}
+                      </span>
+                    )}
                   </div>
                 </DropDown>
               </div>
