@@ -16,7 +16,7 @@ export const MinimizedThemeComponent: BookThemeComponent = ({ book }) => {
     <div className="center">
       <div className="w-1/2">
         <div className="flex justify-left">
-          <a className="w-fit mx-2" href={getFileRealUrl(book?.pdfQname)}>
+          <a className="w-fit mr-2" href={getFileRealUrl(book?.pdfQname)}>
             <Button
               className="p-2 font-bold text-xl rounded-lg"
               variant="plate-grey"
