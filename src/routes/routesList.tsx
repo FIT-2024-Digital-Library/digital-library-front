@@ -1,5 +1,5 @@
 import React from 'react';
-import { StartPage, BooksSearchPage, BookPage, Page3 } from '@/pages';
+import { StartPage, BooksSearchPage, BookPage, AddBookPage, UsersManagementPage } from '@/pages';
 
 type RouteData = {
   url: string;
@@ -18,12 +18,15 @@ export const routesList: RouteData[] = [
     content: <BooksSearchPage />,
   },
   {
+    url: '/books/add',
+    content: <AddBookPage />,
+  },
+  {
     url: '/books/:id',
     content: <BookPage />,
   },
   {
-    url: '/page3',
-    label: 'Page 3',
-    content: <Page3 />,
+    url: '/users/manage',
+    content: <UsersManagementPage />,
   },
 ];

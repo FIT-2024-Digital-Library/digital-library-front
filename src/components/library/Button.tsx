@@ -12,6 +12,7 @@ const variants = {
   inline: `text-1-1 hover:bg-1-6/25`,
   'plate-black': `bg-1-2 text-white hover:bg-1-4 rounded-full`,
   'plate-grey': `bg-1-11 text-black hover:bg-1-9 rounded-full`,
+  search: `bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium`,
 };
 export const Button: React.FC<IconButtonProps> = ({
   variant,

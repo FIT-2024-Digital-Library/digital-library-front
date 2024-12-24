@@ -21,7 +21,22 @@ import {
   TbTrash,
   TbTriangleFilled,
   TbX,
+  TbDownload,
+  TbUpload,
+  TbUser,
+  TbChevronDown,
 } from 'react-icons/tb';
+import {
+  AiFillFileAdd,
+  AiFillFilePdf,
+  AiFillSave,
+  AiOutlineLoading,
+  AiOutlineLoading3Quarters,
+} from 'react-icons/ai';
+import {
+  BiCheck
+} from 'react-icons/bi';
+import {} from 'react-icons/ai';
 import React from 'react';
 import { match } from 'ts-pattern';
 import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
@@ -49,6 +64,16 @@ export const icons = [
   'plus',
   'state',
   'play',
+  'download',
+  'upload',
+  'add-file',
+  'pdf',
+  'save',
+  'loading-1/4',
+  'loading-3/4',
+  'check',
+  'user',
+  'chevron-down',
 ] as const;
 export type IconType = (typeof icons)[number];
 
@@ -86,6 +111,16 @@ export const Icon: React.FC<IconProps> = ({
     .with('trash', () => TbTrash)
     .with('loader', () => TbLoader)
     .with('plus', () => TbPlus)
+    .with('download', () => TbDownload)
+    .with('upload', () => TbUpload)
+    .with('add-file', () => AiFillFileAdd)
+    .with('pdf', () => AiFillFilePdf)
+    .with('save', () => AiFillSave)
+    .with('loading-1/4', () => AiOutlineLoading)
+    .with('loading-3/4', () => AiOutlineLoading3Quarters)
+    .with('check', () => BiCheck)
+    .with('user', () => TbUser)
+    .with('chevron-down', () => TbChevronDown)
     .exhaustive();
 
   const modifiers = match(icon)
