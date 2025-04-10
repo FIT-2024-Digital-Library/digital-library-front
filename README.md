@@ -1,6 +1,8 @@
 # React template
 [Forked from](https://github.com/mordv/clean)
 
+## Description
+
 ## Easy getting
 ```bash
 npm install -g degit
