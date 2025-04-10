@@ -2,7 +2,8 @@
 [Forked from](https://github.com/mordv/clean)
 
 ## Description
-It's a digital library project.
+It's a digital library project. 
+Key Features still include the ability to add books to our library and automatically index them for future searches, so users will be able to quickly find what they need by title, author, genre—or even by citations from the book’s content. Additionally, our semantic search functionality will help users discover books on broader topics. And of course users can view books’ info.
 
 ## Easy getting
 ```bash
