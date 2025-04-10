@@ -2,6 +2,7 @@
 [Forked from](https://github.com/mordv/clean)
 
 ## Description
+It's a digital library project.
 
 ## Easy getting
 ```bash
