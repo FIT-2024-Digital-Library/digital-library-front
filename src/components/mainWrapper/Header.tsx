@@ -3,24 +3,17 @@ import { Link } from 'wouter';
 
 import { Button } from '@/components/library/Button';
 import { useAppStore } from '@/state/state';
-import { dataExtractionWrapper } from '@/query';
-import { getProfileQueryOptions, useProfile } from '@/query/queryHooks';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { logoutUserUsersLogoutPost } from '@/api';
+import { useProfile } from '@/query/queryHooks';
 import { DropDown } from '@/components/library/DropDown';
 import { Icon } from '@/components/library/Icon';
+import { useLogout } from '@/query/mutationHooks';
 
 export const Header: React.FC = () => {
   const showLoginWindow = useAppStore((state) => state.showLoginWindow);
 
   const { profile } = useProfile();
 
-  const queryClient = useQueryClient();
-  const { mutate: logout } = useMutation({
-    mutationFn: () => dataExtractionWrapper(logoutUserUsersLogoutPost()),
-    onSuccess: () =>
-      queryClient.resetQueries({ queryKey: getProfileQueryOptions().queryKey }),
-  });
+  const { logout } = useLogout();
 
   return (
     <header>
@@ -57,7 +50,10 @@ export const Header: React.FC = () => {
                   </div>
                   {profile.privileges === 'admin' && (
                     <Link to="/users/manage">
-                      <Button variant="inline" className="w-full text-left px-4 py-2">
+                      <Button
+                        variant="inline"
+                        className="w-full text-left px-4 py-2"
+                      >
                         Manage Users
                       </Button>
                     </Link>

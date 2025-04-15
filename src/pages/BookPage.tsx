@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'wouter';
-import { Options } from 'react-select';
+import React, { useState } from 'react';
+import { useLocation, useParams } from 'wouter';
 
 import { Button } from '@/components/library/Button';
 import { BookDisplay } from '@/components/book/BookDisplay';
 import { BookEdit } from '@/components/book/BookEdit';
 import { Icon } from '../components/library/Icon';
 import { ReviewsList } from '../components/review/ReviewsList';
-import { useBook } from '@/query/queryHooks/useBook';
-import { useMutation } from '@tanstack/react-query';
-import { dataExtractionWrapper } from '@/query';
-import { deleteBookBooksBookIdDeleteDelete } from '@/api';
-import { navigate } from 'wouter/use-browser-location';
 import { DropDown } from '../components/library/DropDown';
 import { useProfile } from '@/query/queryHooks';
+import { useBookDelete } from '@/query/mutationHooks';
 
 export type SelectOption = {
   value: number;
@@ -22,20 +17,13 @@ export type SelectOption = {
 
 export const BookPage: React.FC = () => {
   const { id } = useParams();
+  const [, setLocation] = useLocation();
 
   const [isEdit, setIsEdit] = useState(false);
   const { profile } = useProfile();
 
-  const { mutate: deleteBook, error: deleteError } = useMutation({
-    mutationFn: (id: number) =>
-      dataExtractionWrapper(
-        deleteBookBooksBookIdDeleteDelete({
-          path: { book_id: id },
-        })
-      ),
-    onSuccess: () => {
-      navigate('/books', { replace: true });
-    },
+  const { deleteBook, error: deleteError } = useBookDelete(id, () => {
+    setLocation('/books', { replace: true });
   });
 
   return (
@@ -72,7 +60,7 @@ export const BookPage: React.FC = () => {
                     <Button
                       className="mx-1 py-2 text-xl"
                       variant="plate-black"
-                      onClick={() => deleteBook(Number(id))}
+                      onClick={() => deleteBook()}
                     >
                       <span>YES!</span>
                       <Icon icon="trash" />

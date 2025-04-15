@@ -13,13 +13,10 @@ import {
   getReviewsQueryOptions,
   useReview,
 } from '@/query/queryHooks';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { dataExtractionWrapper } from '@/query';
-import {
-  createReviewReviewsCreatePost,
-  Review,
-  updateReviewReviewsReviewIdUpdatePut,
-} from '@/api';
+import { useQueryClient } from '@tanstack/react-query';
+import { Review } from '@/api';
+import { useReviewCreate } from '@/query/mutationHooks/useReviewCreate';
+import { useReviewUpdate } from '@/query/mutationHooks/useReviewUpdate';
 
 const marks = [1, 2, 3, 4, 5] as const;
 const reviewScheme = z.object({
@@ -54,51 +51,12 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
     },
   });
 
-  const queryClient = useQueryClient();
-  const onSuccessFn = (response: Review) => {
-    queryClient.invalidateQueries({
-      queryKey: getBookQueryOptions(bookId).queryKey,
-    });
-    queryClient.invalidateQueries({
-      queryKey: getReviewsQueryOptions({ bookId }).queryKey,
-    });
-    queryClient.invalidateQueries({
-      queryKey: getReviewsQueryOptions({ bookId, ownerId: response.ownerId })
-        .queryKey,
-    });
-    queryClient.setQueryData(
-      getReviewQueryOptions(response.id).queryKey,
-      response
-    );
+  const { createReview } = useReviewCreate(bookId, () => {
     setIsEdit(false);
-  };
-
-  const { mutate: addReview } = useMutation({
-    mutationFn: (data: ReviwSchemeType) =>
-      dataExtractionWrapper(
-        createReviewReviewsCreatePost({
-          body: {
-            ...data,
-            bookId: Number(bookId),
-          },
-        })
-      ),
-    onSuccess: onSuccessFn,
   });
 
-  const { mutate: updateReview } = useMutation({
-    mutationFn: (data: { id: number; review: ReviwSchemeType }) =>
-      dataExtractionWrapper(
-        updateReviewReviewsReviewIdUpdatePut({
-          path: {
-            review_id: data.id,
-          },
-          body: {
-            ...data.review,
-          },
-        })
-      ),
-    onSuccess: onSuccessFn,
+  const { updateReview } = useReviewUpdate(reviewId, () => {
+    setIsEdit(false);
   });
 
   return (
@@ -109,9 +67,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
         'border border-black rounded-lg'
       )}
       onSubmit={handleSubmit((data) =>
-        reviewId
-          ? updateReview({ id: reviewId, review: data })
-          : addReview(data)
+        reviewId ? updateReview(data) : createReview(data)
       )}
     >
       <FormItem

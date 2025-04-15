@@ -4,8 +4,6 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { useMutation } from '@tanstack/react-query';
-import { navigate } from 'wouter/use-browser-location';
 
 import {
   Button,
@@ -14,7 +12,6 @@ import {
   UploadButton,
   LoadableComponent,
 } from '@/components/library';
-import { dataExtractionWrapper } from '@/query';
 import {
   useAuthor,
   useAuthors,
@@ -23,12 +20,10 @@ import {
   useGenres,
   useProfile,
 } from '@/query/queryHooks';
-import {
-  createBookBooksCreatePost,
-  updateBookBooksBookIdUpdatePut,
-} from '@/api';
 import { getTheme, themes } from './themes';
 import { getFileRealUrl } from '@/query';
+import { useLocation } from 'wouter';
+import { useBookCreate, useBookUpdate } from '@/query/mutationHooks';
 
 export const bookEditScheme = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -77,6 +72,8 @@ export interface BookEditProps {
 }
 
 export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
+  const [, setLocation] = useLocation();
+
   const {
     profile,
     isPending: isProfilePending,
@@ -90,41 +87,12 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
   const { authors } = useAuthors();
   const { genres } = useGenres();
 
-  const { mutate: createBook, error: createBookError } = useMutation({
-    mutationFn: (data: { book: BookEditData }) =>
-      dataExtractionWrapper(
-        createBookBooksCreatePost({
-          body: {
-            ...data.book,
-            themeId: data.book.theme.value,
-            author: data.book.author.value,
-            genre: data.book.genre !== null ? data.book.genre?.value : null,
-          },
-        })
-      ),
-    onSuccess: (response) => {
-      navigate(`/books/${response}`, { replace: true });
-    },
+  const { createBook, error: createBookError } = useBookCreate((response) => {
+    setLocation(`/books/${response}`, { replace: true });
   });
 
-  const { mutate: updateBook, error: updateBookError } = useMutation({
-    mutationFn: (data: { id: number; book: BookEditData }) =>
-      dataExtractionWrapper(
-        updateBookBooksBookIdUpdatePut({
-          path: {
-            book_id: data.id,
-          },
-          body: {
-            ...data.book,
-            themeId: data.book.theme.value,
-            author: data.book.author.value,
-            genre: data.book.genre !== null ? data.book.genre?.value : null,
-          },
-        })
-      ),
-    onSuccess: () => {
-      setIsEdit?.(false);
-    },
+  const { updateBook, error: updateBookError } = useBookUpdate(bookId, () => {
+    setIsEdit?.(false);
   });
 
   const {
@@ -148,8 +116,8 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
   const pdfUrlWatched = useWatch({ name: 'pdfQname', control: control });
 
   const saveBookData: SubmitHandler<BookEditData> = (data) => {
-    if (bookId !== 'new') updateBook({ id: bookId, book: data });
-    else createBook({ book: data });
+    if (bookId !== 'new') updateBook(data);
+    else createBook(data);
   };
 
   return (
@@ -188,7 +156,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
             >
               <input
                 id="title"
-                placeholder="Title (reauired)"
+                placeholder="Title (required)"
                 className="w-full pb-1 bg-transparent border-black border-b"
                 defaultValue={book?.title}
                 {...register('title')}

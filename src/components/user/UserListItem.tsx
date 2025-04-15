@@ -1,11 +1,9 @@
 import React from 'react';
-import { User, PrivilegesEnum, setPrivilegeForUserUsersUserIdSetPrivilegePost } from '@/api';
+import { User, PrivilegesEnum } from '@/api';
 import { Button } from '@/components/library/Button';
 import { DropDown } from '@/components/library/DropDown';
 import { Icon } from '@/components/library/Icon';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { dataExtractionWrapper } from '@/query';
-import { getUsersQueryOptions } from '@/query/queryHooks';
+import { usePrivilegeSet } from '@/query/mutationHooks';
 
 interface UserListItemProps {
   user: User;
@@ -14,19 +12,7 @@ interface UserListItemProps {
 const privilegeOptions: PrivilegesEnum[] = ['basic', 'moderator', 'admin'];
 
 export const UserListItem: React.FC<UserListItemProps> = ({ user }) => {
-  const queryClient = useQueryClient();
-  const { mutate: setPrivilege } = useMutation({
-    mutationFn: (privilege: PrivilegesEnum) =>
-      dataExtractionWrapper(
-        setPrivilegeForUserUsersUserIdSetPrivilegePost({
-          path: { user_id: user.id },
-          query: { privilege },
-        })
-      ),
-    onSuccess: () => {
-      queryClient.resetQueries({ queryKey: getUsersQueryOptions().queryKey });
-    },
-  });
+  const { setPrivilege } = usePrivilegeSet(user.id);
 
   return (
     <div className="flex items-center justify-between p-4 border-b">
@@ -60,4 +46,4 @@ export const UserListItem: React.FC<UserListItemProps> = ({ user }) => {
       </DropDown>
     </div>
   );
-}; 
+};

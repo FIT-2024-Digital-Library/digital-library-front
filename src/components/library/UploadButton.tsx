@@ -1,14 +1,13 @@
 import React, { HTMLAttributes, useRef } from 'react';
 import { Button } from '@/components/library/Button';
 import { Icon } from '@/components/library/Icon';
-import { useMutation } from '@tanstack/react-query';
-import { dataExtractionWrapper } from '@/query';
-import { uploadFileStoragePost, UploadFileStoragePostResponse } from '@/api';
+import { FileUploadedScheme } from '@/api';
+import { useFileUpload } from '@/query/mutationHooks';
 
 interface UploadDropDownProps extends HTMLAttributes<React.FC> {
   buttonText?: string;
   buttonClassname?: string;
-  onSuccess: (response: UploadFileStoragePostResponse) => void;
+  onSuccess: (response: FileUploadedScheme) => void;
 }
 
 export const UploadButton: React.FC<UploadDropDownProps> = ({
@@ -18,23 +17,7 @@ export const UploadButton: React.FC<UploadDropDownProps> = ({
 }) => {
   const ref = useRef<HTMLInputElement>(null);
 
-  const {
-    mutate: uploadFile,
-    isPending,
-    isSuccess,
-  } = useMutation({
-    mutationFn: (data: File) =>
-      dataExtractionWrapper(
-        uploadFileStoragePost({
-          body: {
-            file: data,
-          },
-        })
-      ),
-    onSuccess: (response) => {
-      onSuccess(response);
-    },
-  });
+  const { uploadFile, isPending, isSuccess } = useFileUpload(onSuccess);
 
   return (
     <>
