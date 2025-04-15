@@ -10,9 +10,7 @@ interface BookCardProps {
 
 export const BookCard: React.FC<BookCardProps> = ({ bookId }) => {
   const { book } = useBook(bookId);
-  const { author } = useAuthor(book?.author);
-
-  if (!book) return null;
+  const { author } = useAuthor(book.author);
 
   return (
     <Link

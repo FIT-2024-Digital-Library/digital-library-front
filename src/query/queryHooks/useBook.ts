@@ -17,22 +17,20 @@ export const bookDraft: Book = {
   pdfQname: '',
 };
 
-export const getBookQueryOptions = (id: BookId) =>
+export const getBookQueryOptions = (id: number) =>
   queryOptions({
     queryKey: ['book', id],
     queryFn: () =>
-      id === 'new'
-        ? bookDraft
-        : dataExtractionWrapper(
-            getBookBooksBookIdGet({
-              path: {
-                book_id: id,
-              },
-            })
-          ),
+      dataExtractionWrapper(
+        getBookBooksBookIdGet({
+          path: {
+            book_id: id,
+          },
+        })
+      ),
   });
 
-export const useBook = (id: BookId) => {
+export const useBook = (id: number) => {
   const { data: book, ...rest } = useQuery(getBookQueryOptions(id));
 
   return { book, ...rest };

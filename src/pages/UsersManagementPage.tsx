@@ -14,10 +14,14 @@ export const UsersManagementPage: React.FC = () => {
         <h1 className="text-2xl font-bold mb-6">Users Management</h1>
         {!profile || profile.privileges !== 'admin' ? (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            У вас нет прав для просмотра этой страницы. Доступ разрешен только администраторам.
+            У вас нет прав для просмотра этой страницы. Доступ разрешен только
+            администраторам.
           </div>
         ) : (
-          <LoadableComponent isPending={isPending} errorMessage={error?.message}>
+          <LoadableComponent
+            isPending={isPending}
+            errorMessage={error?.message}
+          >
             <div className="bg-white rounded-lg shadow">
               {users?.map((user) => (
                 <UserListItem key={user.id} user={user} />
@@ -28,4 +32,4 @@ export const UsersManagementPage: React.FC = () => {
       </div>
     </div>
   );
-}; 
+};

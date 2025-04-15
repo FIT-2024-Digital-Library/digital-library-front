@@ -10,13 +10,17 @@ import { DropDown } from '../components/library/DropDown';
 import { useProfile } from '@/query/queryHooks';
 import { useBookDelete } from '@/query/mutationHooks';
 
+interface BookPageParams {
+  id: number;
+}
+
 export type SelectOption = {
   value: number;
   label: string;
 };
 
 export const BookPage: React.FC = () => {
-  const { id } = useParams();
+  const { id } = useParams<BookPageParams>();
   const [, setLocation] = useLocation();
 
   const [isEdit, setIsEdit] = useState(false);
@@ -28,59 +32,51 @@ export const BookPage: React.FC = () => {
 
   return (
     <div className="vstack mx-2 md:mx-10 xl:mx-32 px-2 md:px-5 text-black rounded-md">
-      {Number(id) ? (
-        <>
-          {!isEdit ? (
-            <BookDisplay bookId={Number(id)} />
-          ) : (
-            <BookEdit bookId={Number(id)} setIsEdit={setIsEdit} />
-          )}
-          {profile && profile.privileges !== 'basic' && !isEdit && (
-            <div className="center my-5">
-              <div className="grid grid-cols-2 w-1/2">
+      {!isEdit ? (
+        <BookDisplay bookId={id} />
+      ) : (
+        <BookEdit bookId={id} setIsEdit={setIsEdit} />
+      )}
+      {profile && profile.privileges !== 'basic' && !isEdit && (
+        <div className="center my-5">
+          <div className="grid grid-cols-2 w-1/2">
+            <Button
+              className="mx-1 py-2 text-xl"
+              variant="plate-black"
+              onClick={() => setIsEdit(true)}
+            >
+              <span>Edit</span>
+              <Icon icon="editor" />
+            </Button>
+            <DropDown
+              className="w-full"
+              buttonComponent={
+                <Button className="w-full text-xl" variant="plate-black">
+                  <span>Delete</span>
+                  <Icon icon="trash" />
+                </Button>
+              }
+            >
+              <div className="py-1 px-2 bg-1-9 around border border-black rounded-md">
+                <span>Are you sure? This action cannot be cancelled</span>
                 <Button
                   className="mx-1 py-2 text-xl"
                   variant="plate-black"
-                  onClick={() => setIsEdit(true)}
+                  onClick={() => deleteBook()}
                 >
-                  <span>Edit</span>
-                  <Icon icon="editor" />
+                  <span>YES!</span>
+                  <Icon icon="trash" />
                 </Button>
-                <DropDown
-                  className="w-full"
-                  buttonComponent={
-                    <Button className="w-full text-xl" variant="plate-black">
-                      <span>Delete</span>
-                      <Icon icon="trash" />
-                    </Button>
-                  }
-                >
-                  <div className="py-1 px-2 bg-1-9 around border border-black rounded-md">
-                    <span>Are you sure? This action cannot be cancelled</span>
-                    <Button
-                      className="mx-1 py-2 text-xl"
-                      variant="plate-black"
-                      onClick={() => deleteBook()}
-                    >
-                      <span>YES!</span>
-                      <Icon icon="trash" />
-                    </Button>
-                    {deleteError && (
-                      <span className="text-red-500">
-                        {deleteError.message}
-                      </span>
-                    )}
-                  </div>
-                </DropDown>
+                {deleteError && (
+                  <span className="text-red-500">{deleteError.message}</span>
+                )}
               </div>
-            </div>
-          )}
-          <hr className="border-2 border-1-7 my-3 rounded" />
-          <ReviewsList bookId={Number(id)} />
-        </>
-      ) : (
-        <h2 className="text-xl text-center text-red-500">Invalid book id</h2>
+            </DropDown>
+          </div>
+        </div>
       )}
+      <hr className="border-2 border-1-7 my-3 rounded" />
+      <ReviewsList bookId={id} />
     </div>
   );
 };

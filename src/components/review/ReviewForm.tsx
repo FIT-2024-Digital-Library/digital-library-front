@@ -7,16 +7,6 @@ import { FormItem } from '../library/FormItem';
 import clsx from 'clsx';
 import { Icon } from '../library/Icon';
 import { ProgressBar } from '../library/ProgressBar';
-import {
-  getBookQueryOptions,
-  getReviewQueryOptions,
-  getReviewsQueryOptions,
-  useReview,
-} from '@/query/queryHooks';
-import { useQueryClient } from '@tanstack/react-query';
-import { Review } from '@/api';
-import { useReviewCreate } from '@/query/mutationHooks/useReviewCreate';
-import { useReviewUpdate } from '@/query/mutationHooks/useReviewUpdate';
 
 const marks = [1, 2, 3, 4, 5] as const;
 const reviewScheme = z.object({
@@ -27,18 +17,14 @@ export type ReviwSchemeType = z.infer<typeof reviewScheme>;
 
 export interface ReviewFormProps
   extends PropsWithChildren<HTMLAttributes<React.FC>> {
-  reviewId?: number;
-  bookId: number;
-  setIsEdit: (value: boolean) => void;
+  review: ReviwSchemeType;
+  submitAction: (review: ReviwSchemeType) => void;
 }
 
 export const ReviewForm: React.FC<ReviewFormProps> = ({
-  reviewId,
-  bookId,
-  setIsEdit,
+  review,
+  submitAction,
 }) => {
-  const { review } = useReview(reviewId);
-
   const {
     register,
     handleSubmit,
@@ -51,14 +37,6 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
     },
   });
 
-  const { createReview } = useReviewCreate(bookId, () => {
-    setIsEdit(false);
-  });
-
-  const { updateReview } = useReviewUpdate(reviewId, () => {
-    setIsEdit(false);
-  });
-
   return (
     <form
       className={clsx(
@@ -66,9 +44,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
         'divide-x divide-black',
         'border border-black rounded-lg'
       )}
-      onSubmit={handleSubmit((data) =>
-        reviewId ? updateReview(data) : createReview(data)
-      )}
+      onSubmit={handleSubmit((data) => submitAction(data))}
     >
       <FormItem
         className="grid grid-cols-1 p-2"

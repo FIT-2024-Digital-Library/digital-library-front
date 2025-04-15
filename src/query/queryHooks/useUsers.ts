@@ -12,4 +12,4 @@ export const useUsers = () => {
   const { data: users, ...rest } = useQuery(getUsersQueryOptions());
 
   return { users, ...rest };
-}; 
+};
