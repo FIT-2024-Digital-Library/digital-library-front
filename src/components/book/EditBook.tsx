@@ -29,12 +29,12 @@ export const EditBook: React.FC<EditBookProps> = ({ bookId, setIsEdit }) => {
           label: getTheme(book.themeId).name,
         },
         author: {
-          value: String(author.id),
+          value: author.name,
           label: author.name,
         },
         genre: genre
           ? {
-              value: String(genre.id),
+              value: genre.name,
               label: genre.name,
             }
           : null,
