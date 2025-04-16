@@ -15,7 +15,7 @@ export const Review: React.FC<ReviewProps> = ({ reviewId, setIsEdit }) => {
   const { profile } = useProfile();
 
   const { deleteReview } = useReviewDelete(reviewId, () => {
-    setIsEdit?.(true);
+    setIsEdit?.(false);
   });
 
   return (

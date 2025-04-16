@@ -3,12 +3,12 @@ import { useLocation, useParams } from 'wouter';
 
 import { Button } from '@/components/library/Button';
 import { BookDisplay } from '@/components/book/BookDisplay';
-import { BookEdit } from '@/components/book/BookEdit';
 import { Icon } from '../components/library/Icon';
 import { ReviewsList } from '../components/review/ReviewsList';
 import { DropDown } from '../components/library/DropDown';
 import { useProfile } from '@/query/queryHooks';
 import { useBookDelete } from '@/query/mutationHooks';
+import { EditBook } from '@/components/book/EditBook';
 
 interface BookPageParams {
   id: number;
@@ -35,7 +35,7 @@ export const BookPage: React.FC = () => {
       {!isEdit ? (
         <BookDisplay bookId={id} />
       ) : (
-        <BookEdit bookId={id} setIsEdit={setIsEdit} />
+        <EditBook bookId={id} setIsEdit={setIsEdit} />
       )}
       {profile && profile.privileges !== 'basic' && !isEdit && (
         <div className="center my-5">

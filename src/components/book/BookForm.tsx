@@ -1,5 +1,5 @@
 import React from 'react';
-import { SubmitHandler, useForm, Controller, useWatch } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod';
 import Select from 'react-select';
@@ -12,18 +12,9 @@ import {
   UploadButton,
   LoadableComponent,
 } from '@/components/library';
-import {
-  useAuthor,
-  useAuthors,
-  useBook,
-  useGenre,
-  useGenres,
-  useProfile,
-} from '@/query/queryHooks';
-import { getTheme, themes } from './themes';
+import { useAuthors, useGenres, useProfile } from '@/query/queryHooks';
+import { themes } from './themes';
 import { getFileRealUrl } from '@/query';
-import { useLocation } from 'wouter';
-import { useBookCreate, useBookUpdate } from '@/query/mutationHooks';
 
 export const bookEditScheme = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -38,7 +29,8 @@ export const bookEditScheme = z.object({
       value: z.string(),
       label: z.string(),
     })
-    .required(),
+    .required()
+    .nullable(),
   genre: z
     .object({
       value: z.string(),
@@ -46,8 +38,8 @@ export const bookEditScheme = z.object({
     })
     .optional()
     .nullable(),
-  publishedDate: z.number({ coerce: true }),
-  description: z.string(),
+  publishedDate: z.number({ coerce: true }).optional().nullable(),
+  description: z.string().optional().nullable(),
   imageQname: z.string().optional().nullable(),
   pdfQname: z.string().min(1, 'Book file is required'),
 });
@@ -66,34 +58,30 @@ const selectComponentStaticProps = {
   maxMenuHeight: 160,
 };
 
-export interface BookEditProps {
-  bookId: number | 'new';
-  setIsEdit?: (value: boolean) => void;
+export interface BookFormProps {
+  defaultData: BookEditData;
+  submitAction: (data: BookEditData) => void;
 }
 
-export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
-  const [, setLocation] = useLocation();
-
+export const BookForm: React.FC<BookFormProps> = ({
+  defaultData,
+  submitAction,
+}) => {
   const {
     profile,
     isPending: isProfilePending,
     error: profileError,
   } = useProfile();
-  const { book, isPending: isBookPending, error: bookError } = useBook(bookId);
-  const { author, isPending: isAuthorPending } = useAuthor(
-    book?.author === -1 ? undefined : book?.author
-  );
-  const { genre, isPending: isGenrePending } = useGenre(book?.genre);
-  const { authors } = useAuthors();
-  const { genres } = useGenres();
-
-  const { createBook, error: createBookError } = useBookCreate((response) => {
-    setLocation(`/books/${response}`, { replace: true });
-  });
-
-  const { updateBook, error: updateBookError } = useBookUpdate(bookId, () => {
-    setIsEdit?.(false);
-  });
+  const {
+    authors,
+    isPending: isAuthorsPending,
+    error: authorsError,
+  } = useAuthors();
+  const {
+    genres,
+    isPending: isGenresPending,
+    error: genresError,
+  } = useGenres();
 
   const {
     register,
@@ -102,41 +90,25 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
     formState: { errors },
   } = useForm<BookEditData>({
     resolver: zodResolver(bookEditScheme),
-    defaultValues: {
-      theme: book
-        ? { value: book.themeId, label: getTheme(book.themeId).name }
-        : undefined,
-      author: author ? { value: author.name, label: author.name } : undefined,
-      genre: genre ? { value: genre.name, label: genre.name } : undefined,
-      imageQname: book?.imageQname,
-      pdfQname: book?.pdfQname ?? '',
-    },
+    defaultValues: defaultData,
   });
   const imageUrlWatched = useWatch({ name: 'imageQname', control: control });
   const pdfUrlWatched = useWatch({ name: 'pdfQname', control: control });
 
-  const saveBookData: SubmitHandler<BookEditData> = (data) => {
-    if (bookId !== 'new') updateBook(data);
-    else createBook(data);
-  };
-
   return (
     <LoadableComponent
-      isPending={
-        isProfilePending ||
-        isBookPending ||
-        (bookId !== 'new' && (isAuthorPending || isGenrePending))
-      }
+      isPending={isProfilePending || isAuthorsPending || isGenresPending}
       errorMessage={
-        bookError?.message ||
         profileError?.message ||
+        authorsError?.message ||
+        genresError?.message ||
         (profile?.privileges === 'basic'
           ? 'Only previleged users can add or edit books'
           : undefined)
       }
       animated
     >
-      <form onSubmit={handleSubmit(saveBookData)}>
+      <form onSubmit={handleSubmit((data) => submitAction(data))}>
         <div className="grid grid-cols-3">
           <div className="center vstack">
             <img
@@ -145,7 +117,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                   ? getFileRealUrl(imageUrlWatched)
                   : ''
               }
-              alt={`${book?.title ?? 'Book'}'s cover`}
+              alt={`${defaultData.title || 'Book'}'s cover`}
               className="w-full h-full object-cover mb-2"
             />
           </div>
@@ -158,7 +130,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                 id="title"
                 placeholder="Title (required)"
                 className="w-full pb-1 bg-transparent border-black border-b"
-                defaultValue={book?.title}
+                defaultValue={defaultData.title}
                 {...register('title')}
               />
             </FormItem>
@@ -233,7 +205,9 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                 type="number"
                 className="pb-1 bg-transparent border-black border-b font-mono"
                 defaultValue={
-                  book?.publishedDate === null ? undefined : book?.publishedDate
+                  defaultData.publishedDate !== null
+                    ? defaultData.publishedDate
+                    : ''
                 }
                 {...register('publishedDate')}
               />
@@ -247,7 +221,9 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                 className="w-full p-2 bg-transparent border-black border h-32 resize-none rounded"
                 placeholder="Book's description"
                 defaultValue={
-                  book?.description === null ? undefined : book?.description
+                  defaultData.description !== null
+                    ? defaultData.description
+                    : ''
                 }
                 {...register('description')}
               />
@@ -305,11 +281,6 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
               <span>Save</span>
               <Icon icon="save" />
             </Button>
-            {(createBookError || updateBookError) && (
-              <span className="text-red-500 mx-3">
-                {createBookError?.message || updateBookError?.message}
-              </span>
-            )}
           </div>
         </div>
       </form>

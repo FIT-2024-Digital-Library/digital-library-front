@@ -1,17 +1,11 @@
 import React from 'react';
 import { Button } from '@/components/library/Button';
-import { Icon, LoadableComponent } from '@/components/library';
-import { useAuthor } from '@/query/queryHooks';
+import { Icon } from '@/components/library';
 import { BookThemeComponent } from './themes';
 import { getFileRealUrl } from '@/query';
+import { SuspendedAuthor } from '../SuspendedAuthor';
 
 export const MinimizedThemeComponent: BookThemeComponent = ({ book }) => {
-  const {
-    author,
-    isPending: isAuthorPending,
-    error: authorError,
-  } = useAuthor(book.author);
-
   return (
     <div className="center">
       <div className="w-1/2">
@@ -26,17 +20,13 @@ export const MinimizedThemeComponent: BookThemeComponent = ({ book }) => {
           </a>
           <h1 className="text-2xl font-bold mb-4">{book?.title}</h1>
         </div>
-        <LoadableComponent
-          isPending={isAuthorPending}
-          errorMessage={authorError?.message}
-          animated
-        >
-          {author && (
+        <SuspendedAuthor authorId={book.author}>
+          {(author) => (
             <h2 className="text-xl mb-2">
               Author: <span className="italic">{author.name}</span>
             </h2>
           )}
-        </LoadableComponent>
+        </SuspendedAuthor>
       </div>
     </div>
   );
