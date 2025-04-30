@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
@@ -13,58 +12,23 @@ import {
   LoadableComponent,
 } from '@/components/library';
 import { useAuthors, useGenres, useProfile } from '@/query/queryHooks';
-import { themes } from './themes';
+import { getTheme, themes } from './themes';
 import { getFileRealUrl } from '@/query';
+import {
+  BookEditData,
+  bookEditScheme,
+  selectComponentStaticProps,
+} from './BookForm';
 
-export const bookEditScheme = z.object({
-  title: z.string().min(1, 'Title is required'),
-  theme: z
-    .object({
-      value: z.number(),
-      label: z.string(),
-    })
-    .required(),
-  author: z
-    .object({
-      value: z.string(),
-      label: z.string(),
-    })
-    .required()
-    .nullable(),
-  genre: z
-    .object({
-      value: z.string(),
-      label: z.string(),
-    })
-    .optional()
-    .nullable(),
-  publishedDate: z.number({ coerce: true }).optional().nullable(),
-  description: z.string().optional().nullable(),
-  imageQname: z.string().optional().nullable(),
-  pdfQname: z.string().min(1, 'Book file is required'),
-});
-export type BookEditData = z.infer<typeof bookEditScheme>;
-
-export const selectComponentStaticProps = {
-  unstyled: true,
-  classNames: {
-    container: () => 'w-full border-b border-black',
-    menuList: () => 'bg-1-12 my-1 py-1 divide-y-2 divide-black rounded',
-    option: () => 'p-2 hover:bg-white',
-    dropdownIndicator: () => 'mx-2',
-  },
-  isSearchable: true,
-  isClearable: false,
-  maxMenuHeight: 160,
-};
-
-export interface BookFormProps {
-  defaultData: BookEditData;
+export interface BookFormSyncProps {
+  data: BookEditData;
+  setDataByKey: (key: string, val: string) => void;
   submitAction: (data: BookEditData) => void;
 }
 
-export const BookForm: React.FC<BookFormProps> = ({
-  defaultData,
+export const BookFormSync: React.FC<BookFormSyncProps> = ({
+  data,
+  setDataByKey,
   submitAction,
 }) => {
   const {
@@ -84,13 +48,12 @@ export const BookForm: React.FC<BookFormProps> = ({
   } = useGenres();
 
   const {
-    register,
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<BookEditData>({
     resolver: zodResolver(bookEditScheme),
-    defaultValues: defaultData,
+    values: data,
   });
   const imageUrlWatched = useWatch({ name: 'imageQname', control: control });
   const pdfUrlWatched = useWatch({ name: 'pdfQname', control: control });
@@ -117,7 +80,7 @@ export const BookForm: React.FC<BookFormProps> = ({
                   ? getFileRealUrl(imageUrlWatched)
                   : ''
               }
-              alt={`${defaultData.title || 'Book'}'s cover`}
+              alt={`${data?.title || 'Book'}'s cover`}
               className="w-full h-full object-cover mb-2"
             />
           </div>
@@ -126,12 +89,21 @@ export const BookForm: React.FC<BookFormProps> = ({
               className="p-1 w-full text-black text-2xl font-bold mb-4"
               errorMessage={errors.title?.message}
             >
-              <input
-                id="title"
-                placeholder="Title (required)"
-                className="w-full pb-1 bg-transparent border-black border-b"
-                defaultValue={defaultData.title}
-                {...register('title')}
+              <Controller
+                name="title"
+                control={control}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="title"
+                    placeholder="Title (required)"
+                    className="w-full pb-1 bg-transparent border-black border-b"
+                    onChange={(e) => {
+                      setDataByKey('title', e.target.value);
+                      field.onChange(e);
+                    }}
+                  />
+                )}
               />
             </FormItem>
             <FormItem
@@ -150,6 +122,10 @@ export const BookForm: React.FC<BookFormProps> = ({
                       value: theme.id,
                       label: theme.name,
                     }))}
+                    onChange={(option) => {
+                      setDataByKey('theme', String(option?.value));
+                      field.onChange(option);
+                    }}
                   />
                 )}
               />
@@ -170,6 +146,10 @@ export const BookForm: React.FC<BookFormProps> = ({
                       value: author.name,
                       label: author.name,
                     }))}
+                    onChange={(option) => {
+                      setDataByKey('author', option?.value || '');
+                      field.onChange(option);
+                    }}
                   />
                 )}
               />
@@ -191,6 +171,10 @@ export const BookForm: React.FC<BookFormProps> = ({
                       value: genre.name,
                       label: genre.name,
                     }))}
+                    onChange={(option) => {
+                      setDataByKey('genre', option?.value || '');
+                      field.onChange(option);
+                    }}
                   />
                 )}
               />
@@ -200,32 +184,44 @@ export const BookForm: React.FC<BookFormProps> = ({
               labelComponent={<span className="pr-1">Publication year:</span>}
               errorMessage={errors.publishedDate?.message}
             >
-              <input
-                id="publishedDate"
-                type="number"
-                className="pb-1 bg-transparent border-black border-b font-mono"
-                defaultValue={
-                  defaultData.publishedDate !== null
-                    ? defaultData.publishedDate
-                    : ''
-                }
-                {...register('publishedDate')}
+              <Controller
+                name="publishedDate"
+                control={control}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="publishedDate"
+                    type="number"
+                    className="pb-1 bg-transparent border-black border-b font-mono"
+                    value={field.value !== null ? field.value : ''}
+                    onChange={(e) => {
+                      setDataByKey('publishedDate', e.target.value);
+                      field.onChange(e);
+                    }}
+                  />
+                )}
               />
             </FormItem>
             <FormItem
               className="p-1 my-4 w-full text-black"
               errorMessage={errors.description?.message}
             >
-              <textarea
-                id="description"
-                className="w-full p-2 bg-transparent border-black border h-32 resize-none rounded"
-                placeholder="Book's description"
-                defaultValue={
-                  defaultData.description !== null
-                    ? defaultData.description
-                    : ''
-                }
-                {...register('description')}
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <textarea
+                    {...field}
+                    id="description"
+                    className="w-full p-2 bg-transparent border-black border h-32 resize-none rounded"
+                    placeholder="Book's description"
+                    value={field.value !== null ? field.value : ''}
+                    onChange={(e) => {
+                      setDataByKey('description', e.target.value);
+                      field.onChange(e);
+                    }}
+                  />
+                )}
               />
             </FormItem>
           </div>
@@ -240,7 +236,10 @@ export const BookForm: React.FC<BookFormProps> = ({
                     <UploadButton
                       buttonText="Upload new image"
                       buttonClassname="rounded-md w-fit"
-                      onSuccess={(response) => onChange(response.qname)}
+                      onSuccess={(response) => {
+                        setDataByKey('imageQname', response.qname);
+                        onChange(response.qname);
+                      }}
                     />
                   </>
                 )}
@@ -257,7 +256,10 @@ export const BookForm: React.FC<BookFormProps> = ({
                     <UploadButton
                       buttonText="Upload new PDF"
                       buttonClassname="rounded-md"
-                      onSuccess={(response) => onChange(response.qname)}
+                      onSuccess={(response) => {
+                        setDataByKey('pdfQname', response.qname);
+                        onChange(response.qname);
+                      }}
                     />
                   </>
                 )}

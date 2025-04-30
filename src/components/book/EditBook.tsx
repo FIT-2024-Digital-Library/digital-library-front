@@ -1,5 +1,5 @@
 import { useBookUpdate } from '@/query/mutationHooks';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { BookForm, BookEditData } from './BookForm';
 import { getTheme } from './themes';
 import { useBook } from '@/query/queryHooks';
@@ -10,13 +10,10 @@ import { Author, Book, Genre } from '@/api';
 import * as Y from 'yjs';
 import { useY } from 'react-yjs';
 import { WebsocketProvider } from 'y-websocket';
+import { BookFormSync } from './BookFormSync';
 
 const doc = new Y.Doc();
-const websocketProvider = new WebsocketProvider(
-  'ws://localhost:1234',
-  'test',
-  doc
-);
+new WebsocketProvider('ws://localhost:1234', 'book-edit', doc);
 
 interface EditBookProps {
   bookId: number;
@@ -52,18 +49,63 @@ export const EditBook: React.FC<EditBookProps> = ({ bookId, setIsEdit }) => {
     []
   );
 
-  const yMap = useMemo(() => doc.getMap<string>(String(bookId)), [bookId]);
-  const value = useY(yMap);
+  const yDataAccessor = useMemo(
+    () => doc.getMap<string>(String(bookId)),
+    [bookId]
+  );
+  const setDataByKey = useCallback(
+    (key: string, value: string) => {
+      yDataAccessor.set(key, value);
+    },
+    [yDataAccessor]
+  );
+  const yData = useY(yDataAccessor);
+  const [data, setData] = useState<BookEditData>();
+
+  useEffect(() => {
+    if (!yData['defined']) return;
+    const theme = getTheme(parseInt(yData['theme']));
+    setData({
+      title: yData['title'],
+      theme: { value: theme.id, label: theme.name },
+      author: { value: yData['author'], label: yData['author'] },
+      genre: yData['genre']
+        ? { value: yData['genre'], label: yData['genre'] }
+        : undefined,
+      pdfQname: yData['pdfQname'],
+      imageQname: yData['imageQname'] ? yData['imageQname'] : undefined,
+      description: yData['description'] ? yData['description'] : undefined,
+      publishedDate: yData['publishedDate']
+        ? parseInt(yData['publishedDate'])
+        : undefined,
+    });
+    console.log(yData);
+  }, [yData, setData]);
+  useEffect(() => {
+    if (yData['defined']) return;
+    if (!book) return;
+    const { themeId, author, genre, ...rest } = book;
+    const m = new Map(Object.entries(rest));
+    m.set('theme', String(themeId));
+    m.set('author', String(author)); // FIX
+    m.set('genre', String(genre));
+    for (const [key, value] of m.entries()) {
+      setDataByKey(key, String(value));
+    }
+    setDataByKey('defined', 'true');
+  }, [yData, book, setDataByKey]);
 
   return (
     <div className="vstack">
-      <input
-        type="text"
-        value={value['val']}
-        onChange={(e) => {
-          yMap.set('val', e.target.value);
-        }}
-      />
+      <LoadableComponent isPending={!data}>
+        {data && (
+          <BookFormSync
+            data={data}
+            setDataByKey={setDataByKey}
+            submitAction={updateBook}
+          />
+        )}
+      </LoadableComponent>
       {/* <LoadableComponent isPending={isPending} errorMessage={error?.message}>
         {book && (
           <SuspendedAuthor authorId={book.author}>
