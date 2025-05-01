@@ -3,7 +3,6 @@ import { Link } from 'wouter';
 import { useBook } from '@/query/queryHooks';
 import { LoadableComponent } from '@/components/library';
 import { getFileRealUrl } from '@/query';
-import { SuspendedAuthor } from './SuspendedAuthor';
 
 interface BookCardProps {
   bookId: number;
@@ -52,11 +51,7 @@ export const BookCard: React.FC<BookCardProps> = ({ bookId }) => {
                 </span>
               </div>
             </div>
-            <SuspendedAuthor authorId={book.author}>
-              {(author) => (
-                <p className="text-sm text-gray-600">{author.name}</p>
-              )}
-            </SuspendedAuthor>
+            <p className="text-sm text-gray-600">{book.author}</p>
             <p className="text-sm text-gray-500 mt-2 line-clamp-2">
               {book.description}
             </p>

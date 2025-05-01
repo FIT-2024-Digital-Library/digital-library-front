@@ -4,8 +4,6 @@ import { BookForm, BookEditData } from './BookForm';
 import { getTheme } from './themes';
 import { useBook } from '@/query/queryHooks';
 import { LoadableComponent } from '../library/LoadableComponent';
-import { SuspendedAuthor } from './SuspendedAuthor';
-import { SuspendedGenre } from './SuspendedGenre';
 import { Author, Book, Genre } from '@/api';
 import * as Y from 'yjs';
 import { useY } from 'react-yjs';
@@ -62,6 +60,7 @@ export const EditBook: React.FC<EditBookProps> = ({ bookId, setIsEdit }) => {
   const yData = useY(yDataAccessor);
   const [data, setData] = useState<BookEditData>();
 
+  // Update editable data by collaborative data
   useEffect(() => {
     if (!yData['defined']) return;
     const theme = getTheme(parseInt(yData['theme']));
@@ -81,14 +80,14 @@ export const EditBook: React.FC<EditBookProps> = ({ bookId, setIsEdit }) => {
     });
     console.log(yData);
   }, [yData, setData]);
+
+  // Update collaborative data by book from back
   useEffect(() => {
     if (yData['defined']) return;
     if (!book) return;
-    const { themeId, author, genre, ...rest } = book;
+    const { avgMark, marksCount, themeId, ...rest } = book;
     const m = new Map(Object.entries(rest));
     m.set('theme', String(themeId));
-    m.set('author', String(author)); // FIX
-    m.set('genre', String(genre));
     for (const [key, value] of m.entries()) {
       setDataByKey(key, String(value));
     }

@@ -29,8 +29,7 @@ export const bookEditScheme = z.object({
       value: z.string(),
       label: z.string(),
     })
-    .required()
-    .nullable(),
+    .required(), // Возможно надо добавить nullable
   genre: z
     .object({
       value: z.string(),

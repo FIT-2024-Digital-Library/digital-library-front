@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod';
 import Select from 'react-select';
@@ -12,7 +12,7 @@ import {
   LoadableComponent,
 } from '@/components/library';
 import { useAuthors, useGenres, useProfile } from '@/query/queryHooks';
-import { getTheme, themes } from './themes';
+import { themes } from './themes';
 import { getFileRealUrl } from '@/query';
 import {
   BookEditData,
