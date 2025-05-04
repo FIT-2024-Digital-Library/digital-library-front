@@ -25,28 +25,6 @@ export const EditBook: React.FC<EditBookProps> = ({ bookId, setIsEdit }) => {
     setIsEdit(false);
   });
 
-  const getBookEditData = useCallback(
-    (book: Book, author: Author, genre?: Genre) =>
-      ({
-        ...book,
-        theme: {
-          value: book.themeId,
-          label: getTheme(book.themeId).name,
-        },
-        author: {
-          value: author.name,
-          label: author.name,
-        },
-        genre: genre
-          ? {
-              value: genre.name,
-              label: genre.name,
-            }
-          : null,
-      } satisfies BookEditData),
-    []
-  );
-
   const yDataAccessor = useMemo(
     () => doc.getMap<string>(String(bookId)),
     [bookId]
@@ -56,6 +34,19 @@ export const EditBook: React.FC<EditBookProps> = ({ bookId, setIsEdit }) => {
       yDataAccessor.set(key, value);
     },
     [yDataAccessor]
+  );
+
+  const setBookData = useCallback(
+    (book: Book) => {
+      const { avgMark, marksCount, themeId, ...rest } = book;
+      const m = new Map(Object.entries(rest));
+      m.set('theme', String(themeId));
+      for (const [key, value] of m.entries()) {
+        setDataByKey(key, value !== null ? String(value) : '');
+      }
+      setDataByKey('defined', 'true');
+    },
+    [setDataByKey]
   );
   const yData = useY(yDataAccessor);
   const [data, setData] = useState<BookEditData>();
@@ -80,59 +71,31 @@ export const EditBook: React.FC<EditBookProps> = ({ bookId, setIsEdit }) => {
     });
     console.log(yData);
   }, [yData, setData]);
-
   // Update collaborative data by book from back
   useEffect(() => {
     if (yData['defined']) return;
     if (!book) return;
-    const { avgMark, marksCount, themeId, ...rest } = book;
-    const m = new Map(Object.entries(rest));
-    m.set('theme', String(themeId));
-    for (const [key, value] of m.entries()) {
-      setDataByKey(key, String(value));
-    }
-    setDataByKey('defined', 'true');
-  }, [yData, book, setDataByKey]);
+    setBookData(book);
+  }, [yData, book, setBookData]);
 
   return (
     <div className="vstack">
-      <LoadableComponent isPending={!data}>
+      <LoadableComponent
+        isPending={!data || isPending}
+        errorMessage={error?.message}
+      >
         {data && (
           <BookFormSync
             data={data}
             setDataByKey={setDataByKey}
             submitAction={updateBook}
+            resetAction={book && (() => setBookData(book))}
           />
-        )}
-      </LoadableComponent>
-      {/* <LoadableComponent isPending={isPending} errorMessage={error?.message}>
-        {book && (
-          <SuspendedAuthor authorId={book.author}>
-            {(author) => (
-              <>
-                {book.genre !== null ? (
-                  <SuspendedGenre genreId={book.genre}>
-                    {(genre) => (
-                      <BookForm
-                        defaultData={getBookEditData(book, author, genre)}
-                        submitAction={updateBook}
-                      />
-                    )}
-                  </SuspendedGenre>
-                ) : (
-                  <BookForm
-                    defaultData={getBookEditData(book, author)}
-                    submitAction={updateBook}
-                  />
-                )}
-              </>
-            )}
-          </SuspendedAuthor>
         )}
       </LoadableComponent>
       {updateBookError && (
         <span className="text-red-500 mx-3">{updateBookError?.message}</span>
-      )} */}
+      )}
     </div>
   );
 };

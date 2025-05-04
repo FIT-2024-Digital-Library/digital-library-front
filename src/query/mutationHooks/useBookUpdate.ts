@@ -20,7 +20,7 @@ export const useBookUpdate = (
             ...book,
             themeId: book.theme.value,
             author: book.author?.value,
-            genre: book.genre !== null ? book.genre?.value : null,
+            genre: book.genre?.value,
           },
         })
       ),

@@ -8,7 +8,6 @@ export const bookDraft: BookEditData = {
   theme: { value: defaultTheme.id, label: defaultTheme.name },
   title: '',
   author: { value: '', label: '' },
-  genre: null,
   publishedDate: 0,
   description: '',
   imageQname: '',

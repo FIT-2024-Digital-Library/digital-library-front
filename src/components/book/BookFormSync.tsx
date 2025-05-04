@@ -22,13 +22,15 @@ import {
 
 export interface BookFormSyncProps {
   data: BookEditData;
-  setDataByKey: (key: string, val: string) => void;
+  setDataByKey: (key: keyof BookEditData, val: string) => void;
+  resetAction?: () => void;
   submitAction: (data: BookEditData) => void;
 }
 
 export const BookFormSync: React.FC<BookFormSyncProps> = ({
   data,
   setDataByKey,
+  resetAction,
   submitAction,
 }) => {
   const {
@@ -274,7 +276,7 @@ export const BookFormSync: React.FC<BookFormSyncProps> = ({
               </Button>
             </a>
           </div>
-          <div className="center col-span-3 my-4">
+          <div className="center gap-x-2 col-span-3 my-4">
             <Button
               className="py-2 w-1/6 text-xl"
               variant="plate-black"
@@ -283,6 +285,15 @@ export const BookFormSync: React.FC<BookFormSyncProps> = ({
               <span>Save</span>
               <Icon icon="save" />
             </Button>
+            {resetAction && (
+              <Button
+                className="py-2 w-1/6 text-xl"
+                variant="plate-black"
+                onClick={resetAction}
+              >
+                Reset
+              </Button>
+            )}
           </div>
         </div>
       </form>

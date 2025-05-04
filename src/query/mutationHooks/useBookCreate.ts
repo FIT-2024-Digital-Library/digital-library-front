@@ -15,7 +15,7 @@ export const useBookCreate = (onSuccess?: (book: Book) => void) => {
             imageQname: book.imageQname !== null ? book.imageQname : undefined,
             themeId: book.theme.value,
             author: book.author.value,
-            genre: book.genre !== null ? book.genre?.value : null,
+            genre: book.genre?.value,
           },
         })
       ),
