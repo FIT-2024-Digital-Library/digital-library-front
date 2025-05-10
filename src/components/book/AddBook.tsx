@@ -7,8 +7,7 @@ import { defaultTheme } from './themes';
 export const bookDraft: BookEditData = {
   theme: { value: defaultTheme.id, label: defaultTheme.name },
   title: '',
-  author: null,
-  genre: null,
+  author: { value: '', label: '' },
   publishedDate: 0,
   description: '',
   imageQname: '',
@@ -21,10 +20,6 @@ export const AddBook: React.FC = () => {
   const { createBook, error: createBookError } = useBookCreate((response) => {
     setLocation(`/books/${response}`, { replace: true });
   });
-
-  // const { updateBook, error: updateBookError } = useBookUpdate(bookId, () => {
-  //   setIsEdit?.(false);
-  // });
 
   return (
     <div className="vstack">
