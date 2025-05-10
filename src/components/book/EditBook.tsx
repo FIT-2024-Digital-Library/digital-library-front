@@ -69,8 +69,13 @@ export const EditBook: React.FC<EditBookProps> = ({ bookId, setIsEdit }) => {
         ? parseInt(yData['publishedDate'])
         : undefined,
     });
+    console.log('Y:');
     console.log(yData);
   }, [yData, setData]);
+  useEffect(() => {
+    console.log('State:');
+    console.log(data);
+  }, [data]);
   // Update collaborative data by book from back
   useEffect(() => {
     if (yData['defined']) return;

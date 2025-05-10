@@ -10,8 +10,10 @@ export const useBookUpdate = (
 ) => {
   const queryClient = useQueryClient();
   const { mutate: updateBook, ...rest } = useMutation({
-    mutationFn: (book: BookEditData) =>
-      dataExtractionWrapper(
+    mutationFn: (book: BookEditData) =>{
+      console.log(book);
+
+      return dataExtractionWrapper(
         updateBookBooksBookIdUpdatePut({
           path: {
             book_id: bookId,
@@ -19,11 +21,11 @@ export const useBookUpdate = (
           body: {
             ...book,
             themeId: book.theme.value,
-            author: book.author?.value,
+            author: book.author.value,
             genre: book.genre?.value,
           },
         })
-      ),
+      );},
     onSuccess: (response) => {
       queryClient.setQueryData(
         getBookQueryOptions(response.id).queryKey,
