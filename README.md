@@ -7,6 +7,9 @@ Key Features
 - ability to add books to our library and automatically index them for future searches
 - users will be able to quickly find what they need by title, author, genre—or even by citations from the book’s content
 - semantic search functionality
+Additional Requirements:
+- Reviews section
+
 
 ## Easy getting
 ```bash
