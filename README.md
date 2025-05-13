@@ -9,6 +9,8 @@ Key Features
 - semantic search functionality
 Additional Requirements:
 - Reviews section
+- multiple Display Templates
+- collaborative book editing
 
 
 ## Easy getting
