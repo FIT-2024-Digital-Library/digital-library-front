@@ -11,7 +11,8 @@ import { WebsocketProvider } from 'y-websocket';
 import { BookFormSync } from './BookFormSync';
 
 const doc = new Y.Doc();
-new WebsocketProvider('ws://localhost:1234', 'book-edit', doc);
+const yjsWebsocketUrl = import.meta.env.VITE_YJS_WEBSOCKET_HOSTNAME;
+new WebsocketProvider(yjsWebsocketUrl, 'book-edit', doc);
 
 interface EditBookProps {
   bookId: number;
