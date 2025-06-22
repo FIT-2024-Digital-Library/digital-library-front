@@ -18,7 +18,7 @@ export const AddBook: React.FC = () => {
   const [, setLocation] = useLocation();
 
   const { createBook, error: createBookError } = useBookCreate((response) => {
-    setLocation(`/books/${response}`, { replace: true });
+    setLocation(`/books/${response.id}`, { replace: true });
   });
 
   return (
