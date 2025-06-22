@@ -6,8 +6,7 @@ import '@/index.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-export const serverUrl = 'http://127.0.0.1:8000';
-// console.log(serverUrl);
+export const serverUrl = import.meta.env.VITE_LIBRARY_API_HOSTNAME;
 client.setConfig({
   baseUrl: serverUrl,
   credentials: 'include',
