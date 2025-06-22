@@ -1,6 +1,6 @@
 import { useBookUpdate } from '@/query/mutationHooks';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { BookForm, BookEditData } from './BookForm';
+import { BookEditData } from './BookFormSchema';
 import { getTheme } from './themes';
 import { useBook } from '@/query/queryHooks';
 import { LoadableComponent } from '../library/LoadableComponent';
