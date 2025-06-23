@@ -1,7 +1,7 @@
 import { Book, updateBookBooksBookIdUpdatePut } from '@/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { dataExtractionWrapper } from '@/query';
-import { BookEditData } from '@/components/book/BookForm';
+import { BookEditData } from '@/components/book/BookFormSchema';
 import { getBookQueryOptions } from '../queryHooks';
 
 export const useBookUpdate = (

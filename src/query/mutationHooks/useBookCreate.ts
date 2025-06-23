@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { dataExtractionWrapper } from '@/query';
 import { Book, createBookBooksCreatePost } from '@/api';
-import { BookEditData } from '@/components/book/BookForm';
+import { BookEditData } from '@/components/book/BookFormSchema';
 import { getBookQueryOptions } from '../queryHooks';
 
 export const useBookCreate = (onSuccess?: (book: Book) => void) => {

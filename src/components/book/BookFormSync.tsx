@@ -18,7 +18,7 @@ import {
   BookEditData,
   bookEditScheme,
   selectComponentStaticProps,
-} from './BookForm';
+} from './BookFormSchema';
 
 export interface BookFormSyncProps {
   data: BookEditData;
