@@ -3,6 +3,7 @@ import { Link } from 'wouter';
 import { useBook } from '@/query/queryHooks';
 import { LoadableComponent } from '@/components/library';
 import { getFileRealUrl } from '@/query';
+import placeholder from '$img/book_card_placeholder.jpg';
 
 interface BookCardProps {
   bookId: number;
@@ -21,9 +22,7 @@ export const BookCard: React.FC<BookCardProps> = ({ bookId }) => {
           <div className="aspect-w-2 aspect-h-3 w-full">
             <img
               src={
-                book.imageQname
-                  ? getFileRealUrl(book.imageQname)
-                  : 'https://via.placeholder.com/200x300?text=No+Cover'
+                book.imageQname ? getFileRealUrl(book.imageQname) : placeholder
               }
               alt={book.title}
               className="w-full h-full object-cover"
