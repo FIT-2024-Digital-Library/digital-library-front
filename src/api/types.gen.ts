@@ -16,8 +16,8 @@ export type Body_upload_file_storage__post = {
 export type Book = {
   themeId: number;
   title: string;
-  author: number;
-  genre: number | null;
+  author: string;
+  genre?: string | null;
   publishedDate?: number | null;
   description?: string | null;
   imageQname?: string;
@@ -211,7 +211,7 @@ export type CreateBookBooksCreatePostData = {
   body: BookCreate;
 };
 
-export type CreateBookBooksCreatePostResponse = number;
+export type CreateBookBooksCreatePostResponse = Book;
 
 export type CreateBookBooksCreatePostError = HTTPValidationError;
 

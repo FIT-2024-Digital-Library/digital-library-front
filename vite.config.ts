@@ -15,6 +15,7 @@ export default defineConfig({
   resolve: {
     alias: {
       $fonts: resolve('./public/fonts'),
+      $img: resolve('./public/img'),
       '@': resolve('./src'),
     },
   },

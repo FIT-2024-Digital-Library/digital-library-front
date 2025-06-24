@@ -1,38 +1,21 @@
 import { useQuery, queryOptions } from '@tanstack/react-query';
 import { dataExtractionWrapper } from '@/query';
-import { Book, getBookBooksBookIdGet } from '@/api';
-import { defaultTheme } from '@/components/book/themes';
+import { getBookBooksBookIdGet } from '@/api';
 
-export type BookId = number | 'new';
-
-export const bookDraft: Book = {
-  id: -1,
-  themeId: defaultTheme.id,
-  title: '',
-  author: -1,
-  genre: null,
-  publishedDate: null,
-  description: '',
-  imageQname: '',
-  pdfQname: '',
-};
-
-export const getBookQueryOptions = (id: BookId) =>
+export const getBookQueryOptions = (id: number) =>
   queryOptions({
     queryKey: ['book', id],
     queryFn: () =>
-      id === 'new'
-        ? bookDraft
-        : dataExtractionWrapper(
-            getBookBooksBookIdGet({
-              path: {
-                book_id: id,
-              },
-            })
-          ),
+      dataExtractionWrapper(
+        getBookBooksBookIdGet({
+          path: {
+            book_id: id,
+          },
+        })
+      ),
   });
 
-export const useBook = (id: BookId) => {
+export const useBook = (id: number) => {
   const { data: book, ...rest } = useQuery(getBookQueryOptions(id));
 
   return { book, ...rest };

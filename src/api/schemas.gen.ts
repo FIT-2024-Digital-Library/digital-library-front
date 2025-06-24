@@ -52,13 +52,13 @@ export const BookSchema = {
       title: 'Title',
     },
     author: {
-      type: 'integer',
+      type: 'string',
       title: 'Author',
     },
     genre: {
       anyOf: [
         {
-          type: 'integer',
+          type: 'string',
         },
         {
           type: 'null',
@@ -127,7 +127,7 @@ export const BookSchema = {
     },
   },
   type: 'object',
-  required: ['themeId', 'title', 'author', 'genre', 'pdfQname', 'id'],
+  required: ['themeId', 'title', 'author', 'pdfQname', 'id'],
   title: 'Book',
 } as const;
 

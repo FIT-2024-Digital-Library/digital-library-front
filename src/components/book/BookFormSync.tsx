@@ -1,11 +1,8 @@
 import React from 'react';
-import { SubmitHandler, useForm, Controller, useWatch } from 'react-hook-form';
-import { z } from 'zod';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod/src/zod';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { useMutation } from '@tanstack/react-query';
-import { navigate } from 'wouter/use-browser-location';
 
 import {
   Button,
@@ -14,161 +11,69 @@ import {
   UploadButton,
   LoadableComponent,
 } from '@/components/library';
-import { dataExtractionWrapper } from '@/query';
-import {
-  useAuthor,
-  useAuthors,
-  useBook,
-  useGenre,
-  useGenres,
-  useProfile,
-} from '@/query/queryHooks';
-import {
-  createBookBooksCreatePost,
-  updateBookBooksBookIdUpdatePut,
-} from '@/api';
-import { getTheme, themes } from './themes';
+import { useAuthors, useGenres, useProfile } from '@/query/queryHooks';
+import { themes } from './themes';
 import { getFileRealUrl } from '@/query';
+import {
+  BookEditData,
+  bookEditScheme,
+  selectComponentStaticProps,
+} from './BookFormSchema';
 
-export const bookEditScheme = z.object({
-  title: z.string().min(1, 'Title is required'),
-  theme: z
-    .object({
-      value: z.number(),
-      label: z.string(),
-    })
-    .required(),
-  author: z
-    .object({
-      value: z.string(),
-      label: z.string(),
-    })
-    .required(),
-  genre: z
-    .object({
-      value: z.string(),
-      label: z.string(),
-    })
-    .optional()
-    .nullable(),
-  publishedDate: z.number({ coerce: true }),
-  description: z.string(),
-  imageQname: z.string().optional().nullable(),
-  pdfQname: z.string().min(1, 'Book file is required'),
-});
-export type BookEditData = z.infer<typeof bookEditScheme>;
-
-const selectComponentStaticProps = {
-  unstyled: true,
-  classNames: {
-    container: () => 'w-full border-b border-black',
-    menuList: () => 'bg-1-12 my-1 py-1 divide-y-2 divide-black rounded',
-    option: () => 'p-2 hover:bg-white',
-    dropdownIndicator: () => 'mx-2',
-  },
-  isSearchable: true,
-  isClearable: false,
-  maxMenuHeight: 160,
-};
-
-export interface BookEditProps {
-  bookId: number | 'new';
-  setIsEdit?: (value: boolean) => void;
+export interface BookFormSyncProps {
+  data: BookEditData;
+  setDataByKey: (key: keyof BookEditData, val: string) => void;
+  resetAction?: () => void;
+  submitAction: (data: BookEditData) => void;
 }
 
-export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
+export const BookFormSync: React.FC<BookFormSyncProps> = ({
+  data,
+  setDataByKey,
+  resetAction,
+  submitAction,
+}) => {
   const {
     profile,
     isPending: isProfilePending,
     error: profileError,
   } = useProfile();
-  const { book, isPending: isBookPending, error: bookError } = useBook(bookId);
-  const { author, isPending: isAuthorPending } = useAuthor(
-    book?.author === -1 ? undefined : book?.author
-  );
-  const { genre, isPending: isGenrePending } = useGenre(book?.genre);
-  const { authors } = useAuthors();
-  const { genres } = useGenres();
-
-  const { mutate: createBook, error: createBookError } = useMutation({
-    mutationFn: (data: { book: BookEditData }) =>
-      dataExtractionWrapper(
-        createBookBooksCreatePost({
-          body: {
-            ...data.book,
-            themeId: data.book.theme.value,
-            author: data.book.author.value,
-            genre: data.book.genre !== null ? data.book.genre?.value : null,
-          },
-        })
-      ),
-    onSuccess: (response) => {
-      navigate(`/books/${response}`, { replace: true });
-    },
-  });
-
-  const { mutate: updateBook, error: updateBookError } = useMutation({
-    mutationFn: (data: { id: number; book: BookEditData }) =>
-      dataExtractionWrapper(
-        updateBookBooksBookIdUpdatePut({
-          path: {
-            book_id: data.id,
-          },
-          body: {
-            ...data.book,
-            themeId: data.book.theme.value,
-            author: data.book.author.value,
-            genre: data.book.genre !== null ? data.book.genre?.value : null,
-          },
-        })
-      ),
-    onSuccess: () => {
-      setIsEdit?.(false);
-    },
-  });
+  const {
+    authors,
+    isPending: isAuthorsPending,
+    error: authorsError,
+  } = useAuthors();
+  const {
+    genres,
+    isPending: isGenresPending,
+    error: genresError,
+  } = useGenres();
 
   const {
-    register,
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<BookEditData>({
     resolver: zodResolver(bookEditScheme),
-    defaultValues: {
-      theme: book
-        ? { value: book.themeId, label: getTheme(book.themeId).name }
-        : undefined,
-      author: author ? { value: author.name, label: author.name } : undefined,
-      genre: genre ? { value: genre.name, label: genre.name } : undefined,
-      imageQname: book?.imageQname,
-      pdfQname: book?.pdfQname ?? '',
-    },
+    values: data,
   });
   const imageUrlWatched = useWatch({ name: 'imageQname', control: control });
   const pdfUrlWatched = useWatch({ name: 'pdfQname', control: control });
 
-  const saveBookData: SubmitHandler<BookEditData> = (data) => {
-    if (bookId !== 'new') updateBook({ id: bookId, book: data });
-    else createBook({ book: data });
-  };
-
   return (
     <LoadableComponent
-      isPending={
-        isProfilePending ||
-        isBookPending ||
-        (bookId !== 'new' && (isAuthorPending || isGenrePending))
-      }
+      isPending={isProfilePending || isAuthorsPending || isGenresPending}
       errorMessage={
-        bookError?.message ||
         profileError?.message ||
+        authorsError?.message ||
+        genresError?.message ||
         (profile?.privileges === 'basic'
           ? 'Only previleged users can add or edit books'
           : undefined)
       }
       animated
     >
-      <form onSubmit={handleSubmit(saveBookData)}>
+      <form onSubmit={handleSubmit((data) => submitAction(data))}>
         <div className="grid grid-cols-3">
           <div className="center vstack">
             <img
@@ -177,7 +82,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                   ? getFileRealUrl(imageUrlWatched)
                   : ''
               }
-              alt={`${book?.title ?? 'Book'}'s cover`}
+              alt={`${data?.title || 'Book'}'s cover`}
               className="w-full h-full object-cover mb-2"
             />
           </div>
@@ -186,12 +91,21 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
               className="p-1 w-full text-black text-2xl font-bold mb-4"
               errorMessage={errors.title?.message}
             >
-              <input
-                id="title"
-                placeholder="Title (reauired)"
-                className="w-full pb-1 bg-transparent border-black border-b"
-                defaultValue={book?.title}
-                {...register('title')}
+              <Controller
+                name="title"
+                control={control}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="title"
+                    placeholder="Title (required)"
+                    className="w-full pb-1 bg-transparent border-black border-b"
+                    onChange={(e) => {
+                      setDataByKey('title', e.target.value);
+                      field.onChange(e);
+                    }}
+                  />
+                )}
               />
             </FormItem>
             <FormItem
@@ -210,6 +124,10 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                       value: theme.id,
                       label: theme.name,
                     }))}
+                    onChange={(option) => {
+                      setDataByKey('theme', String(option?.value));
+                      field.onChange(option);
+                    }}
                   />
                 )}
               />
@@ -230,6 +148,10 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                       value: author.name,
                       label: author.name,
                     }))}
+                    onChange={(option) => {
+                      setDataByKey('author', option?.value || '');
+                      field.onChange(option);
+                    }}
                   />
                 )}
               />
@@ -251,6 +173,10 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                       value: genre.name,
                       label: genre.name,
                     }))}
+                    onChange={(option) => {
+                      setDataByKey('genre', option?.value || '');
+                      field.onChange(option);
+                    }}
                   />
                 )}
               />
@@ -260,28 +186,44 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
               labelComponent={<span className="pr-1">Publication year:</span>}
               errorMessage={errors.publishedDate?.message}
             >
-              <input
-                id="publishedDate"
-                type="number"
-                className="pb-1 bg-transparent border-black border-b font-mono"
-                defaultValue={
-                  book?.publishedDate === null ? undefined : book?.publishedDate
-                }
-                {...register('publishedDate')}
+              <Controller
+                name="publishedDate"
+                control={control}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="publishedDate"
+                    type="number"
+                    className="pb-1 bg-transparent border-black border-b font-mono"
+                    value={field.value !== null ? field.value : ''}
+                    onChange={(e) => {
+                      setDataByKey('publishedDate', e.target.value);
+                      field.onChange(e);
+                    }}
+                  />
+                )}
               />
             </FormItem>
             <FormItem
               className="p-1 my-4 w-full text-black"
               errorMessage={errors.description?.message}
             >
-              <textarea
-                id="description"
-                className="w-full p-2 bg-transparent border-black border h-32 resize-none rounded"
-                placeholder="Book's description"
-                defaultValue={
-                  book?.description === null ? undefined : book?.description
-                }
-                {...register('description')}
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <textarea
+                    {...field}
+                    id="description"
+                    className="w-full p-2 bg-transparent border-black border h-32 resize-none rounded"
+                    placeholder="Book's description"
+                    value={field.value !== null ? field.value : ''}
+                    onChange={(e) => {
+                      setDataByKey('description', e.target.value);
+                      field.onChange(e);
+                    }}
+                  />
+                )}
               />
             </FormItem>
           </div>
@@ -296,7 +238,10 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                     <UploadButton
                       buttonText="Upload new image"
                       buttonClassname="rounded-md w-fit"
-                      onSuccess={(response) => onChange(response.qname)}
+                      onSuccess={(response) => {
+                        setDataByKey('imageQname', response.qname);
+                        onChange(response.qname);
+                      }}
                     />
                   </>
                 )}
@@ -313,7 +258,10 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
                     <UploadButton
                       buttonText="Upload new PDF"
                       buttonClassname="rounded-md"
-                      onSuccess={(response) => onChange(response.qname)}
+                      onSuccess={(response) => {
+                        setDataByKey('pdfQname', response.qname);
+                        onChange(response.qname);
+                      }}
                     />
                   </>
                 )}
@@ -328,7 +276,7 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
               </Button>
             </a>
           </div>
-          <div className="center col-span-3 my-4">
+          <div className="center gap-x-2 col-span-3 my-4">
             <Button
               className="py-2 w-1/6 text-xl"
               variant="plate-black"
@@ -337,10 +285,14 @@ export const BookEdit: React.FC<BookEditProps> = ({ bookId, setIsEdit }) => {
               <span>Save</span>
               <Icon icon="save" />
             </Button>
-            {(createBookError || updateBookError) && (
-              <span className="text-red-500 mx-3">
-                {createBookError?.message || updateBookError?.message}
-              </span>
+            {resetAction && (
+              <Button
+                className="py-2 w-1/6 text-xl"
+                variant="plate-black"
+                onClick={resetAction}
+              >
+                Reset
+              </Button>
             )}
           </div>
         </div>

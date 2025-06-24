@@ -5,11 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod/src/zod';
 
 import { Button } from '@/components/library/Button';
 import { FormItem } from '@/components/library/FormItem';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { dataExtractionWrapper } from '@/query';
-import { registerUsersRegisterPost } from '@/api';
 import { useAppStore } from '@/state';
-import { getProfileQueryOptions } from '@/query/queryHooks';
+import { useRegister } from '@/query/mutationHooks';
 
 const userRegisterScheme = z
   .object({
@@ -26,7 +23,7 @@ export type UserRegisterData = z.infer<typeof userRegisterScheme>;
 
 export const RegisterForm: React.FC = () => {
   const {
-    register,
+    register: registerField,
     handleSubmit,
     formState: { errors },
   } = useForm<UserRegisterData>({
@@ -35,24 +32,14 @@ export const RegisterForm: React.FC = () => {
 
   const closeAuthWindow = useAppStore((state) => state.closeAuthWindow);
 
-  const queryClient = useQueryClient();
-  const { mutate: registerUser, error } = useMutation({
-    mutationFn: (data: UserRegisterData) =>
-      dataExtractionWrapper(
-        registerUsersRegisterPost({
-          body: { ...data, password: data.password1 },
-        })
-      ),
-    onSuccess: () => {
-      queryClient.resetQueries({ queryKey: getProfileQueryOptions().queryKey });
-      closeAuthWindow();
-    },
+  const { register, error } = useRegister(() => {
+    closeAuthWindow();
   });
 
   return (
     <form
       className="vstack w-full p-2"
-      onSubmit={handleSubmit((data) => registerUser(data))}
+      onSubmit={handleSubmit((data) => register(data))}
     >
       <FormItem
         className="vstack p-1 w-full"
@@ -62,7 +49,7 @@ export const RegisterForm: React.FC = () => {
         <input
           id="email"
           className="w-full p-2 bg-transparent border-black border-b"
-          {...register('email')}
+          {...registerField('email')}
         />
       </FormItem>
       <FormItem
@@ -73,7 +60,7 @@ export const RegisterForm: React.FC = () => {
         <input
           id="name"
           className="w-full p-2 bg-transparent border-black border-b"
-          {...register('name')}
+          {...registerField('name')}
         />
       </FormItem>
       <FormItem
@@ -84,7 +71,7 @@ export const RegisterForm: React.FC = () => {
         <input
           id="password1"
           className="w-full p-2 bg-transparent border-black border-b"
-          {...register('password1')}
+          {...registerField('password1')}
           type="password"
         />
       </FormItem>
@@ -96,7 +83,7 @@ export const RegisterForm: React.FC = () => {
         <input
           id="password2"
           className="w-full p-2 bg-transparent border-black border-b"
-          {...register('password2')}
+          {...registerField('password2')}
           type="password"
         />
       </FormItem>

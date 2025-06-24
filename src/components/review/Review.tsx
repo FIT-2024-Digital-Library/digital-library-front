@@ -1,16 +1,22 @@
 import React, { HTMLAttributes } from 'react';
 import clsx from 'clsx';
-import { ProgressBar } from '../library/ProgressBar';
-import { useReview, useUser } from '@/query/queryHooks';
-import { LoadableComponent } from '../library/LoadableComponent';
+import { useProfile, useReview } from '@/query/queryHooks';
+import { Button, LoadableComponent, ProgressBar } from '@/components/library';
+import { SuspendedUser } from '@/components/user/SuspendedUser';
+import { useReviewDelete } from '@/query/mutationHooks';
 
 export interface ReviewProps extends HTMLAttributes<React.FC> {
   reviewId: number;
+  setIsEdit?: (value: boolean) => void;
 }
 
-export const Review: React.FC<ReviewProps> = ({ reviewId }) => {
+export const Review: React.FC<ReviewProps> = ({ reviewId, setIsEdit }) => {
   const { review, isPending } = useReview(reviewId);
-  const { user, isPending: isUserPending } = useUser(review?.ownerId);
+  const { profile } = useProfile();
+
+  const { deleteReview } = useReviewDelete(reviewId, () => {
+    setIsEdit?.(false);
+  });
 
   return (
     <LoadableComponent isPending={isPending} animated>
@@ -24,13 +30,33 @@ export const Review: React.FC<ReviewProps> = ({ reviewId }) => {
           <>
             <div className="grid grid-cols-3 px-4 items-center text-center">
               <ProgressBar value={review.mark} minValue={0} maxValue={5} />
-              <span>{user && user !== null ? user.name : ''}</span>
+              <SuspendedUser userId={review.ownerId}>
+                {(user) => <span>{user.name}</span>}
+              </SuspendedUser>
               <span className="text-gray-500/75">{review.lastEditDate}</span>
             </div>
             <div className="col-span-4 p-2 text-center">{review.text}</div>
           </>
         )}
       </div>
+      {setIsEdit && review?.ownerId == profile?.id && (
+        <div className="around">
+          <Button
+            variant="plate-black"
+            className="py-2 w-1/4"
+            onClick={() => setIsEdit(true)}
+          >
+            Edit review
+          </Button>
+          <Button
+            variant="plate-black"
+            className="py-2 w-1/4"
+            onClick={() => deleteReview()}
+          >
+            Delete review
+          </Button>
+        </div>
+      )}
     </LoadableComponent>
   );
 };

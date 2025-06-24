@@ -2,22 +2,20 @@ import { useQuery, queryOptions } from '@tanstack/react-query';
 import { dataExtractionWrapper } from '@/query';
 import { getUserByIdUsersUserIdGet } from '@/api';
 
-export const getUserQueryOptions = (id?: number) =>
+export const getUserQueryOptions = (id: number) =>
   queryOptions({
     queryKey: ['user', id],
     queryFn: () =>
-      id
-        ? dataExtractionWrapper(
-            getUserByIdUsersUserIdGet({
-              path: {
-                user_id: id,
-              },
-            })
-          )
-        : null,
+      dataExtractionWrapper(
+        getUserByIdUsersUserIdGet({
+          path: {
+            user_id: id,
+          },
+        })
+      ),
   });
 
-export const useUser = (id?: number) => {
+export const useUser = (id: number) => {
   const { data: user, ...rest } = useQuery(getUserQueryOptions(id));
 
   return { user, ...rest };
